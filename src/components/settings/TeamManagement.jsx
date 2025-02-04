@@ -82,7 +82,8 @@ const TeamManagement = () => {
         </button>
       </div>
 
-      <div className="border rounded-[10px] border-[#F1F1F1] bg-white">
+      <div className="max-w-[825px] rounded-[12px] max-h-[650px] border border-[#F1F1F1] bg-[#FAFAFA] p-1">
+      <div className="w-full max-w-[813px] max-h-[630px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">
         <div className="px-6 py-4 border-b border-[#F1F1F1]">
           <div className="flex items-center gap-2">
             <h3 className="text-[16px] font-medium text-[#1A1A1A]">Team Members</h3>
@@ -165,6 +166,7 @@ const TeamManagement = () => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
 
