@@ -4,6 +4,7 @@ import ProfileSettings from "@/components/settings/ProfileSettings"
 import SecuritySettings from "@/components/settings/SecuritySettings"
 import TeamSettings from "@/components/settings/TeamSettings"
 import TeamManagement from "@/components/settings/TeamManagement"
+import RoleManagement from "@/components/settings/RoleManagement"
 
 const Settings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -11,7 +12,7 @@ const Settings = () => {
 
   const tabs = [
     { id: "profile", label: "Profile Settings" },
-    { id: "team", label: "Team Setting" },
+    { id: "team", label: "Role & Permissions" },
     { id: "management", label: "Team Management" },
     { id: "security", label: "Security Settings" },
   ]
@@ -23,7 +24,7 @@ const Settings = () => {
       case "security":
         return <SecuritySettings />
       case "team":
-        return <TeamSettings />
+        return <RoleManagement />
       case "management":
         return <TeamManagement />
       default:
