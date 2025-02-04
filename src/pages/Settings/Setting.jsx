@@ -67,7 +67,7 @@ const Settings = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 w-[221px] h-[42px] text-[#1A1A1A] text-[16px] font-medium px-4 flex items-center justify-start text-left rounded-[10px] ${
-                  activeTab === tab.id ? "bg-[#FAFAFA]" : "hover:bg-[#FAFAFA]"
+                  activeTab === tab.id ? "bg-[#]" : "hover:bg-[#FAFAFA]"
                 }`}
               >
                 {tab.label}
