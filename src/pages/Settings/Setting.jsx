@@ -43,13 +43,13 @@ const Settings = () => {
       <div className="p-6">
         {/* Mobile Tabs */}
         <div className="lg:hidden -mx-6 mb-6">
-          <div className="flex space-x-4 px-6 overflow-x-auto">
+          <div className="flex space-x-4 px-6 hidden-scrollbar overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 border w-[124px] h-[42px] flex items-center justify-center text-[#1A1A1A] whitespace-nowrap ${
-                  activeTab === tab.id ? "bg-[#EBEBF0]" : "border-transparent"
+                className={`py-2 border w-auto px-3 h-[42px] rounded-[10px] text-[1rem] flex items-center justify-center text-[#1A1A1A] whitespace-nowrap ${
+                  activeTab === tab.id ? "bg-[#EBEBF0] border-none" : "border-transparent"
                 }`}
               >
                 {tab.label}
@@ -67,7 +67,7 @@ const Settings = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 w-[221px] h-[42px] text-[#1A1A1A] text-[16px] font-medium px-4 flex items-center justify-start text-left rounded-[10px] ${
-                  activeTab === tab.id ? "bg-[#]" : "hover:bg-[#FAFAFA]"
+                  activeTab === tab.id ? "bg-[#FAFAFA]" : "hover:bg-[#FAFAFA]"
                 }`}
               >
                 {tab.label}
@@ -77,9 +77,12 @@ const Settings = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="max-w-[825px] rounded-[12px] max-h-[575px] border border-[#F1F1F1] bg-[#FAFAFA] p-2 flex items-center justify-center">
-            <div className="w-full max-w-[813px] max-h-[563px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">{renderTabContent()}</div>
-          </div>
+          <div className="max-w-[825px] rounded-[12px] max-h-[650px] border border-[#F1F1F1] bg-[#FAFAFA] p-2 flex items-center justify-center">
+  <div className="w-full max-w-[813px] max-h-[630px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">
+    {renderTabContent()}
+  </div>
+</div>
+
         </div>
       </div>
 

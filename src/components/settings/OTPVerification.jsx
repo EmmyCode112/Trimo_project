@@ -18,7 +18,7 @@ const OTPVerification = ({ type, onBack, onVerify, initialTimer = 60 }) => {
 
   useEffect(() => {
     setOtp(["", "", "", "", "", ""])
-  }, []) // Removed unnecessary dependency: type
+  }, [])
 
   const handleChange = (index, value) => {
     if (isNaN(value)) return
@@ -89,7 +89,7 @@ const OTPVerification = ({ type, onBack, onVerify, initialTimer = 60 }) => {
 
       <h2 className="text-2xl font-bold mb-3">Account Verification</h2>
       <p className="text-[#767676] mb-6">
-        We’ve sent a verification code to your phone and a code to your email. Let’s secure your account!
+        We've sent a verification code to your {type === "email" ? "email" : "phone number"}. Please enter the code to verify.
       </p>
 
       <div className="mb-2">
@@ -122,4 +122,3 @@ const OTPVerification = ({ type, onBack, onVerify, initialTimer = 60 }) => {
 }
 
 export default OTPVerification
-
