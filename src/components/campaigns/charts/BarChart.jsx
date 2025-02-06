@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-const BarChart = () => {
+const BarChart = ({ isEmpty = false }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -44,12 +44,12 @@ const BarChart = () => {
     datasets: [
       {
         label: "Delivery Rate",
-        data: [45, 65, 35, 65, 45, 55, 65],
+        data: isEmpty ? Array(7).fill(0) : [45, 65, 35, 65, 45, 55, 65],
         backgroundColor: "#10B981",
       },
       {
         label: "Failure Rate",
-        data: [20, 25, 15, 20, 20, 20, 25],
+        data: isEmpty ? Array(7).fill(0) : [20, 25, 15, 20, 20, 20, 25],
         backgroundColor: "#EF4444",
       },
     ],

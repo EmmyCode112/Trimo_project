@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Edit, ChevronDown, X } from "lucide-react"
+import { Edit, ChevronDown, X, Send, Clock } from "lucide-react"
 import { MessageTypeBadge, StatusBadge } from "./badges"
 import { BarChart, LineChart, PieChart } from "./charts"
 import ScheduleModal from "./ScheduleModal"
@@ -11,6 +11,7 @@ const CampaignDetails = ({ campaign, onClose }) => {
   const dragRef = useRef(null)
   const [showScheduleModal, setShowScheduleModal] = useState(false)
   const [showActionMenu, setShowActionMenu] = useState(false)
+  const [showEmptyState, setShowEmptyState] = useState(campaign?.status === "Draft")
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768
 
   useEffect(() => {
@@ -55,32 +56,36 @@ const CampaignDetails = ({ campaign, onClose }) => {
   const metrics = [
     {
       label: "Recipient Count",
-      value: "50",
+      value: showEmptyState ? "0" : "50",
       total: "/100",
     },
     {
       label: "Delivery Success Rate",
-      value: "98%",
+      value: showEmptyState ? "0%" : "98%",
     },
     {
       label: "Failure Rate",
-      value: "20%",
+      value: showEmptyState ? "0%" : "20%",
     },
     {
       label: "Click Rate",
-      value: "0%",
+      value: showEmptyState ? "0%" : "25%",
+    },
+    {
+      label: "Open Rate",
+      value: showEmptyState ? "0%" : "10%",
     },
   ]
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
-        className={`bg-white ${
+        className={`fixed bg-white h-full ${
           isMobile
-            ? "fixed inset-x-0 bottom-0 rounded-t-[30px] max-h-[90vh] overflow-y-auto"
-            : "mx-auto my-8 rounded-[30px] max-w-5xl overflow-hidden"
-        }`}
+            ? "inset-x-0 bottom-0 rounded-t-[30px] max-h-[90vh]"
+            : "top-0 right-0 w-[800px] shadow-xl animate-slide-in"
+        } overflow-y-auto`}
         onTouchStart={handleDragStart}
         onMouseDown={handleDragStart}
         onTouchMove={handleDragMove}
@@ -102,12 +107,10 @@ const CampaignDetails = ({ campaign, onClose }) => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {campaign.status !== "Sent" && campaign.status !== "Ongoing" && (
-                <button className="inline-flex items-center px-4 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </button>
-              )}
+              <button className="inline-flex items-center px-4 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </button>
               <div className="relative">
                 <button
                   onClick={() => setShowActionMenu(!showActionMenu)}
@@ -121,15 +124,23 @@ const CampaignDetails = ({ campaign, onClose }) => {
                     <div className="py-1">
                       <button
                         onClick={() => {
+                          console.log("Send Now")
+                          setShowActionMenu(false)
+                        }}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Send Now
+                      </button>
+                      <button
+                        onClick={() => {
                           setShowScheduleModal(true)
                           setShowActionMenu(false)
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
+                        <Clock className="w-4 h-4 mr-2" />
                         Schedule for Later
-                      </button>
-                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Send Now
                       </button>
                     </div>
                   </div>
@@ -142,23 +153,25 @@ const CampaignDetails = ({ campaign, onClose }) => {
           {campaign.status === "Draft" && (
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-6">
               <p className="text-sm text-gray-600">Analytics will be available once the campaign is sent.</p>
-              <button className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setShowEmptyState(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="w-4 h-4" />
               </button>
             </div>
           )}
 
           {/* Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {metrics.map((metric, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-gray-500">{metric.label}</h3>
-                <p className="mt-2 text-3xl font-semibold text-gray-900">
-                  {metric.value}
-                  {metric.total && <span className="text-sm text-gray-500">{metric.total}</span>}
-                </p>
-              </div>
-            ))}
+          <div className="overflow-x-auto hide-scrollbar mb-6">
+            <div className="flex gap-4 min-w-max">
+              {metrics.map((metric, index) => (
+                <div key={index} className="bg-gray-50 rounded-lg p-4 w-[200px]">
+                  <h3 className="text-sm font-medium text-gray-500">{metric.label}</h3>
+                  <p className="mt-2 text-3xl font-semibold text-gray-900">
+                    {metric.value}
+                    {metric.total && <span className="text-sm text-gray-500">{metric.total}</span>}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Charts */}
@@ -170,7 +183,7 @@ const CampaignDetails = ({ campaign, onClose }) => {
                 Your top-performing campaigns with engagement insights and key stats.
               </p>
               <div className="h-[300px]">
-                <BarChart />
+                <BarChart isEmpty={showEmptyState} />
               </div>
             </div>
 
@@ -181,7 +194,7 @@ const CampaignDetails = ({ campaign, onClose }) => {
                 Monitor recent delivery rate across channels for optimal performance
               </p>
               <div className="h-[300px]">
-                <LineChart />
+                <LineChart isEmpty={showEmptyState} />
               </div>
             </div>
 
@@ -192,7 +205,7 @@ const CampaignDetails = ({ campaign, onClose }) => {
                 Monitor recent delivery rate across channels for optimal performance
               </p>
               <div className="h-[300px]">
-                <PieChart />
+                <PieChart isEmpty={showEmptyState} />
               </div>
             </div>
           </div>

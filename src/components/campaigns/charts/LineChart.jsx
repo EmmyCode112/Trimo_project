@@ -1,6 +1,6 @@
-'use client';
+"use client"
 
-import { Line } from 'react-chartjs-2';
+import { Line } from "react-chartjs-2"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,21 +10,11 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js"
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
-const LineChart = () => {
-  // Chart options
+const LineChart = ({ isEmpty = false }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -44,40 +34,40 @@ const LineChart = () => {
     },
     plugins: {
       legend: {
-        position: 'top',
-        align: 'end',
+        position: "top",
+        align: "end",
         labels: {
           usePointStyle: true,
-          pointStyle: 'circle',
+          pointStyle: "circle",
           padding: 20,
-          color: '#344054',
+          color: "#344054",
         },
       },
     },
-  };
+  }
 
-  // Chart data
   const data = {
-    labels: ['0hrs', '1hrs', '2hrs', '3hrs', '4hrs', '5hrs'],
+    labels: ["0hrs", "1hrs", "2hrs", "3hrs", "4hrs", "5hrs"],
     datasets: [
       {
-        label: 'Open Rate',
-        data: [20, 18, 15, 20, 15, 18, 15],
-        borderColor: '#8B5CF6',
-        backgroundColor: '#8B5CF6',
+        label: "Open Rate",
+        data: isEmpty ? Array(6).fill(0) : [20, 18, 15, 20, 15, 18],
+        borderColor: "#8B5CF6",
+        backgroundColor: "#8B5CF6",
         tension: 0.4,
       },
       {
-        label: 'Click Rate',
-        data: [80, 75, 60, 70, 60, 65, 55],
-        borderColor: '#F59E0B',
-        backgroundColor: '#F59E0B',
+        label: "Click Rate",
+        data: isEmpty ? Array(6).fill(0) : [80, 75, 60, 70, 60, 65],
+        borderColor: "#F59E0B",
+        backgroundColor: "#F59E0B",
         tension: 0.4,
       },
     ],
-  };
+  }
 
-  return <Line options={options} data={data} />;
-};
+  return <Line options={options} data={data} />
+}
 
-export default LineChart;
+export default LineChart
+
