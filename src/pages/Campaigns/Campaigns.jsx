@@ -65,9 +65,9 @@ const Campaigns = () => {
           </div>
 
           {/* Empty State */}
-          <EmptyState onCreateCampaign={handleCreateCampaign} />
+          {/* <EmptyState onCreateCampaign={handleCreateCampaign} /> */}
           {/* Campaign List */}
-          {/* <CampaignList /> */}
+          <CampaignList />
 
           {/* Pagination */}
           <Pagination />
