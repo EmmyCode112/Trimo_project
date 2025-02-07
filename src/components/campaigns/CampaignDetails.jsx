@@ -84,7 +84,7 @@ const CampaignDetails = ({ campaign, onClose }) => {
         className={`fixed bg-white h-full ${
           isMobile
             ? "inset-x-0 bottom-0 rounded-t-[30px] max-h-[90vh]"
-            : "top-0 right-0 w-[800px] shadow-xl animate-slide-in"
+            : "top-0 right-4 w-auto rounded-[30px] shadow-xl animate-slide-in max-w-[800px]"
         } overflow-y-auto`}
         onTouchStart={handleDragStart}
         onMouseDown={handleDragStart}
