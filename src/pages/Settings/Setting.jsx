@@ -4,6 +4,7 @@ import ProfileSettings from "@/components/settings/ProfileSettings"
 import SecuritySettings from "@/components/settings/SecuritySettings"
 import TeamSettings from "@/components/settings/TeamSettings"
 import TeamManagement from "@/components/settings/TeamManagement"
+import RoleManagement from "@/components/settings/RoleManagement"
 
 const Settings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -11,7 +12,7 @@ const Settings = () => {
 
   const tabs = [
     { id: "profile", label: "Profile Settings" },
-    { id: "team", label: "Team Setting" },
+    { id: "team", label: "Role & Permissions" },
     { id: "management", label: "Team Management" },
     { id: "security", label: "Security Settings" },
   ]
@@ -23,7 +24,7 @@ const Settings = () => {
       case "security":
         return <SecuritySettings />
       case "team":
-        return <TeamSettings />
+        return <RoleManagement />
       case "management":
         return <TeamManagement />
       default:
@@ -43,13 +44,13 @@ const Settings = () => {
       <div className="p-6">
         {/* Mobile Tabs */}
         <div className="lg:hidden -mx-6 mb-6">
-          <div className="flex space-x-4 px-6 overflow-x-auto">
+          <div className="flex space-x-4 px-6 hidden-scrollbar overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 border w-[124px] h-[42px] flex items-center justify-center text-[#1A1A1A] whitespace-nowrap ${
-                  activeTab === tab.id ? "bg-[#EBEBF0]" : "border-transparent"
+                className={`py-2 border w-auto px-3 h-[42px] rounded-[10px] text-[1rem] flex items-center justify-center text-[#1A1A1A] whitespace-nowrap ${
+                  activeTab === tab.id ? "bg-[#EBEBF0] border-none" : "border-transparent"
                 }`}
               >
                 {tab.label}
@@ -77,9 +78,12 @@ const Settings = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="max-w-[825px] rounded-[12px] max-h-[575px] border border-[#F1F1F1] bg-[#FAFAFA] p-2 flex items-center justify-center">
-            <div className="w-full max-w-[813px] max-h-[563px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">{renderTabContent()}</div>
-          </div>
+          <div className="max-w-[825px] rounded-[12px] max-h-[650px] border border-[#F1F1F1] bg-[#FAFAFA] p-2 flex items-center justify-center">
+  <div className="w-full max-w-[813px] max-h-[630px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">
+    {renderTabContent()}
+  </div>
+</div>
+
         </div>
       </div>
 
