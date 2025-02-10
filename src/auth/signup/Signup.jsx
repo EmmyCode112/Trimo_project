@@ -24,7 +24,7 @@ const Signup = () => {
 
         {!showOtpPopUp ? (
           <div className="flex w-full flex-col overflow-y-auto gap-[100px] max-sm:gap-[50px] max-sm:flex-col-reverse">
-            {/* Sign in Section */}
+            {/* Sign up Section */}
             <div className="sm:self-end max-sm:mt-[40px] signInAccount self-center flex gap-[10px] pt-[25px] items-center ">
               <p className="font-[500] text-[16px] leading-[24px] text-[#767676]">
                 Already have an account?

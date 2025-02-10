@@ -6,11 +6,21 @@ import key from "./Icons/lock.png";
 import eyeOpen from "./Icons/eye.png";
 import profile from "./Icons/profile.png";
 import naira from "./Icons/naira.png";
-import arrowLeft from "./Icons/arrow-left.png";
 import successIcon from "./Icons/successImage.png";
 import houseIcon from "./Icons/company-icon.png";
 import welcomePic from "./Icons/woman-pic.png";
 import arrowRight from "./Icons/arrow-right.png";
+import contacts2Users from "./Icons/profile-2user.png"
+import sortIcon from "./Icons/sort.png"
+import folderIcon from "./Icons/Folder.png"
+import filterIcon from "./Icons/filter.png"
+import moreIcon from "./Icons/moreIcon.png"
+import checkbox from "./Icons/checkbox_unactive.png"
+import checkboxActive from "./Icons/Checkbox.png"
+import editIcon from "./Icons/edit-2.png"
+import trashIcon from "./Icons/trash.png"
+import FolderIcon from "./Icons/Folder.png"
+
 
 import TriimoIcon from "./Icons/trimo-logo.png";
 import homeIcon from "./Icons/home-2.png";
@@ -25,7 +35,8 @@ import contactIcon from "./Icons/note.png";
 import integrationIcon from "./Icons/data.png";
 import CodeRigiIcon from "./Icons/CodeRigi.png";
 import croseIcon from "./Icons/x.png";
-
+import arrow_right from "./Icons/arrowRight.png"
+import arrowLeftPagin from "./Icons/arrowLeft.png"
 import emptyWallet from "./Icons/empty-wallet.png";
 import addWallet from "./Icons/add-square.png";
 import searchIcon from "./Icons/search-normal.png";
@@ -36,6 +47,14 @@ import pendingIcon from "./Icons/pendingIcon.png";
 import keyIcon from "./Icons/keyIcon.png";
 import warningIcon from "./Icons/warningIcon.png";
 import emptyState from "./Icons/NotificationEmptyStateIcon.png";
+import crossIcon from "./Icons/closeIcon.png"
+import deleteWarningIcon from "./Icons/deleteWarning.png"
+import contactFrameManual from "./Icons/contactFrameManually.png"
+import contactFrameImport from "./Icons/contactFrameImport.png"
+import errorWarningIcon from "./Icons/warning-2.png"
+import closeXIcon from "./Icons/CloseX.png"
+
+
 
 export const SideBarIcons = {
   TriimoIcon,
@@ -60,12 +79,13 @@ export const Icons = {
   eyeOpen,
   profile,
   naira,
-  arrowLeft,
+  arrowLeftPagin,
   successIcon,
   houseIcon,
   welcomePic,
-  arrowRight,
+  arrow_right,
   emptyWallet,
+  arrowRight,
   addWallet,
   searchIcon,
   greenUpArrow,
@@ -76,4 +96,20 @@ export const Icons = {
   warningIcon,
   emptyState,
   croseIcon,
+  contacts2Users ,
+  sortIcon,
+  filterIcon,
+  folderIcon,
+  moreIcon,
+  checkbox, 
+  checkboxActive,
+  editIcon,
+  trashIcon,
+  deleteWarningIcon,
+  crossIcon,
+  contactFrameImport,
+  contactFrameManual,
+closeXIcon ,
+errorWarningIcon,
+FolderIcon
 };

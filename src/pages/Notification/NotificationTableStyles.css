@@ -1,0 +1,13 @@
+.dashboard-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.dashboard-table-container table th,
+td {
+  text-align: left;
+  padding: 16px 12px;
+}

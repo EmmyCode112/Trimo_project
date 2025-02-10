@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/slice/authSlice";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
-
 import Cookies from "js-cookie";
-
-// CSS file
 import "./Signin.css";
 
 const Signin = () => {
@@ -15,22 +14,16 @@ const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!Cookies.get("authToken")
-  );
-
-  useEffect(() => {
-    setIsAuthenticated(!!Cookies.get("authToken"));
-  }, []);
-  
   const handleLogin = () => {
+    const userData = { email }; // You can modify this as needed
     Cookies.set("authToken", "dummyAuthToken", { expires: 7 });
-    setIsAuthenticated(true);
+    dispatch(loginSuccess(userData));
     navigate("/");
   };
 
@@ -62,8 +55,6 @@ const Signin = () => {
     }
 
     if (validateEmail(email) && validatePassword(password)) {
-      // Simulate successful login
-
       setErrors({ email: "", password: "" });
       handleLogin();
     }
@@ -79,7 +70,6 @@ const Signin = () => {
         />
       </div>
       <div className="flex w-full flex-col max-sm:flex-col-reverse">
-        {/* Sign Up Section */}
         <div className="sm:self-end max-sm:mt-[40px] signInAccount self-center flex gap-[10px] pt-[25px] items-center ">
           <p className="font-[500] text-[16px] leading-[24px] text-[#767676]">
             I don’t have an account
@@ -91,7 +81,6 @@ const Signin = () => {
           />
         </div>
 
-        {/* Welcome Section */}
         <div className="w-full h-full flex items-center justify-center max-sm:mt-[-30px]">
           <div className="w-[43%] mx-auto right-container">
             <div className="flex flex-col gap-8px mb-[12px] max-sm:mb-[16px]">
@@ -103,7 +92,6 @@ const Signin = () => {
               </p>
             </div>
 
-            {/* Google Login */}
             <div>
               <Button
                 icon={Icons.googleSymbol}
@@ -116,12 +104,10 @@ const Signin = () => {
               <p>or</p>
             </div>
 
-            {/* Login Form */}
             <form
               onSubmit={handleSubmit}
               className="mt-[6px] flex flex-col gap-[18px] mb-[20px]"
             >
-              {/* Email Input */}
               <label className="flex flex-col gap-[6px]">
                 <p className="text-[14px] font-[500] text-[#1A1A1A]">Email</p>
                 <div className="flex gap-[8px] px-[14px] py-[10px] border border-[#D0D5DD] rounded-[8px] items-center">
@@ -151,7 +137,6 @@ const Signin = () => {
                 )}
               </label>
 
-              {/* Password Input */}
               <label className="flex flex-col gap-[6px]">
                 <p className="text-[14px] font-[500] text-[#1A1A1A]">
                   Password
@@ -189,7 +174,6 @@ const Signin = () => {
                 )}
               </label>
 
-              {/* Sign In Button */}
               <div>
                 <Button
                   label="Sign in"
@@ -200,7 +184,6 @@ const Signin = () => {
               </div>
             </form>
 
-            {/* Reset Password */}
             <div className="flex text-[14px] gap-[6px] items-center flex-wrap justify-center">
               <p className="text-[#767676] font-[500]">
                 Can’t remember your password?
