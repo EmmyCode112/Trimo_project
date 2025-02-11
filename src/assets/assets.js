@@ -53,6 +53,8 @@ import contactFrameManual from "./Icons/contactFrameManually.png"
 import contactFrameImport from "./Icons/contactFrameImport.png"
 import errorWarningIcon from "./Icons/warning-2.png"
 import closeXIcon from "./Icons/CloseX.png"
+import EmptyStateIcon from "./Icons/empty-state.svg"
+import More from "./Icons/more.svg"
 
 
 
@@ -111,5 +113,7 @@ export const Icons = {
   contactFrameManual,
 closeXIcon ,
 errorWarningIcon,
-FolderIcon
+FolderIcon,
+EmptyStateIcon,
+More
 };

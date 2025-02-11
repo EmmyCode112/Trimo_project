@@ -44,6 +44,18 @@ const LineChart = ({ isEmpty = false }) => {
         },
       },
     },
+    elements: {
+      line: {
+        tension: 0.4,
+        borderJoinStyle: 'round',
+        borderCapStyle: 'round',
+      },
+      point: {
+        radius: 4,
+        hitRadius: 10,
+        hoverRadius: 6,
+      }
+    }
   }
 
   const data = {
@@ -55,6 +67,7 @@ const LineChart = ({ isEmpty = false }) => {
         borderColor: "#8B5CF6",
         backgroundColor: "#8B5CF6",
         tension: 0.4,
+        borderWidth: 3,
       },
       {
         label: "Click Rate",
@@ -62,6 +75,7 @@ const LineChart = ({ isEmpty = false }) => {
         borderColor: "#F59E0B",
         backgroundColor: "#F59E0B",
         tension: 0.4,
+        borderWidth: 3,
       },
     ],
   }
@@ -70,4 +84,3 @@ const LineChart = ({ isEmpty = false }) => {
 }
 
 export default LineChart
-
