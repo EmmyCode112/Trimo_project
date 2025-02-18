@@ -1,18 +1,20 @@
-import { Gift } from "lucide-react"
+// import { Gift } from "lucide-react"
+import { Icons } from "@/assets/assets"
+
 
 const EmptyState = ({ onCreateCampaign }) => {
   return (
     <div className="flex flex-col items-center justify-center py-16">
-      <div className="w-[72px] h-[72px] bg-[#383268]/10 rounded-full flex items-center justify-center mb-4">
-        <Gift className="w-9 h-9 text-[#383268]" />
+      <div className="w-[60px] h-[60px] rounded-full flex items-center justify-center mb-4">
+        <img src={Icons.EmptyStateIcon} alt="" className="w-full h-full" />
       </div>
-      <h3 className="text-lg font-medium text-gray-900">No Available Campaign</h3>
-      <p className="text-sm text-gray-500 mt-1 mb-6">No campaigns found. Start your first campaign</p>
+      <h3 className="text-[16px] font-medium text-[#3F3E3E]">No Available Campaign</h3>
+      <p className="text-[14px] text-[#767676] mt-1 mb-6">No campaigns found. Start your first campaign</p>
       <button
         onClick={onCreateCampaign}
-        className="bg-[#383268] text-white px-4 py-2 rounded-lg hover:bg-[#2a2a5a] transition-colors text-sm"
+        className="bg-[#383268] w-[204px] h-[44px] text-white px-4 py-2 rounded-[8px] hover:bg-[#2a2a5a] transition-colors text-sm"
       >
-        Create New Campaign
+        Create new Campaign
       </button>
     </div>
   )

@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Filter, SlidersHorizontal } from "lucide-react"
+// import { Filter, SlidersHorizontal } from "lucide-react"
 import EmptyState from "@/components/campaigns/EmptyState"
 import SearchBar from "@/components/campaigns/SearchBar"
 import Pagination from "@/components/campaigns/Pagination"
 import CampaignList from "@/components/campaigns/CampaignList"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { Icons } from "../../assets/assets"
 
 const Campaigns = () => {
   const isMobile = useMediaQuery("(max-width: 640px)")
@@ -25,26 +26,28 @@ const Campaigns = () => {
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({
       ...prev,
-      [type]: prev[type].includes(value) ? prev[type].filter((v) => v !== value) : [...prev[type], value],
+      [type]: prev[type].includes(value)
+        ? prev[type].filter((v) => v !== value)
+        : [...prev[type], value],
     }))
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-0">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold text-gray-900">View Campaigns</h1>
+              <h1 className="text-[20px] font-medium text-[#1a1a1a]">View Campaigns</h1>
               <button
                 onClick={handleCreateCampaign}
-                className="bg-[#383268] text-white px-4 py-2 rounded-lg hover:bg-[#2a2a5a] transition-colors text-sm"
+                className="bg-[#383268] w-[168px] h-[44px] text-white px-4 py-2 rounded-[8px] hover:bg-[#2a2a5a] transition-colors text-sm"
               >
                 Create Campaign
               </button>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-[14px] font-[100] text-[#767676]">
               Easily upload, enter, or organize your contact list for smooth campaign delivery.
             </p>
           </div>
@@ -55,16 +58,16 @@ const Campaigns = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
-          <div className="w-full sm:max-w-[400px]">
+          <div className="w-full sm:max-w-[371px]">
             <SearchBar />
           </div>
           <div className="flex gap-3">
             <div className="relative">
               <button
                 onClick={() => setActiveDropdown(activeDropdown === "filter" ? null : "filter")}
-                className="inline-flex items-center px-3 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                className="px-[18px] py-[10px] h-[44px] flex items-center gap-[10px] rounded-[8px] border border-[#C1BFD0] cursor-pointer text-[#3F3E3E] hover:bg-[#e7e7e7]"
               >
-                <Filter className="w-4 h-4 sm:mr-2" />
+                <img src={Icons.filterIcon} alt="filter" />
                 {!isMobile && "Filter"}
               </button>
               {activeDropdown === "filter" && (
@@ -115,41 +118,44 @@ const Campaigns = () => {
                 </div>
               )}
             </div>
-            <button className="inline-flex items-center px-3 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50">
-              <SlidersHorizontal className="w-4 h-4 sm:mr-2" />
+            <button className="px-[18px] py-[10px] h-[44px] flex items-center gap-[10px] rounded-[8px] border border-[#C1BFD0] cursor-pointer text-[#3F3E3E] hover:bg-[#e7e7e7]">
+              <img src={Icons.sortIcon} alt="filter" />
               {!isMobile && "Sort"}
             </button>
           </div>
         </div>
 
         {/* Campaigns Section */}
-        <div className="bg-white rounded-lg border">
-          <div className="px-6 py-4 border-b">
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-semibold">Campaigns</h2>
-              <span className="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full">
-                {showEmptyState ? "0" : "15"} campaigns
-              </span>
+        <div className="max-w-[100%] rounded-[12px] max-h-[650px] border border-[#F1F1F1] bg-[#FAFAFA] p-1 flex items-center justify-center">
+          <div className="w-full max-w-[100%] max-h-[630px] border rounded-[10px] border-[#F1F1F1] bg-white">
+            <div className="bg-white rounded-lg">
+              <div className="px-6 border-b  py-4">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-[18px] font-medium text-[#101828]">Campaigns</h2>
+                  <span className="bg-[#F5E9EC] text-[#9A2444] text-[12px] font-medium flex items-center justify-center w-[87px] h-[22px] rounded-[16px]">
+                    {showEmptyState ? "0" : "15"} campaigns
+                  </span>
+                </div>
+              </div>
+
+              {showEmptyState ? (
+                <EmptyState onCreateCampaign={handleCreateCampaign} />
+              ) : (
+                <CampaignList filters={filters} onPageChange={setCurrentPage} currentPage={currentPage} />
+              )}
             </div>
-          </div>
 
-          {showEmptyState ? (
-            <EmptyState onCreateCampaign={handleCreateCampaign} />
-          ) : (
-            <CampaignList filters={filters} onPageChange={setCurrentPage} currentPage={currentPage} />
-          )}
+            {/* Pagination - Only show outside white box on desktop when not empty */}
+            {!showEmptyState && (
+              <div className="hidden sm:block mt-6">
+                <Pagination currentPage={currentPage} totalPages={10} onPageChange={setCurrentPage} />
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Pagination - Only show outside white box on desktop when not empty */}
-        {!showEmptyState && (
-          <div className="hidden sm:block border-t mt-6">
-            <Pagination currentPage={currentPage} totalPages={10} onPageChange={setCurrentPage} />
-          </div>
-        )}
       </div>
     </div>
   )
 }
 
 export default Campaigns
-
