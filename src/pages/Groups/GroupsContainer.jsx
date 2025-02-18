@@ -32,7 +32,7 @@ const GroupsContainer = ({
           />
         )}
       </div>
-      <div className="flex flex-wrap gap-[22px] md:gap-y-[40px] md:gap-x-[80px] p-[20px] group-container">
+      <div className="flex flex-wrap max-md:justify-start gap-[22px] md:gap-y-[40px] md:gap-x-[80px] p-[20px] group-container">
         {data.map((group, index) => (
           <div key={index}>
             <GroupFolder

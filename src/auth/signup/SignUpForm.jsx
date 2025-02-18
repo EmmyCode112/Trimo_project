@@ -7,12 +7,15 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [workPhone, setWorkPhone] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [termsChecked, setTermsChecked] = useState(false);
   const [errors, setErrors] = useState({
     email: "",
     password: "",
-    fullName: "",
+    firstName: "",
+    lastName: "",
     workPhone: "",
     confirmPassword: "",
   });
@@ -62,8 +65,13 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
   };
 
   // Validate full name
-  const validateFullName = (name) => {
+  const validateFirstName = (name) => {
     return name.length > 0 && /^[a-zA-Z\s]+$/.test(name);
+  };
+
+   // Validate full name
+   const validateLastName = (lastname) => {
+    return lastname.length > 0 && /^[a-zA-Z\s]+$/.test(lastname);
   };
 
   // Validate work phone (only numbers)
@@ -76,16 +84,19 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     return (
       email &&
       password &&
-      fullName &&
+      firstName &&
+      lastName &&
       workPhone &&
       confirmPassword &&
+      termsChecked &&
       validateEmail(email) &&
       validatePassword(password) &&
-      validateFullName(fullName) &&
+      validateFirstName(firstName) &&
+      validateLastName(lastName) &&
       validateWorkPhone(workPhone) &&
       validateConfirmPassword(password, confirmPassword)
     );
-  }, [email, password, fullName, workPhone, confirmPassword]);
+  }, [email, password, firstName,lastName, workPhone, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -100,7 +111,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
       newErrors.password = "Password does not meet the required criteria.";
     }
 
-    if (!validateFullName(fullName)) {
+    if (!validateFirstName(firstName)) {
       newErrors.fullName = "Full Name must only contain letters and spaces.";
     }
 
@@ -149,31 +160,60 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
       </label>
 
-      {/* Full Name Input */}
+      {/* First Name Input */}
       <label className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-gray-800">Full Name</p>
+        <p className="text-sm font-medium text-gray-800">First Name</p>
         <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
           <img src={Icons.profile} alt="" className="signin-icons" />
           <input
             type="text"
-            placeholder="John Doe"
+            placeholder="John"
             className="w-full outline-none border-none"
-            value={fullName}
+            value={firstName}
             onChange={(e) => {
-              setFullName(e.target.value);
-              if (!validateFullName(e.target.value)) {
+              setFirstName(e.target.value);
+              if (!validateFirstName(e.target.value)) {
                 setErrors((prev) => ({
                   ...prev,
-                  fullName: "Full Name must only contain letters and spaces.",
+                  firstName: "Your first Name must only contain letters and spaces.",
                 }));
               } else {
-                setErrors((prev) => ({ ...prev, fullName: "" }));
+                setErrors((prev) => ({ ...prev, firstName: "" }));
               }
             }}
           />
         </div>
-        {errors.fullName && (
-          <p className="text-red-500 text-sm">{errors.fullName}</p>
+        {errors.firstName && (
+          <p className="text-red-500 text-sm">{errors.firstName}</p>
+        )}
+      </label>
+
+      {/* last Name Input */}
+
+      <label className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-gray-800">Last Name</p>
+        <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
+          <img src={Icons.profile} alt="" className="signin-icons" />
+          <input
+            type="text"
+            placeholder="Doe"
+            className="w-full outline-none border-none"
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              if (!validateLastName(e.target.value)) {
+                setErrors((prev) => ({
+                  ...prev,
+                  lastName: "Your last Name must only contain letters and spaces.",
+                }));
+              } else {
+                setErrors((prev) => ({ ...prev, lastName: "" }));
+              }
+            }}
+          />
+        </div>
+        {errors.lastName && (
+          <p className="text-red-500 text-sm">{errors.lastName}</p>
         )}
       </label>
 
@@ -279,17 +319,22 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
 
       {/* Terms and Conditions */}
       <div className="flex gap-2">
-        <input type="checkbox" id="terms" />
-        <label htmlFor="terms" className="text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          id="terms"
+          checked={termsChecked}
+          onChange={(e) => setTermsChecked(e.target.checked)}
+        />
+        <label htmlFor="terms" className="text-sm cursor-pointer ">
           I agree to the triimo{" "}
-          <span className="text-blue-500">Terms & Conditions</span>
+          <span className="text-[#4285F4]">Terms & Conditions</span>
         </label>
       </div>
 
       {/* Password Checklist */}
       <div className="flex flex-col gap-2 text-sm text-gray-600">
         <p className="font-medium">Password must include:</p>
-        <ul className="list-none flex flex-wrap">
+        <ul className="list-none flex flex-wrap gap-2">
           <li className="flex py-1 px-[10px] rounded-[6px] gap-1 border cursor-pointer items-center border-[#D0D5DD]">
             <input
               type="checkbox"

@@ -1,0 +1,5 @@
+.contacts-group-container {
+    >* {
+        flex-basis : 29% !important;
+    }
+}

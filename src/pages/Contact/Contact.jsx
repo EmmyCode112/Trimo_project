@@ -4,9 +4,13 @@ import { Icons } from "../../assets/assets";
 import ContactsTable from "./ContactsTable";
 import EditContactModal from "./EditContactModal";
 import DeleteModal from "./DeleteModal";
+import DeleteMultipleModal from "./DeleteMultipleModal";
 import CreateContactModal from "./CreateContactModal";
 import CreateFormModal from "./CreateFormModal";
+import AvailableGroupModal from "./AvailableGroupModal";
+import ImportContact from "./ImportContact";
 import { useNavigate } from "react-router-dom";
+import {useGroups} from "../../redux/GroupProvider/UseGroup"
 
 const Contact = () => {
   const navigate = useNavigate();
@@ -16,6 +20,12 @@ const Contact = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [openCreateContactModal, setOpenCreateContactModal] = useState(false);
   const [openCreateFormModal, setOpenCreateFormModal] = useState(false);
+  const [openImportModal, setOpenImportModal] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [availableGroup, setAvailableGroup] = useState(false);
+  const [actionDropdown, setActionDropdown] = useState(false);
+  const [openDeleteMultipleModal, setOpenDeleteMultipleModal] = useState(false);
+  const { groups, setGroups } = useGroups()
 
   const [contacts, setContacts] = useState([
     {
@@ -89,7 +99,6 @@ const Contact = () => {
   };
 
   // delete contact
-
   const handleOpenDeleteModal = (rowData) => {
     setIsOpenDeleteModal(true);
     setSelectedRow(rowData);
@@ -113,6 +122,68 @@ const Contact = () => {
     setOpenCreateFormModal(false);
   };
 
+  // Toggle single row selection
+  const toggleRowSelection = (id) => {
+    setSelectedRows(
+      (prev) =>
+        prev.includes(id)
+          ? prev.filter((rowId) => rowId !== id) // Deselect if already selected
+          : [...prev, id] // Add to selection
+    );
+  };
+
+  const deleteSelectedRows = () => {
+    console.log("Selected rows:", selectedRows);
+    setContacts((prev) =>
+      prev.filter((contact) => !selectedRows.includes(contact.id))
+    );
+
+    setSelectedRows([]);
+    setOpenDeleteMultipleModal(false);
+    console.log(contacts);
+  };
+
+  const openDeleteMultipleModel = () => {
+    setActionDropdown(false);
+    setOpenDeleteMultipleModal(true);
+  };
+  const moveToGroup = () => {
+    setActionDropdown(false);
+    setAvailableGroup(true);
+  };
+
+  const moveContactsToGroup = (groupId) => {
+    // Find the group name based on the ID
+    const group = groups.find((g) => g.id === groupId);
+    const groupName = group ? group.name : "N/A"; // Use "N/A" if group not found
+  
+    setContacts((prevContacts) =>
+      prevContacts.map((contact) =>
+        selectedRows.includes(contact.id) ? { ...contact, group: groupName } : contact
+      )
+    );
+  
+    // Update the group with the selected contacts
+    setGroups((prevGroups) =>
+      prevGroups.map((g) =>
+        g.id === groupId
+          ? { ...g, contacts: [...g.contacts, ...contacts.filter((contact) => selectedRows.includes(contact.id))] }
+          : g
+      )
+    );
+  
+    setSelectedRows([]); // Clear selection
+  
+    // Delay closing the modal by 4 seconds
+    setTimeout(() => {
+      setAvailableGroup(false);
+    }, 4000);
+  };
+  
+  
+  
+  
+
   const columns = React.useMemo(
     () => [
       {
@@ -121,9 +192,13 @@ const Contact = () => {
         ),
         id: "checkbox",
         Cell: ({ row }) => (
-          <div>
+          <div onClick={() => toggleRowSelection(row.original.id)}>
             <img
-              src={Icons.checkbox}
+              src={
+                selectedRows.includes(row.original.id)
+                  ? Icons.checkboxActive
+                  : Icons.checkbox
+              }
               alt="checkbox"
               className="cursor-pointer"
             />
@@ -192,7 +267,7 @@ const Contact = () => {
         ),
       },
     ],
-    [openDropdownRow]
+    [openDropdownRow, selectedRows]
   );
 
   return (
@@ -213,11 +288,47 @@ const Contact = () => {
             a glance.
           </p>
         </header>
-        <Button
-          label="Add New Contact"
-          onClick={() => setOpenCreateContactModal(true)}
-          className="bg-[#383268] text-white rounded-[8px] py-2 px-[18px] hover:bg-[#41397c] max-sm:py-1 max-sm:px-[12px]"
-        />
+        <div className="flex gap-3 justify-end">
+          {selectedRows.length > 0 && (
+            <div className="relative">
+              <button
+                onClick={() => setActionDropdown((prev) => !prev)}
+                className="flex rounded-[8px] gap-[11px] border border-[#C1BFD0] py-[10px] px-[18px] text-[#383268] text-[16px] font-medium items-center hover:bg-[#e7e7e7]"
+              >
+                <span>Action</span>
+                <img src={Icons.arrowDown} alt="action" />
+              </button>
+              {actionDropdown && (
+                <div className="absolute bottom-[-190%] right-0 rounded-[8px] w-[177px] bg-white flex flex-col shadow-md border border-[#E4E7EC] z-10">
+                  <div
+                    className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:bg-gray-100"
+                    onClick={moveToGroup}
+                  >
+                    <img src={Icons.groupIcon} alt="group" />
+                    <p className="text-[#3F3E3E] text-[14px] font-normal">
+                      Move to Group
+                    </p>
+                  </div>
+
+                  <div
+                    className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:bg-gray-100"
+                    onClick={openDeleteMultipleModel}
+                  >
+                    <img src={Icons.trashIcon} alt="delete" />
+                    <p className="text-[#3F3E3E] text-[14px] font-normal">
+                      Bulk Delete
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          <Button
+            label="Add New Contact"
+            onClick={() => setOpenCreateContactModal(true)}
+            className="bg-[#383268] text-white rounded-[8px] py-2 px-[18px] hover:bg-[#41397c] max-sm:px-[12px]"
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-[19px] max-sm:flex-wrap">
@@ -236,11 +347,11 @@ const Contact = () => {
         <div className="flex items-center gap-[19px]">
           <div className="px-[18px] py-[10px] flex items-center gap-[10px] rounded-[8px] border border-[#C1BFD0] cursor-pointer text-[#3F3E3E] hover:bg-[#e7e7e7]">
             <img src={Icons.filterIcon} alt="filter" />
-            <p >Filter</p>
+            <p>Filter</p>
           </div>
           <div className="px-[18px] py-[10px] flex items-center gap-[10px] rounded-[8px] border border-[#C1BFD0] cursor-pointer text-[#3F3E3E] hover:bg-[#e7e7e7]">
             <img src={Icons.sortIcon} alt="sort" />
-            <p >Sort</p>
+            <p>Sort</p>
           </div>
         </div>
       </div>
@@ -248,7 +359,7 @@ const Contact = () => {
       <ContactsTable
         columns={columns}
         data={contacts}
-        isOpenCreateContactModal={openCreateContactModal}
+        isOpenCreateContactModal={() => setOpenCreateContactModal(true)}
       />
 
       {isOpenEditModal && selectedRow && (
@@ -273,6 +384,16 @@ const Contact = () => {
           isOpenCreateContactModal={openCreateContactModal}
           onClose={() => setOpenCreateContactModal(false)}
           onOpenCreateFormModal={() => setOpenCreateFormModal(true)}
+          isOpenImportModal={() => setOpenImportModal(true)}
+        />
+      )}
+
+      {openDeleteMultipleModal && (
+        <DeleteMultipleModal
+          onClose={() => setOpenDeleteMultipleModal(false)}
+          openDeleteModal={openDeleteMultipleModal}
+          selectedContacts={selectedRows}
+          onDelete={deleteSelectedRows}
         />
       )}
 
@@ -282,6 +403,17 @@ const Contact = () => {
           contacts={contacts}
           isOpenModal={openCreateFormModal}
           onClose={() => setOpenCreateFormModal(false)}
+        />
+      )}
+
+      {availableGroup && <AvailableGroupModal openAvailableGroups={availableGroup}  onClose={()=>setAvailableGroup(false)} moveContactsToGroup={moveContactsToGroup}/>}
+
+      {openImportModal && (
+        <ImportContact
+          isOpen={openImportModal}
+          onClose={() => setOpenImportModal(false)}
+          setContacts={setContacts}
+          contacts={contacts}
         />
       )}
     </div>

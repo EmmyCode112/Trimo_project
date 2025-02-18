@@ -1,22 +1,10 @@
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../redux/slice/authSlice";
 
 import { useNavigate } from "react-router-dom";
 
 const PopUp = () => {
   const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
-  const handleLogin = () => {
-
-    Cookies.set("authToken", "dummyAuthToken", { expires: 7 });
-    dispatch(loginSuccess());
-    navigate("/");
-  };
 
   return (
     <div className="w-full pt-4">
@@ -41,7 +29,7 @@ const PopUp = () => {
         <div >
           <Button
             label="Go to Dashboard"
-            onClick={handleLogin}
+            onClick={() => navigate("/sign-in")}
             className="bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] "
           />
         </div>

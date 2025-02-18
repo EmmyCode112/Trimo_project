@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTable, usePagination } from "react-table";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
@@ -8,7 +8,7 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page, // For pagination
+    page,
     prepareRow,
     nextPage,
     previousPage,
@@ -16,13 +16,12 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
     canPreviousPage,
     pageOptions,
     gotoPage,
-    pageCount,
     state: { pageIndex },
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 6 }, // Set page size to 6
+      initialState: { pageIndex: 0, pageSize: 6 },
     },
     usePagination
   );
@@ -50,6 +49,7 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
           <Button
             label="Add New Contact"
             className="bg-[#383268] text-white rounded-[8px] py-2 px-[18px] hover:bg-[#41397c] max-sm:py-1 max-sm:px-[12px]"
+            onClick={isOpenCreateContactModal}
           />
         </div>
       </div>
@@ -66,85 +66,61 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
         </p>
       </div>
 
-      
-
-      <div className=" overflow-x-scroll hide-scrollBar w-full">
+      <div className="overflow-x-scroll hide-scrollBar w-full pb-[70px]">
         {/* Table */}
-      <table
-        {...getTableProps()}
-        className="w-full border-collapse border-spacing-0 shadow whitespace-nowrap text-left"
-      >
-        <thead className="bg-[#F9FAFB]">
-          {headerGroups.map((headerGroup) => (
-            <tr
-              {...headerGroup.getHeaderGroupProps()}
-              className="text-left py-[10px]"
-            >
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className="pl-6 py-[10px] border-b-[#EAECF0] border-b text-[#667085] text-[13px] font-medium"
-                >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className="">
-                {row.cells.map((cell) => (
-                  <td
-                    {...cell.getCellProps()}
-                    className="pl-6 py-[10px] border-b-[#EAECF0] border-b text-[#475467] text-[14px] font-normal"
+        <table
+          {...getTableProps()}
+          className="w-full border-collapse border-spacing-0 shadow whitespace-nowrap text-left"
+        >
+          <thead className="bg-[#F9FAFB]">
+            {headerGroups.map((headerGroup) => (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                className="text-left py-[10px]"
+              >
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    className="pl-6 py-[10px] border-b-[#EAECF0] border-b text-[#667085] text-[13px] font-medium"
                   >
-                    {cell.render("Cell")}
-                  </td>
+                    {column.render("Header")}
+                  </th>
                 ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} className="">
+                  {row.cells.map((cell) => (
+                    <td
+                      {...cell.getCellProps()}
+                      className="pl-6 py-[10px] border-b-[#EAECF0] border-b text-[#475467] text-[14px] font-normal"
+                    >
+                      {cell.render("Cell")}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
 
       {/* Pagination */}
       <div className="flex items-center justify-between mt-4">
-        <button
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-          className="flex items-center gap-2 cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium"
-        >
-          <img src={Icons.arrow_right} alt=" " />
-          Previous
+        <button onClick={() => previousPage()} disabled={!canPreviousPage} className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium">
+          Prev
         </button>
-
-        <div className="flex items-center gap-2">
-          {pageOptions.map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => gotoPage(pageNumber)}
-              className={`px-3 py-1 rounded-lg ${
-                pageIndex === pageNumber
-                  ? "bg-[#383268] text-white"
-                  : "text-[#667085] hover:text-[#1A1A1A]"
-              } text-[14px] font-medium`}
-            >
-              {pageNumber + 1}
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={() => nextPage()}
-          disabled={!canNextPage}
-          className="flex items-center gap-2 cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px]  font-medium"
-        >
+        
+        <span className="text-[#667085] text-[14px] font-medium">
+          Page {"  "}<span className="px-3 py-1 rounded-lg bg-[#383268] text-white text-[14px] font-medium"> {" "}{pageIndex + 1}</span> of {" "} {pageOptions.length}
+        </span>
+        
+        <button onClick={() => nextPage()} disabled={!canNextPage} className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium">
           Next
-          <img src={Icons.arrowLeftPagin} alt=" " />
         </button>
       </div>
     </div>

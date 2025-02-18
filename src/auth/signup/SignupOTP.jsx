@@ -26,7 +26,7 @@ const SignupOTP = ({ isClosedOtp }) => {
   const generateOtp = () => {
     const newOtp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit random OTP
     setOtp(newOtp);
-    alert("Generated OTP:", newOtp); // For debugging, remove in production
+    console.log("Generated OTP:", newOtp); // For debugging, remove in production
     setCountdown(60); // Reset countdown
     setOtpRequested(true);
   };

@@ -48,7 +48,9 @@ const NotificationAlert = () => {
           Notification & Alert
         </h2>
 
-        <table className="rounded-[8px]">
+        <div className="w-full overflow-x-scroll hide-scrollBar">
+
+        <table className="rounded-[8px] whitespace-nowrap">
           <thead>
             <tr className="bg-[#F9FAFB] py-3 border-b border-top-radius border-b-[#EAECF0]">
               <th className="px-[12px] py-3 text-[13px] font-medium text-[#767676]">
@@ -83,7 +85,7 @@ const NotificationAlert = () => {
                       alt="icon"
                       className="w-40px h-[40px]"
                     />
-                    <p className="text-[13px] font-medium text-[#1A1A1A]">
+                    <p className="text-[13px] font-medium text-[#1A1A1A] w-full text-ellipsis overflow-hidden">
                       {notification.message}
                     </p>
                   </td>
@@ -118,6 +120,7 @@ const NotificationAlert = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </container>
   );

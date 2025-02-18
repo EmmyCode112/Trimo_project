@@ -59,7 +59,7 @@ const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFor
   };
 
   return (
-    <div className="fixed flex items-center justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
+    <div className="fixed flex items-center max-md:items-end justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
         className={` bg-white ${
@@ -93,10 +93,10 @@ const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFor
           <p className="mt-[10px] text-[#767676] text-[14px] font-normal">
             Pick a campaign type you would love to start with
           </p>
-          <div className="bg-[#FAFAFA] rounded-[20px] flex gap-x-[11px] mt-[19px] p-[6px] ">
+          <div className="bg-[#FAFAFA] rounded-[20px] flex gap-x-[11px] mt-[19px] p-[6px] max-md:flex-col gap-y-3">
             {/* import */}
             <div className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer">
-              <img src={Icons.contactFrameImport} alt="import contact" />
+              <img src={Icons.contactFrameImport} alt="import contact" className="max-md:w-full" />
               <div className="flex items-center justify-between gap-[20px]">
                 <div>
                   <h2 className="text-[#1A1A1A] text-[15px] font-medium mb-[3px]">
@@ -118,7 +118,7 @@ const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFor
             </div>
             {/* manually */}
             <div className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer" onClick={handleOpenCreateFormModal}>
-              <img src={Icons.contactFrameManual} alt="import contact" />
+              <img src={Icons.contactFrameManual} alt="import contact" className="max-md:w-full" />
               <div className="flex items-center justify-between gap-[20px]">
                 <div>
                   <h2 className="text-[#1A1A1A] text-[15px] font-medium mb-[3px]">

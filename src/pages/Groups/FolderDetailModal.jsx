@@ -7,6 +7,7 @@ import CreateFormModal from "./CreateFormModal";
 import Button from "../../Components/buttons/transparentButton";
 import DeleteMultipleModal from "./DeleteMultipleModal";
 import DeleteModal from "./DeleteModal";
+import EditContactModal from "./EditContactModal";
 
 const FolderDetailModal = ({
   open,
@@ -23,12 +24,14 @@ const FolderDetailModal = ({
   const [isOpenMultipleDelete, setIsOpenMultipleDelete] = useState(false);
   const [isOpenSingleDelete, setIsOpenSingleDelete] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [editContact, setEditContact] = useState(false);
 
   const modalRef = useRef(null);
-const deleteModalRef = useRef(null); // Ref for DeleteModal
-const createContactModalRef = useRef(null); // Ref for CreateContactModal
-const createFormModalRef = useRef(null); 
-const isDeleteSingleModalRef = useRef(null)
+  const deleteModalRef = useRef(null); // Ref for DeleteModal
+  const createContactModalRef = useRef(null); // Ref for CreateContactModal
+  const createFormModalRef = useRef(null);
+  const isDeleteSingleModalRef = useRef(null);
+  const isEditModalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
 
@@ -40,12 +43,15 @@ const isDeleteSingleModalRef = useRef(null)
         (!openCreateNewContact ||
           (createContactModalRef.current &&
             !createContactModalRef.current.contains(event.target))) &&
+        (!setEditContact ||
+          (isEditModalRef.current &&
+            !isEditModalRef.current.contains(event.target))) &&
         (!openCreateFormModal ||
           (createFormModalRef.current &&
             !createFormModalRef.current.contains(event.target))) &&
-            (!isOpenSingleDelete ||
-              (isDeleteSingleModalRef.current &&
-                !isDeleteSingleModalRef.current.contains(event.target))) &&
+        (!isOpenSingleDelete ||
+          (isDeleteSingleModalRef.current &&
+            !isDeleteSingleModalRef.current.contains(event.target))) &&
         (!isOpenMultipleDelete ||
           (deleteModalRef.current &&
             !deleteModalRef.current.contains(event.target)))
@@ -67,12 +73,8 @@ const isDeleteSingleModalRef = useRef(null)
     openCreateNewContact,
     openCreateFormModal,
     isOpenMultipleDelete,
-    isOpenSingleDelete
+    isOpenSingleDelete,
   ]);
-
-
-
-
 
   const handleDragStart = (e) => {
     if (!isMobile) return;
@@ -99,12 +101,14 @@ const isDeleteSingleModalRef = useRef(null)
     dragRef.current = null;
   };
 
-  const toggleSelectContact = (id) => {
-    setSelectedContacts((prev) =>
-      prev.includes(id)
-        ? prev.filter((contactId) => contactId !== id)
-        : [...prev, id]
+
+
+  // Function to update the contact in the list
+  const updateContact = (updatedContact) => {
+    setContacts((prevContacts) =>
+      prevContacts.map((c) => (c.id === updatedContact.id ? updatedContact : c))
     );
+    setEditContact(false);
   };
 
   const deleteSelectedContacts = () => {
@@ -126,27 +130,44 @@ const isDeleteSingleModalRef = useRef(null)
     console.log("Updated contacts:", contacts);
   }, [contacts]);
 
- // Handle the deletion of a single contact
- const handleDeleteContact = () => {
-  if (selectedRow !== null) {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== selectedRow)
-    );
-    setIsOpenSingleDelete(false);
-    setSelectedRow(null); // Reset the selected row
-    console.log("Deleted Contact ID:", selectedRow);
-  } else {
-    console.log("No contact selected for deletion.");
-  }
-};
+  // Handle the deletion of a single contact
+  const handleDeleteContact = () => {
+    if (selectedRow !== null) {
+      setContacts((prevContacts) =>
+        prevContacts.filter((contact) => contact.id !== selectedRow)
+      );
+      setIsOpenSingleDelete(false);
+      setSelectedRow(null); // Reset the selected row
+      console.log("Deleted Contact ID:", selectedRow);
+    } else {
+      console.log("No contact selected for deletion.");
+    }
+  };
 
-// Open delete modal and set selected row
-const openDeleteModal = (id) => {
-  setSelectedRow(id);
-  setIsOpenSingleDelete(true);
-  setOpenDropdownRow(null);
-  console.log(setSelectedRow(id))
-};
+  // Open edit modal and set selected contact
+  const handleEditClick = (contact) => {
+    setSelectedRow(contact);
+    setEditContact(true);
+    setOpenDropdownRow(null);
+  };
+
+  const handleSaveContact = (updatedContact) => {
+    setContacts((prevContacts) =>
+      prevContacts.map((contact) =>
+        contact.id === updatedContact.id ? updatedContact : contact
+      )
+    );
+  };
+  
+  
+
+  // Open delete modal and set selected row
+  const openDeleteModal = (id) => {
+    setSelectedRow(id);
+    setIsOpenSingleDelete(true);
+    setOpenDropdownRow(null);
+    console.log(setSelectedRow(id));
+  };
 
   const columns = useMemo(
     () => [
@@ -217,7 +238,10 @@ const openDeleteModal = (id) => {
 
               {openDropdownRow === row.original.id && (
                 <div className="absolute left-[-137px] rounded-[8px] w-[177px] bg-white flex flex-col shadow-md border border-[#E4E7EC] z-10">
-                  <div className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:bg-gray-100">
+                  <div
+                    onClick={() => handleEditClick(row.original)}
+                    className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:bg-gray-100"
+                  >
                     <img src={Icons.editIcon} alt="edit" />
                     <p className="text-[#3F3E3E] text-[14px] font-normal">
                       Edit
@@ -225,7 +249,7 @@ const openDeleteModal = (id) => {
                   </div>
                   <div
                     className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:bg-gray-100"
-                    onClick={()=>openDeleteModal(row.original.id)}
+                    onClick={() => openDeleteModal(row.original.id)}
                   >
                     <img src={Icons.trashIcon} alt="delete" />
                     <p className="text-[#3F3E3E] text-[14px] font-normal">
@@ -250,13 +274,22 @@ const openDeleteModal = (id) => {
         ref={modalRef}
         className={`fixed bg-white overflow-y-scroll hide-scrollBar ${
           isMobile
-            ? "inset-x-0 h-full bottom-0 rounded-t-[40px] p-3"
+            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
             : "top-4 bottom-4 right-3 w-[1000px] rounded-[30px] p-[22px]"
         }`}
+        onTouchStart={handleDragStart}
+        onMouseDown={handleDragStart}
+        onTouchMove={handleDragMove}
+        onMouseMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
+        onMouseUp={handleDragEnd}
       >
-        <div className="flex flex-col justify-between h-full w-full gap-y-[30px] pb-[22px]">
+         {isMobile && (
+          <div className="w-[81px] h-2 bg-gray-300 rounded-full mx-auto mt-4" />
+        )}
+        <div className="flex flex-col justify-between h-auto max-md:h-full w-full gap-y-[30px] pb-[22px]">
           <div className="flex flex-col gap-y-6">
-            <div className="flex items-center justify-between max-md:flex-wrap">
+            <div className="flex items-center justify-between max-md:flex-wrap gap-y-4">
               <div>
                 <h2 className="text-[18px] font-medium text-[#1A1A1A]">
                   {folder?.name || "No Folder Selected"}
@@ -334,7 +367,17 @@ const openDeleteModal = (id) => {
         <DeleteModal
           isOpenDeleteModal={() => setIsOpenSingleDelete(true)}
           onClose={() => setIsOpenSingleDelete(false)}
-          onDelete={() => handleDeleteContact(selectedRow)} 
+          onDelete={() => handleDeleteContact(selectedRow)}
+        />
+      )}
+
+      {editContact && (
+        <EditContactModal
+          isOpenEditModal={editContact} // ✅ Pass the boolean value instead
+          onClose={() => setEditContact(false)}
+          rowData={selectedRow}
+          onSave={handleSaveContact}
+          existingContacts={contacts}
         />
       )}
     </div>
