@@ -8,13 +8,13 @@ const GroupFolder = ({
   selectedFolders,
   groupId,
   openFolderDetails,
-  folder
+  folder,
 }) => {
   const isSelected = selectedFolders.includes(groupId);
   return (
     <div
-      className="flex folder-con flex-col gap-2 w-full sm:w-1/2 lg:w-1/4 cursor-pointer"
-      onClick={()=>openFolderDetails(folder)}
+      className="flex flex-col folder-con  cursor-pointer"
+      onClick={() => openFolderDetails(folder)}
     >
       <div className="relative folder-img-con w-full h-auto sm:w-[184px] sm:h-[115px]">
         <img
@@ -32,10 +32,16 @@ const GroupFolder = ({
           className="absolute top-[12px] left-[10px] cursor-pointer"
         />
       </div>
-      <p className="text-[#484848] text-[16px] font-normal ">{groupName}</p>
-      <div className="flex items-center gap-x-1 mt-1">
-        <img src={Icons.contacts2Users} alt="users" />
-        <p className="text-[#767676] text-sm font-normal">{folder.contacts.length}</p>
+
+      <div className="w-full">
+        <p className="text-[#484848] text-[16px] font-normal">{groupName}</p>
+
+        <div className="flex items-center gap-x-1 mt-1">
+          <img src={Icons.contacts2Users} alt="users" />
+          <p className="text-[#767676] text-sm font-normal">
+            {folder.contacts.length}
+          </p>
+        </div>
       </div>
     </div>
   );

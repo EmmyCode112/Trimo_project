@@ -98,7 +98,7 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts, group, fold
         ref={modalRef}
         className={`fixed bg-white overflow-y-scroll hide-scrollBar ${
           isMobile
-            ? "inset-x-0 h-full bottom-0 rounded-t-[40px] p-3"
+            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
             : "top-4 bottom-4 right-3 w-[517px] rounded-[30px] p-[22px]"
         }`}
         onTouchStart={handleDragStart}
@@ -111,7 +111,7 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts, group, fold
         {isMobile && (
           <div className="w-[81px] h-2 bg-gray-300 rounded-full mx-auto mt-4" />
         )}
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-3">
           <div>
             <h2 className="font-medium text-[18px] text-[#1A1A1A] mb-[6px]">
               Enter Contact Manually
@@ -244,7 +244,7 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts, group, fold
             </div>
             </div>
             
-            <div className="self-end justify-self-end align-end flex items-center gap-3">
+            <div className="self-end justify-self-end align-end flex items-center gap-3 mt-3">
               <Button
                 label="Cancel"
                 onClick={onClose}

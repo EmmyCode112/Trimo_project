@@ -53,8 +53,12 @@ import contactFrameManual from "./Icons/contactFrameManually.png"
 import contactFrameImport from "./Icons/contactFrameImport.png"
 import errorWarningIcon from "./Icons/warning-2.png"
 import closeXIcon from "./Icons/CloseX.png"
-import EmptyStateIcon from "./Icons/empty-state.svg"
-import More from "./Icons/more.svg"
+import emptyImport from "./Icons/emptyImport.png"
+import fileUploadFailed from "./Icons/fileUploadFailed.png"
+import fileUploadSuccess from "./Icons/fileUploadSuccess.png"
+import reloadIcon from "./Icons/reloadIcon.png"
+import arrowDown from "./Icons/arrow-down.png"
+import groupIcon from "./Icons/group.png"
 
 
 
@@ -114,6 +118,11 @@ export const Icons = {
 closeXIcon ,
 errorWarningIcon,
 FolderIcon,
-EmptyStateIcon,
-More
+emptyImport,
+fileUploadFailed,
+fileUploadSuccess,
+reloadIcon,
+arrowDown,
+groupIcon,
+
 };

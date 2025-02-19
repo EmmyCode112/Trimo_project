@@ -2,14 +2,26 @@ import { useState } from "react";
 import Button from "../../Components/buttons/transparentButton";
 
 const CaseEighty = ({ handleProceed }) => {
-  const [selectedGoal, setSelectedGoal] = useState("");
+  const [selectedGoals, setSelectedGoals] = useState([]);
   const [otherDescription, setOtherDescription] = useState("");
 
-  // Handle goal selection
+  // Handle goal selection (Allow Multiple)
   const handleGoalSelect = (goal) => {
-    setSelectedGoal(goal);
+    setSelectedGoals((prevGoals) => {
+      // Use a proper state update function to avoid unexpected behavior
+      const newGoals = new Set(prevGoals);
+
+      if (newGoals.has(goal)) {
+        newGoals.delete(goal); // Remove if already selected
+      } else {
+        newGoals.add(goal); // Add if not selected
+      }
+
+      return Array.from(newGoals);
+    });
+
     if (goal !== "Others") {
-      setOtherDescription(""); // Clear other description if not selecting "Others"
+      setOtherDescription(""); // Clear "Others" description if deselecting it
     }
   };
 
@@ -20,17 +32,16 @@ const CaseEighty = ({ handleProceed }) => {
 
   // Check if the "Proceed" button should be enabled
   const isProceedEnabled =
-    selectedGoal !== "" &&
-    (selectedGoal !== "Others" ||
-      (selectedGoal === "Others" && otherDescription.trim() !== ""));
+    selectedGoals.length > 0 &&
+    (!selectedGoals.includes("Others") || otherDescription.trim() !== "");
 
   // List of goal options
   const goals = [
     "Onboard / Retain Customers",
     "Convert Marketing Leads",
-    "Send Transactional Messages ",
-    "Sends newsletters",
-    "Setup internal automation ",
+    "Send Transactional Messages",
+    "Send Newsletters",
+    "Setup Internal Automation",
     "Others",
   ];
 
@@ -50,38 +61,38 @@ const CaseEighty = ({ handleProceed }) => {
       <div>
         <fieldset className="mt-6 mb-[19px]">
           <legend className="text-sm font-medium text-gray-700">
-            What best describes you
+            What best describes you?
           </legend>
           <div className="flex flex-wrap gap-x-[12px] gap-y-[10px] mt-2">
-            {goals.map((goal) => (
-              <div
-                key={goal}
-                className={`flex py-1 px-[10px] rounded-[6px] gap-1 border cursor-pointer items-center ${
-                  selectedGoal === goal
-                    ? "border-[#383268]"
-                    : "border-[#D0D5DD]"
-                }`}
-                onClick={() => handleGoalSelect(goal)}
-              >
-                <input
-                  type="checkbox"
-                  name="goal"
-                  value={goal}
-                  checked={selectedGoal === goal}
-                  readOnly
-                  className="w-[18px] h-[18px] cursor-pointer"
-                />
-                <label className="text-sm font-medium text-[#484848] cursor-pointer">
-                  {goal}
+            {goals.map((goal) => {
+              const isSelected = selectedGoals.includes(goal);
+              return (
+                <label
+                  key={goal}
+                  className={`flex py-1 px-[10px] rounded-[6px] gap-1 border cursor-pointer items-center ${
+                    isSelected ? "border-[#383268]" : "border-[#D0D5DD]"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    name="goal"
+                    value={goal}
+                    checked={isSelected}
+                    onChange={() => handleGoalSelect(goal)}
+                    className="w-[18px] h-[18px] cursor-pointer"
+                  />
+                  <span className="text-sm font-medium text-[#484848]">
+                    {goal}
+                  </span>
                 </label>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </fieldset>
       </div>
 
       {/* Other Description Input */}
-      {selectedGoal === "Others" && (
+      {selectedGoals.includes("Others") && (
         <div className="mt-[14px] mb-[19px]">
           <input
             type="text"
@@ -98,7 +109,7 @@ const CaseEighty = ({ handleProceed }) => {
         label="Proceed"
         onClick={handleProceed}
         disabled={!isProceedEnabled}
-        className={`${"bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]"}`}
+        className="bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]"
       />
     </div>
   );

@@ -3,10 +3,11 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 
-const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
-
+const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave, existingContacts }) => {
+console.log("contats", existingContacts)
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
+  const [error, setError] = useState(null)
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
@@ -63,17 +64,6 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
   });
 
   useEffect(() => {
-    if (rowData) {
-      setFormValues({
-        firstName: rowData.firstName || "",
-        lastName: rowData.lastName || "",
-        email: rowData.email || "",
-        phone: rowData.phone || "",
-      });
-    }
-  }, [rowData]);
-
-  useEffect(() => {
     if (!rowData) return;
   
     const hasFormChanged = Object.keys(formValues).some(
@@ -83,39 +73,8 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
     setHasChanges(hasFormChanged);
     setIsSaveDisabled(!hasFormChanged);
   }, [formValues, rowData]);
+  
 
-// Check if Save button should be enabled
-useEffect(() => {
-  const { firstName, lastName, email, phone } = formValues;
-  const isFormValid =
-    firstName.trim() &&
-    lastName.trim() &&
-    email.trim() &&
-    phone.trim() &&
-    validateEmail(email) &&
-    validateWorkPhone(phone);
-
-  // Compare current form values with the original rowData
-  const hasFormChanged =
-    rowData &&
-    (firstName !== rowData.firstName ||
-      lastName !== rowData.lastName ||
-      email !== rowData.email ||
-      phone !== rowData.phone);
-
-  setHasChanges(hasFormChanged);
-  setIsSaveDisabled(!isFormValid || !hasFormChanged);
-}, [formValues, rowData]);
-
-
-  // Handle form input change
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -126,23 +85,107 @@ useEffect(() => {
     return phone.length > 0 && /^\d+$/.test(phone);
   };
 
+  useEffect(() => {
+    if (rowData) {
+      setFormValues((prev) => ({
+        ...prev,
+        firstName: rowData.firstName || prev.firstName,
+        lastName: rowData.lastName || prev.lastName,
+        email: rowData.email || prev.email,
+        phone: rowData.phone || prev.phone,
+      }));
+    }
+  }, [rowData]);
+
+  useEffect(() => {
+    if (!rowData) return;
+  
+    const hasFormChanged = Object.keys(formValues).some(
+      (key) => formValues[key].trim() !== (rowData[key] || "").trim()
+    );
+  
+    const hasEmptyFields = Object.values(formValues).some((value) => value.trim() === "");
+  
+    setHasChanges(hasFormChanged);
+    setIsSaveDisabled(!hasFormChanged || hasEmptyFields); 
+  }, [formValues, rowData]);
   
 
-  const handleSave = () => {
-    const updatedContact = { ...rowData, ...formValues };
-    onSave(updatedContact);
-    onClose();
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+  
+    setFormValues((prev) => {
+      const updatedValues = { ...prev, [name]: value };
+  
+      // Check if form has changed
+      const hasFormChanged = Object.keys(updatedValues).some(
+        (key) => updatedValues[key].trim() !== (rowData[key] || "").trim()
+      );
+  
+      setHasChanges(hasFormChanged);
+      setIsSaveDisabled(!hasFormChanged);
+  
+      return updatedValues;
+    });
+  
+    setError(null);
   };
 
-  if (!isOpenEditModal) return null;
+
+const handleSave = () => {
+  const { firstName, lastName, email, phone } = formValues;
+  const isDuplicate = existingContacts.some((contact) => {
+    if (!rowData) return false; // Prevent undefined error
+    return (
+      contact.id !== rowData.id &&
+      (contact.email.trim().toLowerCase() === email.trim().toLowerCase() ||
+        contact.phone.trim() === phone.trim() ||
+        (contact.firstName.trim().toLowerCase() === firstName.trim().toLowerCase() &&
+          contact.lastName.trim().toLowerCase()))
+    );
+  });
+
+  if (isDuplicate) {
+    const duplicateContact = existingContacts.find((contact) =>
+      contact.id !== rowData.id &&
+      (contact.email === email || contact.phone === phone ||
+        (contact.firstName === firstName && contact.lastName === lastName))
+    );
+
+    if (duplicateContact) {
+      if (duplicateContact.email === email) {
+        setError("email");
+      } else if (duplicateContact.phone === phone) {
+        setError("phone");
+      } else if (
+        duplicateContact.firstName === firstName &&
+        duplicateContact.lastName === lastName
+      ) {
+        setError("name");
+      }
+      return;
+    }
+  }
+
+  // Updated contact object
+  const updatedContact = { ...formValues, id: rowData?.id };
+  
+  console.log("Updated Contact:", updatedContact); // Log the updated contact
+  
+  onSave(updatedContact); // Call the save function
+  onClose(); // Close the modal
+};
+
+  
 
   if (!isOpenEditModal) return null;
+
 
   return (
     <div className="fixed inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
-        className={`fixed bg-white ${
+        className={`fixed bg-white overflow-y-scroll hide-scrollBar ${
           isMobile
             ? "inset-x-0 bottom-0 rounded-t-[30px] p-3"
             : "top-4 bottom-4 right-3 w-[517px] rounded-[30px] p-[22px]"
@@ -243,6 +286,30 @@ useEffect(() => {
                   />
                 </div>
               </label>
+
+              <div>
+              {error && (
+                <div className="flex bg-[#FBF1E6] items-start border justify-between  mt-[40px] border-[#E29133] gap-3 p-4 rounded-[8px]">
+                  <div className="flex gap-3 items-start">
+                  <img src={Icons.errorWarningIcon} alt="error" />
+                  <div>
+                    <p className="text-[#DB7500] text-[14px] font-medium">
+                      Duplicate Entry
+                    </p>
+                    <p className="text-[#C76A00] text-[14px] font-normal">
+                      This contact {error} is already in your list. Avoid duplicates to streamline delivery.
+                    </p>
+                  </div>
+                  </div>
+                  <img
+                    src={Icons.closeXIcon}
+                    alt=""
+                    className="cursor-pointer "
+                    onClick={() => setError(null)}
+                  />
+                </div>
+              )}
+            </div>
             </div>
             <div className="self-end align-end flex items-center gap-3">
               <Button

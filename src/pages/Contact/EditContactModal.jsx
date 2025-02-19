@@ -4,7 +4,6 @@ import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 
 const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
-
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
   const modalRef = useRef(null);
@@ -53,9 +52,8 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
     dragRef.current = null;
   };
 
-
   // Form state
- const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -75,38 +73,37 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
 
   useEffect(() => {
     if (!rowData) return;
-  
+
     const hasFormChanged = Object.keys(formValues).some(
       (key) => formValues[key].trim() !== (rowData[key] || "").trim()
     );
-  
+
     setHasChanges(hasFormChanged);
     setIsSaveDisabled(!hasFormChanged);
   }, [formValues, rowData]);
 
-// Check if Save button should be enabled
-useEffect(() => {
-  const { firstName, lastName, email, phone } = formValues;
-  const isFormValid =
-    firstName.trim() &&
-    lastName.trim() &&
-    email.trim() &&
-    phone.trim() &&
-    validateEmail(email) &&
-    validateWorkPhone(phone);
+  // Check if Save button should be enabled
+  useEffect(() => {
+    const { firstName, lastName, email, phone } = formValues;
+    const isFormValid =
+      firstName.trim() &&
+      lastName.trim() &&
+      email.trim() &&
+      phone.trim() &&
+      validateEmail(email) &&
+      validateWorkPhone(phone);
 
-  // Compare current form values with the original rowData
-  const hasFormChanged =
-    rowData &&
-    (firstName !== rowData.firstName ||
-      lastName !== rowData.lastName ||
-      email !== rowData.email ||
-      phone !== rowData.phone);
+    // Compare current form values with the original rowData
+    const hasFormChanged =
+      rowData &&
+      (firstName !== rowData.firstName ||
+        lastName !== rowData.lastName ||
+        email !== rowData.email ||
+        phone !== rowData.phone);
 
-  setHasChanges(hasFormChanged);
-  setIsSaveDisabled(!isFormValid || !hasFormChanged);
-}, [formValues, rowData]);
-
+    setHasChanges(hasFormChanged);
+    setIsSaveDisabled(!isFormValid || !hasFormChanged);
+  }, [formValues, rowData]);
 
   // Handle form input change
   const handleInputChange = (e) => {
@@ -118,15 +115,14 @@ useEffect(() => {
   };
 
   const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex =
+      /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
 
   const validateWorkPhone = (phone) => {
     return phone.length > 0 && /^\d+$/.test(phone);
   };
-
-  
 
   const handleSave = () => {
     const updatedContact = { ...rowData, ...formValues };
@@ -158,106 +154,111 @@ useEffect(() => {
           <div className="w-[81px] h-2 bg-gray-300 rounded-full mx-auto mt-4" />
         )}
 
-        <div className="flex flex-col">
+        <div className="flex flex-col justify-between w-full h-full">
           <div>
-            <h2 className="font-medium text-[18px] text-[#1A1A1A] mb-[6px]">
-              Edit Contact Info
-            </h2>
-            <p className="text-[14px] font-normal text-[#767676]">
-              Add recipients one by one for quick updates or smaller campaigns.
-            </p>
+            <div>
+              <h2 className="font-medium text-[18px] text-[#1A1A1A] mb-[6px]">
+                Edit Contact Info
+              </h2>
+              <p className="text-[14px] font-normal text-[#767676]">
+                Add recipients one by one for quick updates or smaller
+                campaigns.
+              </p>
+            </div>
+            <form className="mt-[28px] flex flex-col gap-[20px] ">
+              <div className="flex flex-col gap-y-[18px]">
+                <label className="flex flex-col gap-2">
+                  <p className="text-[14px] font-medium text-[#1A1A1A]">
+                    First Name
+                  </p>
+                  <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
+                    <img
+                      src={Icons.profile}
+                      alt="first name"
+                      className="signin-icons"
+                    />
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formValues.firstName}
+                      onChange={handleInputChange}
+                      className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
+                    />
+                  </div>
+                </label>
+                <label className="flex flex-col gap-2">
+                  <p className="text-[14px] font-medium text-[#1A1A1A]">
+                    Last Name
+                  </p>
+                  <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
+                    <img
+                      src={Icons.profile}
+                      alt="last name"
+                      className="signin-icons"
+                    />
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formValues.lastName}
+                      onChange={handleInputChange}
+                      className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
+                    />
+                  </div>
+                </label>
+                <label className="flex flex-col gap-2">
+                  <p className="text-[14px] font-medium text-[#1A1A1A]">
+                    Email
+                  </p>
+                  <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
+                    <img
+                      src={Icons.smsIcon}
+                      alt="email"
+                      className="signin-icons"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formValues.email}
+                      onChange={handleInputChange}
+                      className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
+                    />
+                  </div>
+                </label>
+                <label className="flex flex-col gap-2">
+                  <p className="text-[14px] font-medium text-[#1A1A1A]">
+                    Phone Number
+                  </p>
+                  <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
+                    <img
+                      src={Icons.naira}
+                      alt="country code"
+                      className="signin-icons"
+                    />
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formValues.phone}
+                      onChange={handleInputChange}
+                      className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
+                    />
+                  </div>
+                </label>
+              </div>
+            </form>
           </div>
-          <form className="mt-[28px] flex flex-col gap-[20px] h-full">
-            <div className="flex flex-col gap-y-[18px]">
-              <label className="flex flex-col gap-2">
-                <p className="text-[14px] font-medium text-[#1A1A1A]">
-                  First Name
-                </p>
-                <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-                  <img
-                    src={Icons.profile}
-                    alt="first name"
-                    className="signin-icons"
-                  />
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formValues.firstName}
-                    onChange={handleInputChange}
-                    className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
-                  />
-                </div>
-              </label>
-              <label className="flex flex-col gap-2">
-                <p className="text-[14px] font-medium text-[#1A1A1A]">
-                  Last Name
-                </p>
-                <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-                  <img
-                    src={Icons.profile}
-                    alt="last name"
-                    className="signin-icons"
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formValues.lastName}
-                    onChange={handleInputChange}
-                    className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
-                  />
-                </div>
-              </label>
-              <label className="flex flex-col gap-2">
-                <p className="text-[14px] font-medium text-[#1A1A1A]">Email</p>
-                <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-                  <img
-                    src={Icons.smsIcon}
-                    alt="email"
-                    className="signin-icons"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={formValues.email}
-                    onChange={handleInputChange}
-                    className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
-                  />
-                </div>
-              </label>
-              <label className="flex flex-col gap-2">
-                <p className="text-[14px] font-medium text-[#1A1A1A]">
-                  Phone Number
-                </p>
-                <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-                  <img
-                    src={Icons.naira}
-                    alt="country code"
-                    className="signin-icons"
-                  />
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formValues.phone}
-                    onChange={handleInputChange}
-                    className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
-                  />
-                </div>
-              </label>
-            </div>
-            <div className="self-end align-end flex items-center gap-3">
-              <Button
-                label="Cancel"
-                onClick={onClose}
-                className="rounded-[8px] border border-[#C1BFDO] hover:bg-[#eeeff0]"
-              />
-              <Button
-                label="Save"
-                onClick={handleSave}
-                disabled={isSaveDisabled}
-                className={`rounded-[8px] border border-[#C1BFDO] bg-[#383268] hover:bg-[#41397c] text-white`}
-              />
-            </div>
-          </form>
+          <div className="self-end align-end flex items-center gap-3 justify-self-end ">
+            <Button
+              label="Cancel"
+              onClick={onClose}
+              className="rounded-[8px] border border-[#C1BFDO] hover:bg-[#eeeff0]"
+            />
+            <Button
+              label="Save"
+              onClick={handleSave}
+              disabled={isSaveDisabled}
+              className={`rounded-[8px] border border-[#C1BFDO] bg-[#383268] hover:bg-[#41397c] text-white`}
+            />
+          </div>
         </div>
       </div>
     </div>

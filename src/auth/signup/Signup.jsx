@@ -23,8 +23,8 @@ const Signup = () => {
         </div>
 
         {!showOtpPopUp ? (
-          <div className="flex w-full flex-col overflow-y-auto gap-[100px] max-sm:gap-[50px] max-sm:flex-col-reverse">
-            {/* Sign up Section */}
+          <div className="flex w-full flex-col overflow-y-auto lg:gap-[100px] max-sm:gap-[50px] max-sm:flex-col-reverse">
+            {/* Sign in Section */}
             <div className="sm:self-end max-sm:mt-[40px] signInAccount self-center flex gap-[10px] pt-[25px] items-center ">
               <p className="font-[500] text-[16px] leading-[24px] text-[#767676]">
                 Already have an account?
@@ -37,7 +37,7 @@ const Signup = () => {
             </div>
 
             <div className="w-full h-full flex items-center justify-center">
-              <div className="w-[43%] mx-auto auth-right-container mt-[100px]">
+              <div className="w-[43%] mx-auto auth-right-container mt-[100px] max-sm:mb-[130px]">
                 <div className="flex flex-col gap-8px mb-[12px] max-sm:mb-[16px]">
                   <h4 className="font-[600] text-[28px] tracking-[-2px]">
                     Sign up to Get Started

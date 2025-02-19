@@ -3,7 +3,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 
 
-const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFormModal }) => {
+const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFormModal, isOpenImportModal}) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
@@ -58,8 +58,13 @@ const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFor
     onClose();
   };
 
+  const handleOpenImportModal = () => {
+  isOpenImportModal();
+  onClose();      
+}
+
   return (
-    <div className="fixed flex items-center justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
+    <div className="fixed flex items-center max-md:items-end justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
         className={` bg-white ${
@@ -95,7 +100,7 @@ const CreateContactModal = ({ isOpenCreateContactModal, onClose, onOpenCreateFor
           </p>
           <div className="bg-[#FAFAFA] rounded-[20px] flex gap-x-[11px] mt-[19px] p-[6px] ">
             {/* import */}
-            <div className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer">
+            <div className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer" onClick={handleOpenImportModal}>
               <img src={Icons.contactFrameImport} alt="import contact" />
               <div className="flex items-center justify-between gap-[20px]">
                 <div>
