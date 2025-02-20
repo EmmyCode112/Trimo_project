@@ -7,7 +7,22 @@ import { TemplateCard } from "@/components/campaigns/template-card"
 import { TemplatePreviewModal } from "@/components/campaigns/template-preview-modal"
 import { EmailOptionCard } from "@/components/campaigns/email-option-card"
 import { NewsletterTemplate } from "@/components/campaigns/templates/newsletter-template"
-import { testimonial } from "@/assets/templates" 
+import { 
+  campaign_update,
+  menu,
+  discount,
+  festive,
+  newsletter1,
+  newsletter,
+  order,
+  product_intro,
+  program,
+  resources,
+  school,
+  service_intro,
+  testimonial,
+  update
+ } from "@/assets/templates" 
 
 const emailOptions = [
   {
@@ -28,48 +43,73 @@ const templates = [
   {
     id: "1",
     title: "Newsletter Template",
-    image: testimonial,
+    image: newsletter1,
     template: NewsletterTemplate,
   },
   {
     id: "2",
     title: "Menu Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: menu,
   },
   {
     id: "3",
     title: "Call to Action Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: festive,
   },
   {
     id: "4",
     title: "Product Introduction Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: product_intro,
   },
   {
     id: "5",
     title: "Discount Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: discount,
   },
   {
     id: "6",
     title: "Service Introduction Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: service_intro,
   },
   {
     id: "7",
     title: "Announcement Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: newsletter,
   },
   {
     id: "8",
     title: "Program Promotion Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image: program,
   },
   {
     id: "9",
     title: "Resources Template",
-    image: "/placeholder.svg?height=226&width=338",
+    image:   resources,
+  },
+  {
+    id: "10",
+    title: "Order Confirmation Template",
+    image:   order,
+  },
+  {
+    id: "11",
+    title: "Weekly Updates Template",
+    image:   update,
+  },
+  {
+    id: "12",
+    title: "Testimonial Template",
+    image:   testimonial,
+  },
+  {
+    id: "13",
+    title: "Campaign Update Template",
+    image:   campaign_update,
+  },
+  {
+    id: "14",
+    title: "School Update Template",
+    image:   school,
   },
 ]
 

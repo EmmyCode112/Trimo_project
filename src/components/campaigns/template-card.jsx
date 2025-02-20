@@ -10,23 +10,22 @@ export function TemplateCard({ title, image, onPreview, onUse }) {
   return (
     <div className="flex flex-col gap-4">
       <Card
-        className="relative overflow-hidden w-[338px] h-[226px] bg-[#F9F9F9] group cursor-pointer"
+        className="relative overflow-hidden w-[338px] border-none outline-none shadow-none  h-[181px] bg-[#FAFAFA] group cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <CardContent className="p-4 h-full flex items-center justify-center">
-          <div className="relative w-[90%] h-[90%]">
+        <CardContent className="p-0 h-full flex items-center justify-center">
+          <div className="relative w-full h-full">
             <img src={image || "/placeholder.svg"} alt={title} className="w-full h-full object-contain" />
             {isHovered && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-3 transition-all duration-200">
+              <div className="absolute inset-0 bg-[#C7C7C74D] backdrop-blur-[70px] flex items-center justify-center gap-3 transition-all duration-200">
                 <Button
-                  variant="secondary"
                   onClick={onPreview}
-                  className="text-sm font-medium bg-white hover:bg-white/90"
+                  className="bg-white text-[#383268] font-medium text-[16px] hover:scale-105 hover:bg-white transition-all duration-200 border border-[#C1BFD0] w-[95px] h-[44px]"
                 >
                   Preview
                 </Button>
-                <Button onClick={onUse} className="bg-[#383268] hover:bg-[#383268]/90 text-sm font-medium">
+                <Button onClick={onUse} className="bg-[#383268] hover:bg-[#383268]/90 text-[16px] text-white w-[138px] h-[44px] font-medium transition-all duration-200">
                   Use Template
                 </Button>
               </div>
@@ -35,9 +34,8 @@ export function TemplateCard({ title, image, onPreview, onUse }) {
         </CardContent>
       </Card>
       <div className="px-1">
-        <h3 className="font-general-sans text-[20px] leading-[30px] font-medium text-[#1A1A1A]">{title}</h3>
+        <h3 className="font-general-sans text-[18px] leading-[30px] font-semibold text-[#484848]">{title}</h3>
       </div>
     </div>
   )
 }
-
