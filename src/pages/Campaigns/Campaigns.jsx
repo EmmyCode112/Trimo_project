@@ -9,6 +9,7 @@ import CampaignList from "@/components/campaigns/CampaignList"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { Icons } from "../../assets/assets"
 
+
 const Campaigns = () => {
   const isMobile = useMediaQuery("(max-width: 640px)")
   const [showEmptyState, setShowEmptyState] = useState(false)
@@ -154,6 +155,7 @@ const Campaigns = () => {
           </div>
         </div>
       </div>
+            
     </div>
   )
 }

@@ -115,9 +115,9 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
           Prev
         </button>
         
-        <span className="text-[#667085] text-[14px] font-medium">
+        <p className="text-[#667085] text-[14px] font-medium">
           Page {"  "}<span className="px-3 py-1 rounded-lg bg-[#383268] text-white text-[14px] font-medium"> {" "}{pageIndex + 1}</span> of {" "} {pageOptions.length}
-        </span>
+        </p>
         
         <button onClick={() => nextPage()} disabled={!canNextPage} className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium">
           Next

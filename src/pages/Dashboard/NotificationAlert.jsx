@@ -2,8 +2,12 @@ import { useState } from "react";
 import "./NotificationTableStyles.css";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-
+import { useModal } from "../../redux/UseCampaignModal";
+import CampaignModal from "../Campaigns/SMSCampaign/CampaignModal"
 const NotificationAlert = () => {
+
+  const { openCampaignModal, openModal, closeCampaignModal } = useModal();
+
   const [notifications] = useState([
     {
       type: "Low Balance",
@@ -40,6 +44,14 @@ const NotificationAlert = () => {
       bgColor: "#E3F2FD",
     },
   ]);
+
+  const handleCreateCampaign = (action) => {
+    if (action === "Start Campaign") {
+      openCampaignModal(); // ✅ Opens modal when "Start Campaign" is clicked
+    }
+  };
+  
+  
 
   return (
     <container className="dashboard-table-container">
@@ -92,6 +104,7 @@ const NotificationAlert = () => {
                   <td>
                     <Button
                       label={notification.action}
+                      onClick={() => handleCreateCampaign(notification.action)} 
                       className="py-[10px] px-[16px] text-[#344054] rounded-[8px] border border-[#D0D5DD] hover:bg-[#eeeff0] text-[13px] w-[140px]"
                     />
                   </td>
@@ -122,6 +135,13 @@ const NotificationAlert = () => {
         </table>
         </div>
       </div>
+
+      {
+        openModal &&
+        (
+          <CampaignModal onClose={closeCampaignModal} onOpen={openCampaignModal} />
+        )
+      }
     </container>
   );
 };

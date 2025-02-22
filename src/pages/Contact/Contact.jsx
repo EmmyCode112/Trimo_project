@@ -288,7 +288,7 @@ const Contact = () => {
             a glance.
           </p>
         </header>
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-3 justify-end self-end">
           {selectedRows.length > 0 && (
             <div className="relative">
               <button
