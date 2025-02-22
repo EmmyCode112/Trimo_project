@@ -14,7 +14,7 @@ const EmptyState = ({ onCreateCampaign }) => {
         onClick={onCreateCampaign}
         className="bg-[#383268] w-[204px] h-[44px] text-white px-4 py-2 rounded-[8px] hover:bg-[#2a2a5a] transition-colors text-sm"
       >
-        Create new Campaign
+        Create New Campaign
       </button>
     </div>
   )

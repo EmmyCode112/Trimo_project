@@ -108,7 +108,7 @@
   height: 0px;
   display: none;
 }
-
+ 
 .hidden-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -137,3 +137,28 @@
   animation: slide-in 0.3s ease-out;
 }
 
+
+.sidebar-container {
+  transition: width 0.3s ease-in-out;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.sidebar-link-text {
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebar-container:hover .sidebar-link-text {
+  opacity: 1;
+}
+
+.sidebar-arrow {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebar-container:hover .sidebar-arrow {
+  opacity: 1;
+}

@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Cookies from "js-cookie"; // Import Cookies
+import Cookies from "js-cookie";
 import "./App.css";
 
 import Signin from "@/auth/signin/Signin";
@@ -30,7 +30,6 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
-import { useModal } from "@/redux/UseCampaignModal";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -119,6 +118,7 @@ const App = () => {
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
+                    {/* <Route path="/campaigns/create" element={<CampaignPage />} /> */}
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
