@@ -27,6 +27,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
 import CampaignPage from "./pages/Campaigns/EmailCampaign";
+import EmailEditorPage from "./pages/Campaigns/RichText";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -118,6 +119,7 @@ const App = () => {
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
+                    <Route path="/campaigns/editor" element={<EmailEditorPage />} />
                     <Route path="/wallet" element={<Wallet />} />
                     <Route path="/groups" element={<Groups />} />
                     <Route path="/notifications" element={<Notification />} />

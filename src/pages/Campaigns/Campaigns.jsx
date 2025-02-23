@@ -34,7 +34,7 @@ const Campaigns = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
+      {/*ah zxhhahd */}
       <div className="bg-white">
         <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col gap-0">

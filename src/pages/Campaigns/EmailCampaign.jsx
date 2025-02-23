@@ -164,7 +164,7 @@ export default function CampaignPage() {
               {...template}
               onPreview={() => setSelectedTemplate(template)}
               onUse={() => {
-                /* Handle template use */
+                /* Handle template use  */
               }}
             />
           ))}
@@ -185,7 +185,7 @@ export default function CampaignPage() {
               <selectedTemplate.template />
             ) : (
               <div className="aspect-[4/5] bg-gray-100 rounded-lg" />
-            ),
+            ), 
           }}
         />
       )}
