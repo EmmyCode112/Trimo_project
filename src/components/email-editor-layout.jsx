@@ -16,7 +16,6 @@ export function EmailEditorLayout() {
   const [isLoading, setIsLoading] = useState(false)
   const [deviceView, setDeviceView] = useState('desktop')
   const [showPreview, setShowPreview] = useState(false)
-  const { toast } = useToast()
   
   const {
     state,
