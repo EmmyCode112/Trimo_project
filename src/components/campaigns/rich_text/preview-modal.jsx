@@ -19,7 +19,7 @@ export function PreviewModal({ open, onOpenChange, content, deviceView }) {
                     ))}
                   </nav>
                 )}
-                {/* Add more preview renderers */}
+                {/* Add more preview renderers  */}
               </div>
             ))}
           </div>
@@ -28,4 +28,3 @@ export function PreviewModal({ open, onOpenChange, content, deviceView }) {
     </Dialog>
   )
 }
-

@@ -59,7 +59,7 @@ import fileUploadSuccess from "./Icons/fileUploadSuccess.png"
 import reloadIcon from "./Icons/reloadIcon.png"
 import arrowDown from "./Icons/arrow-down.png"
 import groupIcon from "./Icons/group.png"
-import OtpIcon from "./Icons/OtpIcon.png"
+import OtpIcon from "./Icons/otpIcon.png"
 import whatsAppIcon from "./Icons/whatsAppIcon.png"
 import calenderIcon from "./Icons/calendar.png"
 

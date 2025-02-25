@@ -24,6 +24,7 @@ import Setting from "./pages/Settings/Setting";
 import Wallet from "./pages/Wallet/Wallet";
 import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
+import EmailEditorPage from "./pages/Campaigns/RichText";
 
 
 import Sidebar from "./Components/Sidebar/Sidebar";
@@ -35,7 +36,7 @@ import CampaignPage from "./pages/Campaigns/EmailCampaign";
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const dispatch = useDispatch();
-  const { campaignName } = useModal();
+  // const { campaignName } = useModal();
 
   // Load authentication state on mount
   useEffect(() => {
@@ -86,7 +87,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="/sign-in" />} />
           </>
         ) : (
-          // Authenticated Layout
+          // Authenticated Layout for authenticated users
           <Route
             path="/*"
             element={
