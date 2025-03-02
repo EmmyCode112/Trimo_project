@@ -63,6 +63,10 @@ import OtpIcon from "./Icons/otpIcon.png"
 import whatsAppIcon from "./Icons/whatsAppIcon.png"
 import calenderIcon from "./Icons/calendar.png"
 
+import addCircle from "./Icons/campaign/add-circle.svg"
+
+
+
 export const SideBarIcons = {
   TriimoIcon,
   homeIcon,

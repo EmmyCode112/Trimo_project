@@ -35,7 +35,7 @@ export default function EmailInfo({ emailInfo, setEmailInfo }) {
 
         <div className="flex items-center gap-2">
           <span className="text-[18px] font-medium text-[#484848]">Subject:</span>
-          <span className="text-sm bg-[#FAE9EB] w-[42px] h-[28px] rounded-[6px] flex items-center justify-center text-[#CB1E33]">{emailInfo.subject}</span>
+          <span className="text-sm bg-[#FAE9EB] h-[28px] rounded-[6px] flex items-center justify-center text-[#CB1E33]">{emailInfo.subject}</span>
 
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
