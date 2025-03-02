@@ -31,6 +31,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
 import CampaignPage from "./pages/Campaigns/EmailCampaign";
+import Home from "./pages/Campaigns/Email/page";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -119,7 +120,7 @@ const App = () => {
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
-                    {/* <Route path="/campaigns/create" element={<CampaignPage />} /> */}
+                    <Route path="/campaigns/rich-text" element={<Home />} />
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
