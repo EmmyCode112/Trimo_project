@@ -24,7 +24,6 @@ import Setting from "./pages/Settings/Setting";
 import Wallet from "./pages/Wallet/Wallet";
 import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
-import EmailEditorPage from "./pages/Campaigns/RichText";
 
 
 import Sidebar from "./Components/Sidebar/Sidebar";
@@ -124,7 +123,6 @@ const App = () => {
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
-                    <Route path="/campaigns/editor" element={<EmailEditorPage />} />
                     <Route path="/wallet" element={<Wallet />} />
                     <Route path="/groups" element={<Groups />} />
                     <Route path="/notifications" element={<Notification />} />
