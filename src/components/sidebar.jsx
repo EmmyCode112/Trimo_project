@@ -27,7 +27,7 @@ export default function Sidebar({
         onValueChange={(value) => setActiveTab(value)}
         className="flex-1 w-full flex flex-col"
       >
-        <TabsList className="grid grid-cols-3 bg-white h-12">
+        <TabsList className="grid grid-cols-3 bg-white p-4 h-12">
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="row">Row</TabsTrigger>
           <TabsTrigger value="setting">Setting</TabsTrigger>

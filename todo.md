@@ -1,1 +1,1 @@
-# Continue working on the icons section for the settings sidebar
+# Continue working on the icons section for the settings sidebar 

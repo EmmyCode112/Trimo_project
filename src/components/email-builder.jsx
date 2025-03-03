@@ -30,10 +30,12 @@ export default function EmailBuilder() {
   const [template, setTemplate] = useState(defaultTemplate);
   const [selectedElement, setSelectedElement] = useState(null);
   const [emailInfo, setEmailInfo] = useState({
-    from: "test@trimnotest.com",
-    to: "[customer.email]",
-    subject: "Null",
-  });
+    from: "test@triimotest.com",
+    to: "{{customer.email}}",
+    subject: "",
+    headerType: "none",
+  })
+
   const [lastSaved, setLastSaved] = useState(new Date());
   const { toast } = useToast();
   const [history, setHistory] = useState([defaultTemplate]);
@@ -352,6 +354,7 @@ export default function EmailBuilder() {
           onSendTest={handleSendTest}
           isPreviewMode={isPreviewMode}
           togglePreviewMode={togglePreviewMode}
+          emailInfo={emailInfo}
         />
         <EmailInfo emailInfo={emailInfo} setEmailInfo={setEmailInfo} />
         <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200">

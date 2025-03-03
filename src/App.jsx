@@ -120,6 +120,7 @@ const App = () => {
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
+                    <Route path="/campaigns/list" element={<CampaignPage />} />
                     <Route path="/campaigns/rich-text" element={<Home />} />
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />

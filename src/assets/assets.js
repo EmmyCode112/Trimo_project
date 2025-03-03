@@ -64,6 +64,15 @@ import whatsAppIcon from "./Icons/whatsAppIcon.png"
 import calenderIcon from "./Icons/calendar.png"
 
 import addCircle from "./Icons/campaign/add-circle.svg"
+import documentCode from "./Icons/campaign/document-code.svg"
+import icon2 from "./Icons/campaign/icon2.svg"
+import icon3 from "./Icons/campaign/icon3.svg"
+import imageIcon from "./Icons/campaign/image-01.svg"
+import icon4 from "./Icons/campaign/icon4.svg"
+import paragraph from "./Icons/campaign/paragraph.svg"
+import star from "./Icons/campaign/star.svg"
+import textCreation from "./Icons/campaign/text-creation.svg"
+
 
 
 
@@ -120,16 +129,39 @@ export const Icons = {
   crossIcon,
   contactFrameImport,
   contactFrameManual,
-closeXIcon ,
-errorWarningIcon,
-FolderIcon,
-emptyImport,
-fileUploadFailed,
-fileUploadSuccess,
-reloadIcon,
-arrowDown,
-groupIcon,
-whatsAppIcon,
-OtpIcon,
-calenderIcon
+  closeXIcon ,
+  errorWarningIcon,
+  FolderIcon,
+  emptyImport,
+  fileUploadFailed,
+  fileUploadSuccess,
+  reloadIcon,
+  arrowDown,
+  groupIcon,
+  whatsAppIcon,
+  OtpIcon,
+  calenderIcon,
+  addCircle,
+  documentCode,
+  icon2,
+  icon3,
+  imageIcon,
+  icon4,
+  paragraph,
+  star,
+  textCreation
+
 };
+
+export {
+  addCircle,
+  documentCode,
+  icon2,
+  icon3,
+  imageIcon,
+  icon4,
+  paragraph,
+  star,
+  textCreation
+
+}

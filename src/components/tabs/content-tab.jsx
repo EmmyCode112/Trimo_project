@@ -1,18 +1,27 @@
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Type, AlignLeft, List, ImageIcon, Square, SeparatorHorizontal, Code, Share2, Star } from "lucide-react";
+import {  addCircle,
+  documentCode,
+  icon2,
+  icon3,
+  imageIcon,
+  icon4,
+  paragraph,
+  star,
+  textCreation } from "@/assets/assets";
 
 export default function ContentTab({ addElement }) {
   const elements = [
-    { type: "title", icon: <Type className="h-6 w-6" />, label: "Title" },
-    { type: "paragraph", icon: <AlignLeft className="h-6 w-6" />, label: "Paragraph" },
-    { type: "list", icon: <List className="h-6 w-6" />, label: "List" },
-    { type: "image", icon: <ImageIcon className="h-6 w-6" />, label: "Image" },
-    { type: "button", icon: <Square className="h-6 w-6" />, label: "Button" },
-    { type: "divider", icon: <SeparatorHorizontal className="h-6 w-6" />, label: "Divider" },
-    { type: "html", icon: <Code className="h-6 w-6" />, label: "HTML" },
-    { type: "social", icon: <Share2 className="h-6 w-6" />, label: "Social" },
-    { type: "icon", icon: <Star className="h-6 w-6" />, label: "Icon" },
+    { type: "title", icon: <img src={addCircle} alt="alt" className="w-[48px] h-[48px]" />, label: "Title" },
+    { type: "paragraph", icon: <img src={paragraph} alt="alt" className="w-[48px] h-[48px]" />, label: "Paragraph" },
+    { type: "list", icon: <img src={icon4} alt="alt" className="w-[48px] h-[48px]" />, label: "List" },
+    { type: "image", icon: <img src={imageIcon} alt="alt" className="w-[48px] h-[48px]" />, label: "Image" },
+    { type: "button", icon: <img src={icon2} alt="alt" className="w-[48px] h-[48px]" />, label: "Button" },
+    { type: "divider", icon: <img src={icon3} alt="alt" className="w-[48px] h-[48px]" />, label: "Divider" },
+    { type: "html", icon: <img src={documentCode} alt="alt" className="w-[48px] h-[48px]" />, label: "HTML" },
+    { type: "social", icon: <img src={textCreation} alt="alt" className="w-[48px] h-[48px]" />, label: "Social" },
+    { type: "icon", icon: <img src={star} alt="alt" className="w-[48px] h-[48px]" />, label: "Icon" },
   ];
 
   return (
@@ -46,13 +55,16 @@ function DraggableElement({ type, icon, label, addElement }) {
   }));
 
   return (
-    <div
-      ref={drag}
-      className="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-md cursor-move hover:border-[#383268] transition-colors"
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-      onClick={() => addElement(type)}
-    >
-      {icon}
+    <div className="w-[131px] h-[146px] flex items-center flex-col gap-[13px]">
+      <div
+        ref={drag}
+        className="w-full h-[190px] rounded-[20px] flex flex-col items-center justify-center p-4 border border-[#F1F1F1] cursor-move hover:border-[#383268] transition-colors"
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+        onClick={() => addElement(type)}
+      >
+        {icon}
+      </div>
+
       <span className="mt-2 text-sm">{label}</span>
     </div>
   );
