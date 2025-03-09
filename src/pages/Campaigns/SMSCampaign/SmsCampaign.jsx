@@ -3,17 +3,30 @@ import CreateRecipientFormModal from "./CreateRecipientFormModal";
 import RecipientTable from "./RecipientTable";
 import { useRecipients } from "../../../redux/UseRecipient";
 import DeleteRecipientModal from "./DeleteRecipientModal";
+import ImportContact from "./ImportContact";
+import AvailableGroupModal from "./AvailableGroupModal";
 
 import { useModal } from "../../../redux/UseCampaignModal";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import Button from "../../../Components/buttons/transparentButton";
 import { Icons } from "../../../assets/assets";
+import Toast from "@/Components/Alerts/Toast"
+
+
 const SmsCampaign = () => {
   const { recipients, setRecipients } = useRecipients();
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openDeleteRecipient, setOpenDeleteRecipient] = useState(false);
   const [selectedRecipientId, setSelectedRecipientId] = useState(null);
-  const [isNext, setIsNext] = useState(false); 
+  const [importModal, setImportModal] = useState(false);
+  const [importFromGroup, setImportFromGroup] = useState(false);
+  const [toast, setToast] = useState({ show: false, title: "", message: "", type: "" });
+
+  const handleClickCsv = () => {
+    setImportModal(true);
+  };
+
+  const [isNext, setIsNext] = useState(false);
   const { campaignName } = useModal();
   const navigate = useNavigate();
 
@@ -24,16 +37,17 @@ const SmsCampaign = () => {
 
   const handlePrevious = () => {
     if (campaignName.trim()) {
-    //   const formattedName = formatCampaignName(campaignName);
+      //   const formattedName = formatCampaignName(campaignName);
       navigate(`/campaigns/${campaignName}`);
-
     }
   };
-  
+
   const handleDelete = () => {
     if (selectedRecipientId !== null) {
       setRecipients((prevRecipients) =>
-        prevRecipients.filter((recipient) => recipient.id !== selectedRecipientId)
+        prevRecipients.filter(
+          (recipient) => recipient.id !== selectedRecipientId
+        )
       );
       setOpenDeleteRecipient(false);
       setSelectedRecipientId(null);
@@ -46,7 +60,7 @@ const SmsCampaign = () => {
   // Handle Next Button Click
   const handleNext = () => {
     if (!NextButtonDisabled) {
-      navigate("/campaigns/smsCampaign/create-capaign")
+      navigate("/campaigns/smsCampaign/create-capaign");
     }
   };
   useEffect(() => {
@@ -80,7 +94,10 @@ const SmsCampaign = () => {
         </div>
       </div>
       <div className="flex flex-col gap-5 md:flex-row">
-        <div className="max-sm:w-full py-[18px] px-[22px] rounded-[10px] bg-[#FAFAFA] border border-[#F1F1F1] lg:w-[317px] cursor-pointer">
+        <div
+          className="max-sm:w-full py-[18px] px-[22px] rounded-[10px] bg-[#FAFAFA] border border-[#F1F1F1] lg:w-[317px] cursor-pointer"
+          onClick={handleClickCsv}
+        >
           <h2 className="text-normal font-medium text-[1A1A1A]">Upload Csv</h2>
           <p className="text-[#767676] text-[14px] font-normal">
             Quickly import your recipient list with a CSV file for efficient
@@ -98,7 +115,7 @@ const SmsCampaign = () => {
             Send messages to your regular contacts in a single click.
           </p>
         </div>
-        <div className="max-sm:w-full py-[18px] px-[22px] rounded-[10px] bg-[#FAFAFA] border border-[#F1F1F1] lg:w-[317px] cursor-pointer">
+        <div className="max-sm:w-full py-[18px] px-[22px] rounded-[10px] bg-[#FAFAFA] border border-[#F1F1F1] lg:w-[317px] cursor-pointer" onClick={() => setImportFromGroup(true)}>
           <h2 className="text-normal font-medium text-[1A1A1A]">
             Select Contact Groups
           </h2>
@@ -112,6 +129,7 @@ const SmsCampaign = () => {
         <RecipientTable
           openFormModal={() => setOpenFormModal(true)}
           openDeleteModal={openDeleteModal}
+          setImportModal={setImportModal}
         />
       </div>
 
@@ -127,6 +145,33 @@ const SmsCampaign = () => {
           onClose={() => setOpenDeleteRecipient(false)}
           isOpenDeleteModal={() => setOpenDeleteRecipient(false)}
           onDelete={handleDelete}
+        />
+      )}
+      {importModal && (
+        <ImportContact
+          isOpen={importModal}
+          onClose={() => setImportModal(false)}
+          contacts={recipients}
+          setContacts={setRecipients}
+        />
+      )}
+
+      {importFromGroup && (
+        <AvailableGroupModal
+          openAvailableGroups={importFromGroup}
+          onClose={() => setImportFromGroup(false)}
+        toast={toast}
+        setToast={setToast}
+        />
+      )}
+
+      
+{toast.show && (
+        <Toast
+          title={toast.title}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ show: false })}
         />
       )}
     </div>

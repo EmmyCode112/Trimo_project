@@ -1,133 +1,225 @@
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Icons } from "../../../assets/assets";
+import Button from "@/Components/buttons/transparentButton";
 
-const MessageEditor = () => {
-  const [message, setMessage] = useState("");
-  const [formattedMessage, setFormattedMessage] = useState("");
-  const [showLinkPopup, setShowLinkPopup] = useState(false);
+
+const UsersPage = ({ customers, message, setMessage }) => {
   const [linkText, setLinkText] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
+  const [showLinkPopup, setShowLinkPopup] = useState(false);
+  
+  const [activeFormats, setActiveFormats] = useState({
+    bold: false,
+    italic: false,
+    underline: false,
+    link: false,
+  });
 
-  // Formatting states
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isCode, setIsCode] = useState(false);
+  const editorRef = useRef(null);
+  const selectionRef = useRef(null);
 
-  const handleTextChange = (e) => {
-    let newText = e.target.value;
-    
-    // Apply active formatting
-    if (isBold) newText = `<b>${newText}</b>`;
-    if (isItalic) newText = `<i>${newText}</i>`;
-    if (isUnderline) newText = `<u>${newText}</u>`;
-    if (isCode) newText = `<code style="background: #f4f4f4; padding: 2px 4px; border-radius: 4px;">${newText}</code>`;
+  const applyFormat = (tag) => {
+    document.execCommand(tag, false, null);
+    setActiveFormats((prev) => ({
+      ...prev,
+      [tag]: !prev[tag], // Toggle active state
+    }));
+  };
 
-    setMessage(e.target.value);
-    setFormattedMessage(newText);
+  const handleInput = (e) => {
+    setMessage(e.target.innerHTML);
+  };
+
+  const saveSelection = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      selectionRef.current = selection.getRangeAt(0); // Store selection
+    }
+  };
+
+  const restoreSelection = () => {
+    if (selectionRef.current) {
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(selectionRef.current); // Restore selection
+    }
+  };
+
+
+  const insertAtCursor = (html) => {
+    restoreSelection(); // Restore cursor before inserting
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    const frag = document.createDocumentFragment();
+    let node, lastNode;
+    while ((node = tempDiv.firstChild)) {
+      lastNode = frag.appendChild(node);
+    }
+    range.insertNode(frag);
+    if (lastNode) {
+      range.setStartAfter(lastNode);
+      range.setEndAfter(lastNode);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+        // Ensure the content updates immediately
+        setMessage(editorRef.current.innerHTML);
+
   };
 
   const handleInsertLink = () => {
     if (linkText && linkUrl) {
-      const linkHtml = `<a href="${linkUrl}" target="_blank" style="color: blue; text-decoration: underline;">${linkText}</a>`;
-      setFormattedMessage((prev) => prev + " " + linkHtml);
-      setMessage((prev) => prev + " " + linkText);
+      const linkHtml = `<a href="${linkUrl}" target="_blank" style="color: #4A74FD !important;">${linkText}</a>`;
+
+      insertAtCursor(linkHtml);
       setShowLinkPopup(false);
       setLinkText("");
       setLinkUrl("");
     }
   };
 
+  const linkRef = useRef()
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (linkRef.current && !linkRef.current.contains(event.target)) {
+        setShowLinkPopup(false);
+      }
+      
+    };
+    if (showLinkPopup) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showLinkPopup]);
+
+  const handleInsertVariable = () => {
+    insertAtCursor("{{}} ");
+  };
+
+  const handleShowLinkPopup = () => {
+    saveSelection(); // Save cursor position before opening
+    setShowLinkPopup(true);
+  };
+
+  const checkActiveFormat = () => {
+    setActiveFormats({
+      bold: document.queryCommandState("bold"),
+      italic: document.queryCommandState("italic"),
+      underline: document.queryCommandState("underline"),
+      link: document.queryCommandState("createLink"),
+    });
+  };
+
   return (
-    <div style={{ maxWidth: "400px", margin: "auto" }}>
-      {/* Textarea (Plain Text) */}
-      <textarea
-        value={message}
-        onChange={handleTextChange}
-        placeholder="Type your message here"
-        style={{
-          width: "100%",
-          height: "100px",
-          padding: "8px",
-          marginBottom: "10px",
-        }}
-      />
-
-      {/* Toolbar */}
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          padding: "5px",
-          border: "1px solid #ccc",
-        }}
-      >
-        <button
-          onClick={() => setIsBold(!isBold)}
-          style={{ color: isBold ? "blue" : "black" }}
-        >
-          <b>B</b>
-        </button>
-        <button
-          onClick={() => setIsItalic(!isItalic)}
-          style={{ color: isItalic ? "blue" : "black" }}
-        >
-          <i>I</i>
-        </button>
-        <button
-          onClick={() => setIsUnderline(!isUnderline)}
-          style={{ color: isUnderline ? "blue" : "black" }}
-        >
-          <u>U</u>
-        </button>
-        <button
-          onClick={() => setIsCode(!isCode)}
-          style={{ color: isCode ? "blue" : "black" }}
-        >
-          {"<>"}
-        </button>
-        <button onClick={() => setShowLinkPopup(true)}>🔗</button>
-      </div>
-
-      {/* Link Popup */}
-      {showLinkPopup && (
+    <div className="flex flex-col">
+      <p className="mb-[6px]">Compose message</p>
+      <div className="full rounded-[8px] border border-[#D0D5DD] py-[10px] px-[14px]">
         <div
-          style={{
-            position: "absolute",
-            background: "white",
-            padding: "10px",
-            border: "1px solid #ccc",
-            marginTop: "5px",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Enter link text"
-            value={linkText}
-            onChange={(e) => setLinkText(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Enter URL"
-            value={linkUrl}
-            onChange={(e) => setLinkUrl(e.target.value)}
-          />
-          <button onClick={handleInsertLink}>Attach</button>
-        </div>
-      )}
+          placeholder="Type your message here"
+          ref={editorRef}
+          contentEditable
+          onInput={handleInput}
+          onMouseUp={checkActiveFormat} // Detect active formats
+          className="w-full h-[155px] border-none outline-none font-normal text-[14px]"
+        ></div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => applyFormat("bold")}
+            onMouseUp={checkActiveFormat}
+            className={`p-1
+              ${
+                activeFormats.bold ? " border border-[#383268]" : "bg-[#FAFAFA]"
+              }`}
+          >
+            <img src={Icons.boldIcon} alt="" />
+          </button>
 
-      {/* Preview Panel */}
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "10px",
-          border: "1px solid #ccc",
-        }}
-      >
-        <strong>Preview:</strong>
-        <p dangerouslySetInnerHTML={{ __html: formattedMessage }}></p>
+          <button
+            onClick={() => applyFormat("italic")}
+            onMouseUp={checkActiveFormat}
+            className={`p-1
+              ${
+                activeFormats.italic
+                  ? " border border-[#383268]"
+                  : "bg-[#FAFAFA]"
+              }`}
+          >
+            <img src={Icons.italicIcon} alt="" />
+          </button>
+
+          <button
+            onClick={() => applyFormat("underline")}
+            onMouseUp={checkActiveFormat}
+            className={`p-1
+              ${
+                activeFormats.underline
+                  ? " border border-[#383268]"
+                  : "bg-[#FAFAFA]"
+              }`}
+          >
+            <img src={Icons.underlinedIcon} alt="" />
+          </button>
+
+          <div className="relative" ref={linkRef}>
+            <button
+              onClick={handleShowLinkPopup} 
+              className={`${
+                showLinkPopup ? " border border-[#383268]" : "bg-[#FAFAFA]"
+              } p-1`}
+            >
+              <img src={Icons.linkIcon} alt="" />
+            </button>
+            {showLinkPopup && (
+              <div className="absolute top-[-500%] left-[-200%] z-10 bg-white shadow-md rounded-[10px] p-[10px] border border-[#F1F1F1]">
+                <div className="flex flex-col gap-1">
+                  <p className="text-[#484848] text-[14px] font-normal">
+                    Embed link
+                  </p>
+                  <input
+                    className="text-[13px] text-[#667085] font-normal rounded-[8px] border border-[#D0D5DD] p-1 outline-none"
+                    type="text"
+                    placeholder="Enter link text"
+                    value={linkText}
+                    onChange={(e) => setLinkText(e.target.value)}
+                  />
+
+                  <div className="flex gap-2 w-full items-center  rounded-[8px] border border-[#D0D5DD] p-1">
+                    <img src={Icons.pasteIinkIcon} alt="" />
+                    <input
+                      className="text-[13px] text-[#667085] font-normal w-full outline-none"
+                      type="text"
+                      placeholder="Enter URL"
+                      value={linkUrl}
+                      onChange={(e) => setLinkUrl(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <Button
+                  onClick={handleInsertLink}
+                  disabled={!linkText || !linkUrl}
+                  className=" px-3 py-2 rounded-[8px] mt-2 text-[13px] bg-[#383268] text-white"
+                
+                  label="Attach"
+                />
+              </div>
+            )}
+          </div>
+
+          <button onClick={handleInsertVariable} className="p-1 bg-[#FAFAFA]">
+            <img src={Icons.veriableIcon} alt="" />
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default MessageEditor;
+export default UsersPage;

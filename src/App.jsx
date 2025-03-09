@@ -17,14 +17,13 @@ import PasswordReset from "./auth/forgottenPassword/PasswordReset";
 import Campaigns from "./pages/Campaigns/Campaigns";
 import SmsCampaignManager from "./pages/Campaigns/SMSCampaign/SmsCampaignManager";
 import SmsCampaign from "./pages/Campaigns/SMSCampaign/SmsCampaign";
-import MessageCreation from "./pages/Campaigns/SMSCampaign/MessageCreation"
+import MessageCreation from "./pages/Campaigns/SMSCampaign/MessageCreation";
 import Contact from "./pages/Contact/Contact";
 import Analytics from "./pages/Analytics/Analytics";
 import Setting from "./pages/Settings/Setting";
 import Wallet from "./pages/Wallet/Wallet";
 import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
-
 
 import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
@@ -35,8 +34,13 @@ import Home from "./pages/Campaigns/Email/page";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [openFormModal, setOpenFormModal] = useState(false);
+
   const dispatch = useDispatch();
+<<<<<<< Updated upstream
   // const { campaignName } = useModal();
+=======
+>>>>>>> Stashed changes
 
   // Load authentication state on mount
   useEffect(() => {
@@ -120,8 +124,15 @@ const App = () => {
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
+<<<<<<< Updated upstream
                     <Route path="/campaigns/list" element={<CampaignPage />} />
                     <Route path="/campaigns/rich-text" element={<Home />} />
+=======
+                    {/* <Route
+                      path="/campaigns/create"
+                      element={<CampaignPage />}
+                    /> */}
+>>>>>>> Stashed changes
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
@@ -129,11 +140,17 @@ const App = () => {
                     <Route path="/groups" element={<Groups />} />
                     <Route path="/notifications" element={<Notification />} />
                     {/* <Route path={`/campaigns/${campaignName}`} element={<SmsCampaign />} />  */}
-                    <Route path={`/campaigns/smsCampaign`} element={<SmsCampaign />} /> 
-                    <Route path={`/campaigns/smsCampaign/create-capaign`} element={<MessageCreation />} /> 
+                    <Route
+                      path={`/campaigns/smsCampaign`}
+                      element={<SmsCampaign />}
+                    />
+                    <Route
+                      path={`/campaigns/smsCampaign/create-capaign`}
+                      element={<MessageCreation />}
+                    />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
-                  
+
                   <SmsCampaignManager />
                 </div>
               </div>

@@ -4,8 +4,9 @@ import { useRecipients } from "../../../redux/UseRecipient";
 import { Icons } from "../../../assets/assets";
 import Button from "../../../Components/buttons/transparentButton";
 
-const SelectedRecipient = ({ openFormModal }) => {
+const SelectedRecipient = ({ openForm }) => {
   const { recipients, setRecipients } = useRecipients();
+ 
 
   const columns = React.useMemo(
     () => [
@@ -45,7 +46,7 @@ const SelectedRecipient = ({ openFormModal }) => {
             <Button
               label="Add Contacts"
               className="rounded-[8px] border border-[#383268] hover:bg-[#383268] hover:text-white text-[#383268]"
-              onClick={openFormModal}
+              onClick={openForm}
             />
           </div>
         </div>

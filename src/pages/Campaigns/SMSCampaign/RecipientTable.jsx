@@ -42,7 +42,7 @@ const RecipientsTable = ({openFormModal, openDeleteModal}) => {
     canPreviousPage,
     pageOptions,
     state: { pageIndex },
-  } = useTable({ columns, data: recipients }, usePagination);
+  } = useTable({ columns, data: recipients, initialState: { pageIndex: 0, pageSize: 6 }, }, usePagination);
 
   if (data.length === 0) {
     return (
@@ -70,7 +70,7 @@ const RecipientsTable = ({openFormModal, openDeleteModal}) => {
             <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
               No Recipients Found
             </h2>
-            <p className="text-[#767676] text-[14px] font-normal">
+            <p className="text-[#767676] text-[14px] font-normal md:max-w-2/3">
               It looks like there are no recipients available in this table.
               Please upload a CSV file or manually add recipients to get
               started.

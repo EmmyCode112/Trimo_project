@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Icons } from "../../assets/assets";
-import { useGroups } from "../../redux/GroupProvider/UseGroup";
+import { Icons } from "@/assets/assets";
+import { useGroups } from "../../../redux/GroupProvider/UseGroup";
 import GroupFolder from "./GroupFolder";
-import Button from "../../Components/buttons/transparentButton";
-import "./Contacts.css";
+import Button from "@/Components/buttons/transparentButton";
+// import "./Contacts.css";
 import CreateGroupModal from "./CreateGroupModal";
+import FolderDetailModal from "./FolderDetailModal";
 
-const AvailableGroupModal = ({
-  openAvailableGroups,
-  onClose,
-  moveContactsToGroup,
-}) => {
+const AvailableGroupModal = ({ openAvailableGroups, onClose, toast, setToast}) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
   const [duplicateError, setDuplicateError] = useState(false);
   const [createGroupModal, setCreateGroupModal] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState(null);
+
+  const openFolderDetails = (folder) => {
+    console.log("Opening Folder:", folder);
+    setSelectedFolder(folder);
+  };
 
   // Close modal when clicking outside
   const createGroupRef = useRef(null);
@@ -32,16 +35,16 @@ const AvailableGroupModal = ({
         onClose();
       }
     };
-  
+
     if (openAvailableGroups) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [openAvailableGroups, onClose]);
-  
+
   // Handle dragging down on mobile to close
   const handleDragStart = (e) => {
     if (!isMobile) return;
@@ -70,6 +73,7 @@ const AvailableGroupModal = ({
 
   const { groups, setGroups } = useGroups();
 
+  console.log("groups", groups);
 
   if (!openAvailableGroups) return null;
 
@@ -132,6 +136,8 @@ const AvailableGroupModal = ({
               <p className="text-[#767676] text-[14px] font-normal">
                 Send messages to your regular contacts in a single click.
               </p>
+
+              <p onClick={() => console.log("groups list", groups)}>clicked</p>
             </div>
             {groups.length === 0 ? (
               <p className="text-[#767676] text-[14px] font-normal">
@@ -141,13 +147,29 @@ const AvailableGroupModal = ({
             ) : (
               <div className=" max-h-[70%] flex flex-wrap max-md:justify-start gap-[22px] md:gap-y-[20px] md:gap-x-[29px] contacts-group-container">
                 {groups.map((items, index) => (
-                  <div key={index}>
-                    <GroupFolder
-                      folder={items} // Pass the current group instead of the whole array
-                      groupId={items.id}
-                      groupName={items.name}
-                      moveContactsToGroup={moveContactsToGroup}
-                    />
+                  <div
+                    className="flex flex-col folder-con cursor-pointer "
+                    onClick={() => openFolderDetails(items)}
+                    key={index}
+                  >
+                    <div className=" folder-img-con w-full h-auto">
+                      <img
+                        src={Icons.FolderIcon}
+                        alt="folder"
+                        className="w-full h-full relative"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <p className="text-[#484848] text-[14px] font-normal">
+                        {items.name}
+                      </p>
+                      <div className="flex items-center gap-x-1 mt-1">
+                        <img src={Icons.contacts2Users} alt="users" />
+                        <p className="text-[#767676] text-sm font-normal">
+                          {items.contacts.length}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -179,6 +201,18 @@ const AvailableGroupModal = ({
           onClose={() => setCreateGroupModal(false)}
           isOpen={createGroupModal}
           data={groups}
+          toast={toast}
+        setToast={setToast}
+        />
+      )}
+
+      {selectedFolder && (
+        <FolderDetailModal
+          folder={selectedFolder}
+          open={Boolean(selectedFolder)}
+          onClose={() => setSelectedFolder(null)}
+          setGroups={setGroups}
+          closeParentModal={onClose}
         />
       )}
     </div>
