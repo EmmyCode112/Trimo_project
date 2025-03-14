@@ -118,7 +118,7 @@ const Dashboard = ({handleLogout}) => {
               <p className="text-[14px] text-[#875578] font-normal">
                 Explore in-depth insights into your campaign performance and
                 engagement metrics.
-              </p>
+              </p> 
 
               <img
                 src={Icons.vector}
