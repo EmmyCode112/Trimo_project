@@ -86,7 +86,7 @@ const App = () => {
             <Route path="/account-setup" element={<SetUp />} />
             <Route path="*" element={<Navigate to="/sign-in" />} />
           </>
-        ) : (
+        ) : ( 
           // Authenticated Layout for authenticated users
           <Route
             path="/*"
@@ -113,7 +113,7 @@ const App = () => {
                   <Navbar
                     toggleSidebar={toggleSidebar}
                     isSidebarOpen={isSidebarOpen}
-                  />
+                  /> 
                   <Routes>
                     <Route
                       path="/"

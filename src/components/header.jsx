@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
-import { Link } from "react-router-dom"
 import { formatDistanceToNow } from "date-fns"
 import { Clock } from "iconsax-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -11,7 +10,15 @@ import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Sms, Warning2 } from "iconsax-react"
 
-export default function Header({ lastSaved, onSave, onSendTest, isPreviewMode, togglePreviewMode, emailInfo }) {
+export default function Header({
+  lastSaved,
+  onSave,
+  onSendTest,
+  isPreviewMode,
+  togglePreviewMode,
+  emailInfo,
+  onSendClick,
+}) {
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [showTestModal, setShowTestModal] = useState(false)
   const [testEmail, setTestEmail] = useState("")
@@ -50,16 +57,14 @@ export default function Header({ lastSaved, onSave, onSendTest, isPreviewMode, t
     <>
       <header className="flex items-center justify-between py-4 px-12 h-[69px] bg-white border-b border-[#F1F1F1]">
         <div className="flex items-center space-x-4">
-          <Link to="/" passHref>
-            <Button
-              variant="outline"
-              className="w-[101px] rounded-[8px] h-[44px] text-[#383268] font-medium text-[16px] bg-white border border-[#C1BFD0]"
-              size="sm"
-            >
-              <ArrowLeft className="w-[20px] h-[20px] mr-2 text-[#383268]" />
-              Back
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            className="w-[101px] rounded-[8px] h-[44px] text-[#383268] font-medium text-[16px] bg-white border border-[#C1BFD0]"
+            size="sm"
+          >
+            <ArrowLeft className="w-[20px] h-[20px] mr-2 text-[#383268]" />
+            Back
+          </Button>
         </div>
         <div className="flex items-center space-x-3">
           {lastSaved && (
@@ -101,6 +106,13 @@ export default function Header({ lastSaved, onSave, onSendTest, isPreviewMode, t
           >
             Save
           </Button>
+          <Button
+            variant="outline"
+            className="bg-[#383268] w-[72px] h-[44px] rounded-[8px] text-white font-medium text-[16px]"
+            onClick={onSendClick}
+          >
+            Send
+          </Button>
         </div>
       </header>
 
@@ -110,7 +122,9 @@ export default function Header({ lastSaved, onSave, onSendTest, isPreviewMode, t
           <div className="p-6 mt-12">
             <DialogHeader className="mb-4">
               <DialogTitle className="text-[20px] text-[#1A1A1A] font-medium">Review Errors</DialogTitle>
-              <p className="text-[#767676] text-sm mt-1 pb-5">This message has errors which may prevent it from sending.</p>
+              <p className="text-[#767676] text-sm mt-1 pb-5">
+                This message has errors which may prevent it from sending.
+              </p>
               <p className="text-[#767676] text-sm ">
                 You can troubleshoot missing variable errors by previewing your message and checking customer data.
               </p>
@@ -118,7 +132,9 @@ export default function Header({ lastSaved, onSave, onSendTest, isPreviewMode, t
 
             <div className="bg-[#FAE9EB] w-[561px] h-[76px] border border-[#D54B5C] rounded-lg p-4 mb-6">
               <div className="flex items-start gap-2">
-                <div className="text-[#D54B5C] mt-1"><Warning2 size={20} color="#D54B5C" /></div>
+                <div className="text-[#D54B5C] mt-1">
+                  <Warning2 size={20} color="#D54B5C" />
+                </div>
                 <div>
                   <div className="text-[#CB1E33] text-sm font-medium mb-1">Error found in Subject</div>
                   <div className="text-[#B91B2E] font-[300] text-[13px]">subject can't be blank</div>

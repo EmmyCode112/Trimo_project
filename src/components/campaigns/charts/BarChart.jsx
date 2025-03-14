@@ -57,6 +57,5 @@ const BarChart = ({ isEmpty = false }) => {
 
   return <Bar options={options} data={data} />
 }
-
 export default BarChart
 
