@@ -256,7 +256,7 @@ const Sidebar = ({ isSidebarOpen }) => {
           className={`rotate-90 w-[20px] h-[20px] transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
         />
       </div>
-    </div>
+    </div> 
   );
 };
 
