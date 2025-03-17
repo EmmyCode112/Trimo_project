@@ -4,9 +4,10 @@ import MessageEditor from "./MessageEditor";
 import SelectedRecipient from "./SelectedRecipient";
 import MessagePreview from "./MessagePreview";
 import { useRecipients } from "../../../redux/UseRecipient";
-import ScheduleCampaign from "./ScheduleCampaign";
-import CreationRecipientModal from "./CreationRecipientModal";
-import { useNavigate } from "react-router-dom"
+import ScheduleCampaign from "../../../Components/emmyCampaignSetup/ScheduleCampaign";
+import CreationRecipientModal from "../../../Components/emmyCampaignSetup/CreationRecipientModal";
+import { useNavigate } from "react-router-dom";
+import Toast from "@/Components/Alerts/Toast";
 
 const MessageCreation = () => {
   useEffect(() => {
@@ -19,21 +20,35 @@ const MessageCreation = () => {
   const [schedule, setSchedule] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
+  const [toast, setToast] = useState({
+    show: false,
+    type: "",
+    title: "",
+    message: "",
+  });
   const isMessageScheduled =
-    schedule === "sendNow" || (schedule === "scheduleLater" && selectedDate && selectedTime);
+    schedule === "sendNow" ||
+    (schedule === "scheduleLater" && selectedDate && selectedTime);
+
+  const isScheduleDisabled = !message.length > 0;
 
   return (
     <div className="px-[31px] py-[32px] flex flex-col gap-[22px]">
       <div className="flex justify-between items-center flex-wrap-reverse gap-[20px]">
         <header>
-          <h1 className="text-[#1A1A1A] text-[24px] font-medium mb-[5px]">Message Creation</h1>
-          <p className="text-[#767676] font-normal text-[15px]">Add broadcast name and template below</p>
+          <h1 className="text-[#1A1A1A] text-[24px] font-medium mb-[5px]">
+            Message Creation
+          </h1>
+          <p className="text-[#767676] font-normal text-[15px]">
+            Add broadcast name and template below
+          </p>
         </header>
         <div className="flex gap-3 justify-end self-end">
-          <Button label="Previous" className="text-[#383268] hover:bg-[] rounded-[8px] py-2 px-[18px] border-[#383268]" 
-          onClick={()=>navigate("/campaigns/smsCampaign")}
+          <Button
+            label="Previous"
+            className="text-[#383268] hover:bg-[] rounded-[8px] py-2 px-[18px] border-[#383268]"
+            onClick={() => navigate("/campaigns/smsCampaign")}
           />
           <Button
             label="Next"
@@ -56,13 +71,33 @@ const MessageCreation = () => {
         </div>
       </div>
       <div>
-        {message.length > 0 && (
-          <ScheduleCampaign setSchedule={setSchedule} schedule={schedule} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime} selectedTime={selectedTime} selectedDate={selectedDate} />
-        )}
+        <ScheduleCampaign
+          setSchedule={setSchedule}
+          schedule={schedule}
+          setSelectedDate={setSelectedDate}
+          setSelectedTime={setSelectedTime}
+          selectedTime={selectedTime}
+          selectedDate={selectedDate}
+          isDisabled={isScheduleDisabled}
+        />
       </div>
 
       {openFormModal && (
-        <CreationRecipientModal onOpen={openFormModal} onClose={() => setOpenFormModal(false)} />
+        <CreationRecipientModal
+          onOpen={openFormModal}
+          onClose={() => setOpenFormModal(false)}
+          toast={toast}
+          setToast={setToast}
+        />
+      )}
+
+      {toast.show && (
+        <Toast
+          type={toast.type}
+          title={toast.title}
+          message={toast.message}
+          onClose={() => setToast({ show: false })}
+        />
       )}
     </div>
   );

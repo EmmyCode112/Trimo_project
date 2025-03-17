@@ -1,0 +1,11 @@
+.preview-container {
+  background-image: url("/whatsAppPrev.png");
+  height: 712px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  background-position: center;
+  border-top-left-radius:100px;
+  border-top-right-radius:100px;
+  /* background: red; */
+}

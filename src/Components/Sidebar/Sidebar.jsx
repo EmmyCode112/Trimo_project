@@ -6,13 +6,25 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Sidebar = ({ isSidebarOpen }) => {
   const links = [
     { label: "Home", Icon: SideBarIcons.homeIcon, route: "/" },
-    { label: "Campaigns", Icon: SideBarIcons.campaignIcon, route: "/campaigns" },
+    {
+      label: "Campaigns",
+      Icon: SideBarIcons.campaignIcon,
+      route: "/campaigns",
+    },
     { label: "Contacts", Icon: SideBarIcons.contactIcon, route: "/contacts" },
     { label: "Templates", Icon: SideBarIcons.templateIcon },
-    { label: "Analytics", Icon: SideBarIcons.analyticsIcon, route: "/analytics" },
+    {
+      label: "Analytics",
+      Icon: SideBarIcons.analyticsIcon,
+      route: "/analytics",
+    },
     { label: "Wallet", Icon: SideBarIcons.walletIcon, route: "/wallet" },
     { label: "Integration", Icon: SideBarIcons.integrationIcon },
-    { label: "Notification", Icon: SideBarIcons.notificationIcon, route: "/notifications" },
+    {
+      label: "Notification",
+      Icon: SideBarIcons.notificationIcon,
+      route: "/notifications",
+    },
     { label: "Settings", Icon: SideBarIcons.settingIcon, route: "/settings" },
   ];
 
@@ -24,26 +36,39 @@ const Sidebar = ({ isSidebarOpen }) => {
   });
 
   useEffect(() => {
-    if (links.some(link => link.route === location.pathname)) {
+    if (links.some((link) => link.route === location.pathname)) {
       setActiveLink(location.pathname);
       localStorage.setItem("activeRoute", location.pathname);
     }
   }, [location.pathname]);
 
+  const user = {
+    id: 1,
+    name: "CodeRigi",
+    avatar: null, // Can be null or a URL if needed
+    role: "Admin",
+  };
+
+  const getUserInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : "?";
+  };
   return (
-    <div 
-      className="bg-[#383268] h-full flex flex-col justify-between w-[82px] hover:w-[263px] transition-all duration-300 ease-in-out overflow-hidden group"
-    >
-      <div>
-        <div className="pt-[32px] pb-[24px] pl-[24px]">
-          <img 
+    <div className="bg-[#383268] h-full flex flex-col justify-between w-[82px] hover:w-[263px] transition-all duration-300 ease-in-out overflow-hidden group">
+      <div className="w-full h-full flex flex-col gap-y-3">
+        <div className="w-full flex items-center">
+          <img
             src={SideBarIcons.TriimoIcon}
-            alt="Logo" 
-            className="w-[24px] group-hover:w-auto transition-all duration-300"
+            alt="Logo"
+            className="w-[24px] group-hover:w-full transition-all duration-300 hidden group-hover:block"
+          />
+          <img
+            src={SideBarIcons.HeaderIcon}
+            alt="Logo"
+            className="w-full mt-3 block group-hover:hidden transition-all duration-300"
           />
         </div>
 
-        <ul className="flex flex-col gap-3 px-3 relative h-full">
+        <ul className="flex flex-col gap-3 px-3 w-full h-full">
           {links.map((link, index) => (
             <li
               key={index}
@@ -54,38 +79,45 @@ const Sidebar = ({ isSidebarOpen }) => {
                   navigate(link.route);
                 }
               }}
-              className={`flex items-center py-2 px-3 cursor-pointer rounded-[10px] justify-between text-[#EBEBF0] font-medium 
-                hover:bg-[#e9e9e92f] ${activeLink === link.route ? "bg-[#e9e9e92f]" : ""} 
-                ${link.label === "Settings" ? "absolute bottom-0 w-[90%]" : ""}`}
+              className={`flex items-center py-2 px-3 cursor-pointer rounded-[10px] justify-between text-[#EBEBF0] font-medium w-[50px] group-hover:w-auto
+                hover:bg-[#e9e9e92f] ${
+                  activeLink === link.route ? "bg-[#e9e9e92f]" : ""
+                } ${link.label === "Settings" ? "mt-auto" : ""}`}
             >
               <div className="flex gap-3 items-center min-w-[24px]">
-                <img src={link.Icon} alt={link.label} className="w-[24px] h-[24px]" />
+                <img
+                  src={link.Icon}
+                  alt={link.label}
+                  className="w-[24px] h-[24px]"
+                />
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                   {link.label}
                 </span>
               </div>
-              <img 
+              <img
                 src={Icons.arrowRight}
-                alt="" 
-                className="w-[20px] h-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                alt=""
+                className="w-[20px] h-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="flex justify-between items-center px-4 group-hover:px-7 text-[#EBEBF0] font-medium py-[20px] border-t border-t-[#e9e9e92f] transition-all duration-300">
+      <div className="flex justify-between items-center px-4 group-hover:px-7 text-[#EBEBF0] font-medium py-[20px] border-t border-t-[#e9e9e92f] transition-all duration-300 mt-3">
         <div className="flex gap-3 items-center">
-          <img src={SideBarIcons.CodeRigiIcon} alt="" className="w-[40px] h-[40px] min-w-[40px]" />
+          <div className="w-[40px] h-[40px] min-w-[40px] bg-[#9A2444] text-white flex items-center justify-center rounded-full text-lg font-medium">
+            {getUserInitial(user.name)}
+          </div>
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-            <h3 className="text-sm">CodeRigi</h3>
-            <p className="text-[#E7E7E7] text-[13px] font-[300]">Admin</p>
+            <h3 className="text-sm">{user.name}</h3>
+            <p className="text-[#E7E7E7] text-[13px] font-[300]">{user.role}</p>
           </div>
         </div>
-        <img 
+        <img
           src={Icons.arrowRight}
-          alt="" 
-          className="rotate-90 w-[20px] h-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+          alt=""
+          className="rotate-90 w-[20px] h-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
       </div>
     </div>
@@ -93,4 +125,3 @@ const Sidebar = ({ isSidebarOpen }) => {
 };
 
 export default Sidebar;
-

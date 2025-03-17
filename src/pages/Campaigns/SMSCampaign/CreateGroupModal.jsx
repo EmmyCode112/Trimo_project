@@ -3,7 +3,14 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "@/assets/assets";
 import Button from "@/Components/buttons/transparentButton";
 
-const CreateGroupModal = ({ isOpen, onClose, onCreate, data, setToast, toast }) => {
+const CreateGroupModal = ({
+  isOpen,
+  onClose,
+  onCreate,
+  data,
+  setToast,
+  toast,
+}) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
@@ -67,17 +74,24 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data, setToast, toast }) 
     );
 
     if (isDuplicate) {
-      showToast("Duplicate Error", "This group name is already in use.please chose a unique name.", "error");
+      showToast(
+        "Duplicate Error",
+        "This group name is already in use.please chose a unique name.",
+        "error"
+      );
       return;
     } else {
-      showToast("Group Created", "Your group was created successfully!", "success");
+      showToast(
+        "Group Created",
+        "Your group was created successfully!",
+        "success"
+      );
     }
-
 
     onCreate(groupName);
     setGroupName("");
     setDuplicateError(false);
-    onClose()
+    onClose();
   };
 
   const handleKeyDown = (e) => {
@@ -89,12 +103,12 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data, setToast, toast }) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed flex items-center justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
+    <div className="fixed flex items-end md:items-center justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
         className={` bg-white ${
           isMobile
-            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
+            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3 w-full"
             : " w-[605px] rounded-[40px] p-[22px]"
         }`}
         onTouchStart={handleDragStart}
@@ -108,14 +122,14 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data, setToast, toast }) 
           <div className="w-[81px] h-2 bg-gray-300 rounded-full mx-auto mt-4" />
         )}
 
-        <h2 className="text-lg font-medium mb-4">Create New Group</h2>
+        <h2 className="text-lg font-medium mb-4 mt-3">Create New Group</h2>
         <input
           type="text"
           value={groupName}
           onChange={(e) => {
             const newName = e.target.value;
             setGroupName(newName);
-            
+
             // Reset duplicate error if new name is not in the list
             const isDuplicate = data.some(
               (group) => group.name.toLowerCase() === newName.toLowerCase()
@@ -136,13 +150,11 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data, setToast, toast }) 
           <Button
             onClick={handleCreate}
             className="px-4 py-2 bg-[#383268] text-white rounded"
-            disabled={ groupName.trim() === ""}
+            disabled={groupName.trim() === ""}
             label="Create"
           />
         </div>
       </div>
-
-
     </div>
   );
 };

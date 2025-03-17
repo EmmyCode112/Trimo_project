@@ -7,8 +7,6 @@ import './index.css'; // Adjust this path if necessary
 import { GroupProvider } from "./redux/GroupProvider/UseGroup";
 import { CampaignModalProvider } from "./redux/UseCampaignModal";
 import { RecipientsProvider } from "./redux/UseRecipient"; // Import the RecipientsProvider
-import { Toaster } from "@/components/ui/toaster"
-
 
 const root = ReactDOM.createRoot(document.getElementById('root')); // Ensure the element exists in your HTML
 root.render(
@@ -17,7 +15,6 @@ root.render(
       <CampaignModalProvider>
         <RecipientsProvider> {/* Wrap the app with RecipientsProvider */}
           <App />
-          <Toaster />
         </RecipientsProvider>
       </CampaignModalProvider>
     </GroupProvider>

@@ -1,8 +1,11 @@
 import { Icons } from "@/assets/assets";
-
-const GroupFolder = ({ groupName, folder }) => {
+import { useEffect } from "react";
+const GroupFolder = ({ groupName, openFolderDetails }) => {
   return (
-    <div className="flex flex-col folder-con cursor-pointer">
+    <div
+      className="flex flex-col folder-con cursor-pointer "
+      onClick={openFolderDetails}
+    >
       <div className=" folder-img-con w-full h-auto">
         <img
           src={Icons.FolderIcon}

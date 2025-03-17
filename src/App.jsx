@@ -13,10 +13,11 @@ import Signup from "@/auth/signup/Signup";
 import SetUp from "./auth/AccountSetUp/SetUp";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import PasswordReset from "./auth/forgottenPassword/PasswordReset";
-
 import Campaigns from "./pages/Campaigns/Campaigns";
-import SmsCampaignManager from "./pages/Campaigns/SMSCampaign/SmsCampaignManager";
+import CampaignManager from "@/Components/CampaignManager";
 import SmsCampaign from "./pages/Campaigns/SMSCampaign/SmsCampaign";
+import WhatsAppMessageCreation from "./pages/Campaigns/WhatsAppCampaign/WhatsAppMessageCreation";
+import  WhatsAppCampaign from "./pages/Campaigns/WhatsAppCampaign/WhatsAppCampaign";
 import MessageCreation from "./pages/Campaigns/SMSCampaign/MessageCreation";
 import Contact from "./pages/Contact/Contact";
 import Analytics from "./pages/Analytics/Analytics";
@@ -29,18 +30,12 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
-import CampaignPage from "./pages/Campaigns/EmailCampaign";
-import Home from "./pages/Campaigns/Email/page";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openFormModal, setOpenFormModal] = useState(false);
 
   const dispatch = useDispatch();
-<<<<<<< Updated upstream
-  // const { campaignName } = useModal();
-=======
->>>>>>> Stashed changes
 
   // Load authentication state on mount
   useEffect(() => {
@@ -91,7 +86,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="/sign-in" />} />
           </>
         ) : (
-          // Authenticated Layout for authenticated users
+          // Authenticated Layout
           <Route
             path="/*"
             element={
@@ -124,15 +119,10 @@ const App = () => {
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
-<<<<<<< Updated upstream
-                    <Route path="/campaigns/list" element={<CampaignPage />} />
-                    <Route path="/campaigns/rich-text" element={<Home />} />
-=======
                     {/* <Route
                       path="/campaigns/create"
                       element={<CampaignPage />}
                     /> */}
->>>>>>> Stashed changes
                     <Route path="/contacts" element={<Contact />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
@@ -145,13 +135,22 @@ const App = () => {
                       element={<SmsCampaign />}
                     />
                     <Route
-                      path={`/campaigns/smsCampaign/create-capaign`}
+                      path={`/campaigns/WhatsApp-campaign`}
+                      element={<WhatsAppCampaign />}
+                    />
+                    <Route
+                      path={`/campaigns/WhatsApp-campaign/create`}
+                      element={<WhatsAppMessageCreation />}
+                    />
+                    
+                    <Route
+                      path={`/campaigns/smsCampaign/create`}
                       element={<MessageCreation />}
                     />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
 
-                  <SmsCampaignManager />
+                  <CampaignManager />
                 </div>
               </div>
             }

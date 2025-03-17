@@ -80,12 +80,12 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed flex items-center justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
+    <div className="fixed flex items-end md:items-center justify-center inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
         className={` bg-white ${
           isMobile
-            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
+            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3 w-full"
             : " w-[605px] rounded-[40px] p-[22px]"
         }`}
         onTouchStart={handleDragStart}
@@ -99,14 +99,14 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data }) => {
           <div className="w-[81px] h-2 bg-gray-300 rounded-full mx-auto mt-4" />
         )}
 
-        <h2 className="text-lg font-medium mb-4">Create New Group</h2>
+        <h2 className="text-lg font-medium mb-4 mt-3">Create New Group</h2>
         <input
           type="text"
           value={groupName}
           onChange={(e) => {
             const newName = e.target.value;
             setGroupName(newName);
-            
+
             // Reset duplicate error if new name is not in the list
             const isDuplicate = data.some(
               (group) => group.name.toLowerCase() === newName.toLowerCase()

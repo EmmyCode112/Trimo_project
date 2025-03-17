@@ -1,0 +1,83 @@
+/* Remove border and add shadow */
+.react-calendar {
+  border: none !important;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  /* border-radius: 8px; */
+  /* padding: 10px; */
+}
+
+/* Style weekday headers */
+.react-calendar__month-view__weekdays {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #9ca3af !important;
+  text-decoration: none !important;
+  margin: 4px;
+}
+
+.react-calendar_month {
+  display: flex !important;
+  /* flex-wrap: wrap !important; */
+  gap: 8px !important;
+}
+/* Add spacing using flex */
+.react-calendar__month-view__days {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+/* Style date tiles */
+.react-calendar__tile {
+  width: 35px !important; /* Reduce width */
+  height: 35px !important; /* Keep it square */
+  border-radius: 6px; /* Slightly rounded corners */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+/* Hover effect */
+.react-calendar__tile:hover {
+  background-color: #383268 !important;
+  color: white !important;
+}
+
+/* Selected date */
+.react-calendar__tile--active {
+  background-color: #383268 !important;
+  color: white !important;
+}
+
+/* Today's date */
+.react-calendar__tile--now {
+  background-color: transparent !important;
+  color: #383268 !important;
+  font-weight: bold;
+}
+
+/* Disable past dates */
+/* Disable past dates */
+.react-calendar__tile:disabled {
+  cursor: not-allowed !important;
+  background-color: transparent !important;
+  color: #9ca3af !important; /* Adjust text color if needed */
+}
+
+/* Prevent hover effect on disabled dates */
+.react-calendar__tile:disabled:hover {
+  background-color: transparent !important;
+  color: #9ca3af !important;
+}
+
+/* Ensure weekend colors match */
+.react-calendar__tile abbr {
+  color: inherit !important;
+}
+
+@media (max-width: 430px) {
+  .calendar-container {
+    width: 100%;
+  }
+}

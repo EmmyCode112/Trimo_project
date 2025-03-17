@@ -1,5 +1,6 @@
-import Button from "../../Components/buttons/transparentButton";
-import { Icons } from "../../assets/assets";
+import Button from "@/Components/buttons/transparentButton";
+import { Icons } from "@/assets/assets";
+import PhoneNumberInput from "@/Components/PhoneNumberInput";
 
 import { useState, useMemo } from "react";
 
@@ -11,6 +12,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
   const [lastName, setLastName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsChecked, setTermsChecked] = useState(false);
+  const [countryCode, setCountryCode] = useState("ng");
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -69,15 +71,13 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     return name.length > 0 && /^[a-zA-Z\s]+$/.test(name);
   };
 
-   // Validate full name
-   const validateLastName = (lastname) => {
+  // Validate full name
+  const validateLastName = (lastname) => {
     return lastname.length > 0 && /^[a-zA-Z\s]+$/.test(lastname);
   };
 
   // Validate work phone (only numbers)
-  const validateWorkPhone = (phone) => {
-    return phone.length > 0 && /^\d+$/.test(phone);
-  };
+  const validateWorkPhone = (phone) => /^\+?\d*$/.test(phone);
 
   // Memoize isFormFilled to avoid re-renders
   const isFormFilled = useMemo(() => {
@@ -96,7 +96,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
       validateWorkPhone(workPhone) &&
       validateConfirmPassword(password, confirmPassword)
     );
-  }, [email, password, firstName,lastName, workPhone, confirmPassword]);
+  }, [email, password, firstName, lastName, workPhone, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -175,7 +175,8 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
               if (!validateFirstName(e.target.value)) {
                 setErrors((prev) => ({
                   ...prev,
-                  firstName: "Your first Name must only contain letters and spaces.",
+                  firstName:
+                    "Your first Name must only contain letters and spaces.",
                 }));
               } else {
                 setErrors((prev) => ({ ...prev, firstName: "" }));
@@ -204,7 +205,8 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
               if (!validateLastName(e.target.value)) {
                 setErrors((prev) => ({
                   ...prev,
-                  lastName: "Your last Name must only contain letters and spaces.",
+                  lastName:
+                    "Your last Name must only contain letters and spaces.",
                 }));
               } else {
                 setErrors((prev) => ({ ...prev, lastName: "" }));
@@ -220,7 +222,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
       {/* Work Phone Input */}
       <label className="flex flex-col gap-2">
         <p className="text-sm font-medium text-gray-800">Work Phone</p>
-        <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
+        {/* <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
           <img src={Icons.naira} alt="" className="signin-icons" />
           <input
             type="text"
@@ -239,7 +241,27 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
               }
             }}
           />
-        </div>
+        </div> */}
+
+        <PhoneNumberInput
+          country={"ng"} // Default country
+          value={workPhone}
+          onChange={(phone) => {
+            setWorkPhone(phone);
+            if (!validateWorkPhone(phone)) {
+              setErrors({ workPhone: "Work Phone must contain only numbers." });
+            } else {
+              setErrors({});
+            }
+          }}
+          disableCountryCode={true} // Prevent manual deletion of country code
+          disableDropdown={false} // Allow country selection
+          enableSearch={true} // Let users search for their country
+          inputProps={{
+            required: true,
+          }}
+        />
+
         {errors.workPhone && (
           <p className="text-red-500 text-sm">{errors.workPhone}</p>
         )}

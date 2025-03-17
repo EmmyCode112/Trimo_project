@@ -12,8 +12,10 @@ const Toast = ({ title, message, type, onClose }) => {
 
   return (
     <div
-      className={`fixed z-50 top-5 right-5  gap-3 p-4 rounded-lg shadow-lg text-white flex items-start w-[300px] border ${
-        type === "error" ? "bg-[#FAE9EB] border-[#D54B5C]" : "bg-[#F6FEF9] border-[#6CE9A6]"
+      className={`fixed z-[999] top-5 right-5  gap-3 p-4 rounded-lg shadow-lg text-white flex items-start md:w-[400px] w-[full] border ${
+        type === "error"
+          ? "bg-[#FAE9EB] border-[#D54B5C]"
+          : "bg-[#F6FEF9] border-[#6CE9A6]"
       }`}
     >
       {/* Icon based on type */}
@@ -25,12 +27,26 @@ const Toast = ({ title, message, type, onClose }) => {
 
       <div className="flex-1">
         {/* Customizable header */}
-        <p className={` text-[14px] font-medium ${type === "error" ? "text-[#CB1E33]" : "text-[#027A48]"}`}>{title}</p>
-        <span className={` text-[14px] font-normal ${type === "error" ? "text-[#CB1E33]" : "text-[#027A48]"}`}>{message}</span>
+        <p
+          className={` text-[14px] font-medium ${
+            type === "error" ? "text-[#CB1E33]" : "text-[#027A48]"
+          }`}
+        >
+          {title}
+        </p>
+        <span
+          className={` text-[14px] font-normal ${
+            type === "error" ? "text-[#CB1E33]" : "text-[#027A48]"
+          }`}
+        >
+          {message}
+        </span>
       </div>
 
       <button onClick={onClose} className="ml-3 text-white font-bold">
-        <img src={type === "error" ? Icons.errorIcon : Icons.toastSuccessIcon} />
+        <img
+          src={type === "error" ? Icons.errorIcon : Icons.toastSuccessIcon}
+        />
       </button>
     </div>
   );

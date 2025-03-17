@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "@/assets/assets";
 import Button from "@/Components/buttons/transparentButton";
+import PhoneNumberInput from "@/Components/PhoneNumberInput";
 
 const ManuallyAddContact = ({
   isOpenModal,
@@ -205,25 +206,16 @@ const ManuallyAddContact = ({
                   <p className="text-[14px] font-medium text-[#1A1A1A]">
                     Phone Number
                   </p>
-                  <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-                    <img
-                      src={Icons.naira}
-                      alt="country code"
-                      className="signin-icons"
-                    />
-                    <input
-                      type="text"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
-                      }
-                      className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
-                    />
-                  </div>
+
+                  <PhoneNumberInput
+                    value={formData.phone}
+                    onChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone: value,
+                      }))
+                    }
+                  />
                 </label>
 
                 <div>

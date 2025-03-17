@@ -8,6 +8,7 @@ import Button from "../../Components/buttons/transparentButton";
 import DeleteMultipleModal from "./DeleteMultipleModal";
 import DeleteModal from "./DeleteModal";
 import EditContactModal from "./EditContactModal";
+import ImportContact from "./ImportContact";
 
 const FolderDetailModal = ({
   open,
@@ -25,6 +26,7 @@ const FolderDetailModal = ({
   const [isOpenSingleDelete, setIsOpenSingleDelete] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [editContact, setEditContact] = useState(false);
+  const [importContact, setImportContact] = useState(false);
 
   const modalRef = useRef(null);
   const deleteModalRef = useRef(null); // Ref for DeleteModal
@@ -34,6 +36,7 @@ const FolderDetailModal = ({
   const isEditModalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
+  const importModalRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -46,6 +49,9 @@ const FolderDetailModal = ({
         (!setEditContact ||
           (isEditModalRef.current &&
             !isEditModalRef.current.contains(event.target))) &&
+        (!setImportContact ||
+          (importModalRef.current &&
+            !importModalRef.current.contains(event.target))) &&
         (!openCreateFormModal ||
           (createFormModalRef.current &&
             !createFormModalRef.current.contains(event.target))) &&
@@ -100,8 +106,6 @@ const FolderDetailModal = ({
     modalRef.current.style.transform = "";
     dragRef.current = null;
   };
-
-
 
   // Function to update the contact in the list
   const updateContact = (updatedContact) => {
@@ -158,8 +162,6 @@ const FolderDetailModal = ({
       )
     );
   };
-  
-  
 
   // Open delete modal and set selected row
   const openDeleteModal = (id) => {
@@ -284,7 +286,7 @@ const FolderDetailModal = ({
         onTouchEnd={handleDragEnd}
         onMouseUp={handleDragEnd}
       >
-         {isMobile && (
+        {isMobile && (
           <div className="w-[81px] h-2 bg-gray-300 rounded-full mx-auto mt-4" />
         )}
         <div className="flex flex-col justify-between h-auto max-md:h-full w-full gap-y-[30px] pb-[22px]">
@@ -342,6 +344,7 @@ const FolderDetailModal = ({
           isOpenCreateContactModal={() => setOpenCreateNewContact(true)}
           onClose={() => setOpenCreateNewContact(false)}
           onOpenCreateFormModal={() => setOpenCreateFormModal(true)}
+          openImportModal={() => setImportContact(true)}
         />
       )}
 
@@ -370,7 +373,14 @@ const FolderDetailModal = ({
           onDelete={() => handleDeleteContact(selectedRow)}
         />
       )}
-
+      {importContact && (
+        <ImportContact
+          isOpen={importContact}
+          onClose={() => setImportContact(false)}
+          contacts={contacts}
+          setContacts={setContacts}
+        />
+      )}
       {editContact && (
         <EditContactModal
           isOpenEditModal={editContact} // ✅ Pass the boolean value instead

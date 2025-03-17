@@ -6,8 +6,7 @@ import { Icons } from "../../../assets/assets";
 import Button from "../../../Components/buttons/transparentButton";
 import "./Calender.css";
 import { useModal } from "../../../redux/UseCampaignModal";
-import {  useNavigate } from "react-router-dom"
-
+import { useNavigate } from "react-router-dom";
 
 const CreateCampaignFormModal = ({ onClose, onOpen }) => {
   const modalRef = useRef(null);
@@ -15,7 +14,6 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
   const navigate = useNavigate();
-
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -106,14 +104,13 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
 
   if (!onOpen) return null;
 
+  //   const formatCampaignName = (campaignName) => {
+  //     return campaignName
+  //       .toLowerCase()
+  //       .replace(/[^a-z0-9.\-_ ]/g, "") // Allow only letters, numbers, ., -, _, and spaces
+  //       .replace(/\s+/g, "-"); // Replace spaces with dashes
+  //   };
 
-//   const formatCampaignName = (campaignName) => {
-//     return campaignName
-//       .toLowerCase()
-//       .replace(/[^a-z0-9.\-_ ]/g, "") // Allow only letters, numbers, ., -, _, and spaces
-//       .replace(/\s+/g, "-"); // Replace spaces with dashes
-//   };
-  
   // const handleNext = () => {
   //   if (campaignName.trim()) {
   //   //   const formattedName = formatCampaignName(campaignName);
@@ -123,12 +120,11 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
   // };
   const handleNext = () => {
     if (campaignName.trim()) {
-    //   const formattedName = formatCampaignName(campaignName);
+      //   const formattedName = formatCampaignName(campaignName);
       navigate(`/campaigns/smsCampaign`);
       onClose();
     }
   };
-  
 
   return (
     <div className="fixed inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">

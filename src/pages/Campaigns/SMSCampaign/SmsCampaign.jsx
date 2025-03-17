@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
-import CreateRecipientFormModal from "./CreateRecipientFormModal";
-import RecipientTable from "./RecipientTable";
+import CreateRecipientFormModal from "../../../Components/emmyCampaignSetup/CreateRecipientFormModal";
+import RecipientTable from "../../../Components/emmyCampaignSetup/RecipientTable";
 import { useRecipients } from "../../../redux/UseRecipient";
-import DeleteRecipientModal from "./DeleteRecipientModal";
-import ImportContact from "./ImportContact";
-import AvailableGroupModal from "./AvailableGroupModal";
+import DeleteRecipientModal from "../../../Components/emmyCampaignSetup/DeleteRecipientModal";
+import ImportContact from "../../../Components/emmyCampaignSetup/ImportContact";
+import AvailableGroupModal from "../../../Components/emmyCampaignSetup/AvailableGroupModal";
 
 import { useModal } from "../../../redux/UseCampaignModal";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../Components/buttons/transparentButton";
 import { Icons } from "../../../assets/assets";
-import Toast from "@/Components/Alerts/Toast"
-
+import Toast from "@/Components/Alerts/Toast";
 
 const SmsCampaign = () => {
   const { recipients, setRecipients } = useRecipients();
@@ -20,7 +19,12 @@ const SmsCampaign = () => {
   const [selectedRecipientId, setSelectedRecipientId] = useState(null);
   const [importModal, setImportModal] = useState(false);
   const [importFromGroup, setImportFromGroup] = useState(false);
-  const [toast, setToast] = useState({ show: false, title: "", message: "", type: "" });
+  const [toast, setToast] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "",
+  });
 
   const handleClickCsv = () => {
     setImportModal(true);
@@ -60,7 +64,7 @@ const SmsCampaign = () => {
   // Handle Next Button Click
   const handleNext = () => {
     if (!NextButtonDisabled) {
-      navigate("/campaigns/smsCampaign/create-capaign");
+      navigate("/campaigns/smsCampaign/create");
     }
   };
   useEffect(() => {
@@ -115,7 +119,10 @@ const SmsCampaign = () => {
             Send messages to your regular contacts in a single click.
           </p>
         </div>
-        <div className="max-sm:w-full py-[18px] px-[22px] rounded-[10px] bg-[#FAFAFA] border border-[#F1F1F1] lg:w-[317px] cursor-pointer" onClick={() => setImportFromGroup(true)}>
+        <div
+          className="max-sm:w-full py-[18px] px-[22px] rounded-[10px] bg-[#FAFAFA] border border-[#F1F1F1] lg:w-[317px] cursor-pointer"
+          onClick={() => setImportFromGroup(true)}
+        >
           <h2 className="text-normal font-medium text-[1A1A1A]">
             Select Contact Groups
           </h2>
@@ -137,6 +144,8 @@ const SmsCampaign = () => {
         <CreateRecipientFormModal
           onClose={() => setOpenFormModal(false)}
           onOpen={openFormModal}
+          toast={toast}
+          setToast={setToast}
         />
       )}
 
@@ -153,6 +162,8 @@ const SmsCampaign = () => {
           onClose={() => setImportModal(false)}
           contacts={recipients}
           setContacts={setRecipients}
+          setToast={setToast}
+          toast={toast}
         />
       )}
 
@@ -160,13 +171,12 @@ const SmsCampaign = () => {
         <AvailableGroupModal
           openAvailableGroups={importFromGroup}
           onClose={() => setImportFromGroup(false)}
-        toast={toast}
-        setToast={setToast}
+          toast={toast}
+          setToast={setToast}
         />
       )}
 
-      
-{toast.show && (
+      {toast.show && (
         <Toast
           title={toast.title}
           message={toast.message}

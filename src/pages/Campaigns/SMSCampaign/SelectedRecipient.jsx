@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useTable, usePagination } from "react-table";
-import { useRecipients } from "../../../redux/UseRecipient";
-import { Icons } from "../../../assets/assets";
-import Button from "../../../Components/buttons/transparentButton";
+import { useRecipients } from "@/redux/UseRecipient";
+import { Icons } from "@/assets/assets";
+import Button from "@/Components/buttons/transparentButton";
 
 const SelectedRecipient = ({ openForm }) => {
   const { recipients, setRecipients } = useRecipients();
- 
 
   const columns = React.useMemo(
     () => [
@@ -39,8 +38,12 @@ const SelectedRecipient = ({ openForm }) => {
       <div className="pb-[20px] flex flex-col gap-3">
         <div className="flex justify-between items-center gap-3">
           <div>
-            <h2 className="text-[20px] text-[#1A1A1A] font-medium">Who do you want to send it to?</h2>
-            <p className="text-[#767676] text-[14px] font-nornmal">Select below contacts</p>
+            <h2 className="text-[20px] text-[#1A1A1A] font-medium">
+              Who do you want to send it to?
+            </h2>
+            <p className="text-[#767676] text-[14px] font-nornmal">
+              Select below contacts
+            </p>
           </div>
           <div>
             <Button
@@ -64,16 +67,16 @@ const SelectedRecipient = ({ openForm }) => {
         </search>
       </div>
       <div className="w-full rounded-[15px] py-[20px] px-[20px] flex flex-col gap-[22px]  border-[5px] border-[#F1F1F1]">
-          <div className="flex gap-3 justify-between items-center">
-            <div className="flex items-center gap-2 ">
-              <h2 className="text-[18px] font-meidium text-[#3F3E3E]">
-                Recipients
-              </h2>
-              <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
-                {data.length} {data.length > 1 ? "recipients" : "recipient"}
-              </p>
-            </div>
+        <div className="flex gap-3 justify-between items-center">
+          <div className="flex items-center gap-2 ">
+            <h2 className="text-[18px] font-meidium text-[#3F3E3E]">
+              Recipients
+            </h2>
+            <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
+              {data.length} {data.length > 1 ? "recipients" : "recipient"}
+            </p>
           </div>
+        </div>
         <div className="overflow-x-scroll w-full scrollbar-hide">
           <table
             {...getTableProps()}

@@ -3,6 +3,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../../assets/assets";
 import Button from "../../../Components/buttons/transparentButton";
 import { useRecipients } from "../../../redux/UseRecipient";
+import PhoneNumberInput from "@/Components/PhoneNumberInput";
+
 const CreateRecipientFormModal = ({ onClose, onOpen }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -59,10 +61,10 @@ const CreateRecipientFormModal = ({ onClose, onOpen }) => {
     phone: "",
   });
   const isFormValid =
-  !formData.firstName ||
-  !formData.lastName ||
-  !formData.email ||
-  !formData.phone;
+    !formData.firstName ||
+    !formData.lastName ||
+    !formData.email ||
+    !formData.phone;
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -70,7 +72,7 @@ const CreateRecipientFormModal = ({ onClose, onOpen }) => {
     if (isFormValid) return;
 
     const newRecipient = {
-      id: recipients.length + 1, 
+      id: recipients.length + 1,
       ...formData,
     };
 
@@ -185,25 +187,15 @@ const CreateRecipientFormModal = ({ onClose, onOpen }) => {
                 <p className="text-[14px] font-medium text-[#1A1A1A]">
                   Phone Number
                 </p>
-                <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-                  <img
-                    src={Icons.naira}
-                    alt="country code"
-                    className="signin-icons"
-                  />
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        phone: e.target.value,
-                      }))
-                    }
-                    className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
-                  />
-                </div>
+                <PhoneNumberInput
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      phone: e.target.value,
+                    }))
+                  }
+                />
               </label>
             </div>
           </div>

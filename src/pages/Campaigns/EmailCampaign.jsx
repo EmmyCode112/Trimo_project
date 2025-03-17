@@ -28,17 +28,14 @@ const emailOptions = [
   {
     title: "Drag & Drop",
     description: "A block builder for responsive email no coding required",
-    link: "#"
   },
   {
     title: "Rich Text Editor",
     description: "Create basic text emails and make changes to the code if needed",
-    link: "/campaigns/rich-text"
   },
   {
     title: "Code",
     description: "Build emails from code with developer tools like syntax autocomplete",
-    link: "#"
   },
 ]
 
@@ -141,7 +138,7 @@ export default function CampaignPage() {
         </h2>
         <div className="flex flex-col lg:flex-row flex-nowrap gap-4 mb-12">
           {emailOptions.map((option) => (
-            <EmailOptionCard key={option.title} title={option.title} description={option.description} link={option.link} />
+            <EmailOptionCard key={option.title} title={option.title} description={option.description} />
           ))}
         </div>
 
@@ -167,7 +164,7 @@ export default function CampaignPage() {
               {...template}
               onPreview={() => setSelectedTemplate(template)}
               onUse={() => {
-                /* Handle template use  */
+                /* Handle template use */
               }}
             />
           ))}
@@ -188,7 +185,7 @@ export default function CampaignPage() {
               <selectedTemplate.template />
             ) : (
               <div className="aspect-[4/5] bg-gray-100 rounded-lg" />
-            ), 
+            ),
           }}
         />
       )}
