@@ -395,7 +395,7 @@ const Contact = () => {
           selectedContacts={selectedRows}
           onDelete={deleteSelectedRows}
         />
-      )}
+      )} 
 
       {openCreateFormModal && (
         <CreateFormModal
@@ -418,6 +418,6 @@ const Contact = () => {
       )}
     </div>
   );
-};
+}; 
 
 export default Contact;

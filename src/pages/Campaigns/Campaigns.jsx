@@ -8,11 +8,13 @@ import Pagination from "@/components/campaigns/Pagination"
 import CampaignList from "@/components/campaigns/CampaignList"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { Icons } from "../../assets/assets"
+import { useNavigate } from "react-router-dom"
 
 
 const Campaigns = () => {
   const isMobile = useMediaQuery("(max-width: 640px)")
   const [showEmptyState, setShowEmptyState] = useState(false)
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [filters, setFilters] = useState({
     messageType: [],
@@ -22,6 +24,7 @@ const Campaigns = () => {
 
   const handleCreateCampaign = () => {
     console.log("Create campaign clicked")
+    navigate("/campaigns/list")
   }
 
   const handleFilterChange = (type, value) => {
@@ -45,7 +48,7 @@ const Campaigns = () => {
                 onClick={handleCreateCampaign}
                 className="bg-[#383268] w-[168px] h-[44px] text-white px-4 py-2 rounded-[8px] hover:bg-[#2a2a5a] transition-colors text-sm"
               >
-                Create Campaign
+                See Campaigns
               </button>
             </div>
             <p className="text-[14px] font-[100] text-[#767676]">

@@ -327,4 +327,4 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
   );
 };
 
-export default ImportContact;
+export default ImportContact; 
