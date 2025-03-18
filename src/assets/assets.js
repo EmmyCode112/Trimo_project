@@ -75,7 +75,7 @@ import toastSuccessIcon from "./Icons/errorIcon.png";
 import ErrorWarning from "./Icons/warning-1.png";
 import successWarning from "./Icons/tick-square.png";
 import whastsAppPreviewPanel from "./Icons/whatsAppPrev.png";
-
+// import addCircle from './Icons/campaign/add-circle.svg'
 import tremplate_campaign_update from "./templates/campaign_update.png";
 import template_menu from "./templates/menu.png";
 import template_discount from "./templates/discount.png";
