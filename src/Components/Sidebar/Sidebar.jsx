@@ -16,15 +16,15 @@ const subNavItems = {
     { label: "Groups", route: "/groups", count: 10 }
   ],
   templates: [
-    { label: "Manage Template", route: "/templates/manage" },
-    { label: "Create New Template", route: "/campaigns/rich-text" }
+    { label: "Manage Template", route: "/campaigns/email" },
+    { label: "Create New Template", route: "/campaigns/template" }
   ],
   analytics: [
-    { label: "Dashboard Analytics", route: "/analytics/dashboard" },
+    { label: "Dashboard Analytics", route: "/analytics" },
     { label: "Detailed Report", route: "/analytics/report" }
   ],
   wallet: [
-    { label: "Wallet Overview", route: "/wallet/overview" },
+    { label: "Wallet Overview", route: "/wallet" },
     { label: "Transaction History", route: "/wallet/history" }
   ],
   integration: [
@@ -33,7 +33,7 @@ const subNavItems = {
     { label: "Webhook Setup", route: "/integration/webhooks" }
   ],
   notifications: [
-    { label: "All Notifications", route: "/notifications/all", count: 10 },
+    { label: "All Notifications", route: "/notifications", count: 10 },
     { label: "Notification Settings", route: "/notifications/settings" }
   ]
 };
