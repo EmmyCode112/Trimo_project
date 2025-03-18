@@ -22,6 +22,7 @@ import trashIcon from "./Icons/trash.png";
 import FolderIcon from "./Icons/Folder.png";
 import emptyUsers from "./Icons/profile-picture.png";
 
+  // omo bro
 import TriimoIcon from "./Icons/trimo-logo.png";
 import homeIcon from "./Icons/home-2.png";
 import homeIconActive from "./Icons/home.png";
