@@ -74,7 +74,7 @@ import toastSuccessIcon from "./Icons/errorIcon.png";
 import ErrorWarning from "./Icons/warning-1.png";
 import successWarning from "./Icons/tick-square.png";
 import whastsAppPreviewPanel from "./Icons/whatsAppPrev.png";
-
+// import addCircle from './Icons/campaign/add-circle.svg'
 import tremplate_campaign_update from "./templates/campaign_update.png";
 import template_menu from "./templates/menu.png";
 import template_discount from "./templates/discount.png";
@@ -89,6 +89,16 @@ import HeaderIcon from "./Icons/Header.png";
 
 import emptyTemplate from "./Icons/emptyTemplate.png";
 import emptyPreviewTemplate from "./Icons/emptyPreviewTemplate.png";
+
+import addCircle from "./Icons/campaign/add-circle.svg"
+import documentCode from "./Icons/campaign/document-code.svg"
+import icon2 from "./Icons/campaign/icon2.svg"
+import icon3 from "./Icons/campaign/icon3.svg"
+import imageIcon from "./Icons/campaign/image-01.svg"
+import icon4 from "./Icons/campaign/icon4.svg"
+import paragraph from "./Icons/campaign/paragraph.svg"
+import star from "./Icons/campaign/star.svg"
+import textCreation from "./Icons/campaign/text-creation.svg"
 
 export const templates = [
   {
@@ -209,4 +219,19 @@ export const Icons = {
   whastsAppPreviewPanel,
   emptyPreviewTemplate,
   emptyTemplate,
+  addCircle
 };
+
+
+export {
+  addCircle,
+  documentCode,
+  icon2,
+  icon3,
+  imageIcon,
+  icon4,
+  paragraph,
+  star,
+  textCreation
+
+}
