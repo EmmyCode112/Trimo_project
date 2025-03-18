@@ -1,20 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SideBarIcons, Icons } from "../../assets/assets";
+import CampaignModal from '../CampaignModal';
+import { useModal } from '@/redux/UseCampaignModal';
 
 // Define the sub-navigation items for each main nav item that has them
 const subNavItems = {
   campaigns: [
     { label: "New Campaign", route: "/campaigns/new" },
-    { label: "View All Campaigns", route: "/campaigns/all", count: 10 }
+    { label: "View All Campaigns", route: "/campaigns", count: 10 }
   ],
   contacts: [
-    { label: "All Contacts", route: "/contacts/all", count: 10 },
-    { label: "Groups", route: "/contacts/groups", count: 10 }
+    { label: "All Contacts", route: "/contacts", count: 10 },
+    { label: "Groups", route: "/groups", count: 10 }
   ],
   templates: [
     { label: "Manage Template", route: "/templates/manage" },
-    { label: "Create New Template", route: "/templates/new" }
+    { label: "Create New Template", route: "/campaigns/rich-text" }
   ],
   analytics: [
     { label: "Dashboard Analytics", route: "/analytics/dashboard" },
@@ -42,6 +44,12 @@ const Sidebar = ({ isSidebarOpen }) => {
   });
   const [isExpanded, setIsExpanded] = useState(false);
   const sidebarRef = useRef(null);
+  const { openCampaignModal, openModal, closeCampaignModal } = useModal();
+  const handleCreateCampaign = (action) => {
+    if (action === "Start Campaign") {
+      openCampaignModal(); // ✅ Opens modal when "Start Campaign" is clicked
+    }
+  };
 
   const links = [
     { label: "Home", Icon: SideBarIcons.homeIcon, route: "/" },
@@ -212,7 +220,13 @@ const Sidebar = ({ isSidebarOpen }) => {
                     {subNavItems[link.key].map((subItem, subIndex) => (
                       <button
                         key={subIndex}
-                        onClick={() => handleSubNavClick(subItem.route)}
+                        onClick={() => {
+                          if (subItem.route === "/campaigns/new") {
+                            handleCreateCampaign('Start Campaign')
+                          } else {
+                            handleSubNavClick(subItem.route);
+                          }
+                        }}
                         className={`mx-3 px-3 py-2 rounded-[6px] flex items-center justify-between font-['General Sans'] text-[14px] transition-colors
                           ${
                             activeLink === subItem.route

@@ -25,6 +25,7 @@ import Setting from "./pages/Settings/Setting";
 import Wallet from "./pages/Wallet/Wallet";
 import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
+import EmailEditorPage from "./pages/Campaigns/EmailCampaign";
 
 import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
@@ -133,6 +134,10 @@ const App = () => {
                     <Route
                       path={`/campaigns/smsCampaign`}
                       element={<SmsCampaign />}
+                    />
+                    <Route
+                      path={`/campaigns/template`}
+                      element={<EmailEditorPage />}
                     />
                     <Route
                       path={`/campaigns/WhatsApp-campaign`}
