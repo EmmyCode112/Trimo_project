@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar } from "react-chartjs-2";
 import CalenderModal from "./CalenderModal";
-import Button from "../../Components/buttons/transparentButton";
+import Button from "@/Components/buttons/transparentButton";
 import {
   Chart as ChartJS,
   BarElement,
@@ -19,7 +19,7 @@ const MessagesSentChart = () => {
   const [selectedFilter, setSelectedFilter] = useState("12m");
   const [showCalendar, setShowCalendar] = useState(false);
   const [chartData, setChartData] = useState({});
-  const calendarRef = useRef(null);
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 880);
 
   useEffect(() => {
@@ -29,23 +29,6 @@ const MessagesSentChart = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // Handle clicks outside to close the calendar
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-        setShowCalendar(false);
-      }
-    }
-
-    if (showCalendar) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showCalendar]);
 
   const filters = isMobile
     ? ["12m", "30d", "7d"]

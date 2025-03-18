@@ -217,7 +217,7 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
                           const isPast = date.getTime() < today;
 
                           let classNames = "calendar-tile";
-                          if (isSelected) classNames += " calendar-selected";
+                          if (isSelected) classNames += "calendar-selected";
                           else if (isToday) classNames += " calendar-today";
                           else if (isPast) classNames += " calendar-disabled";
 
