@@ -6,6 +6,7 @@ export const CampaignModalProvider = ({ children }) => {
   const [openModal, setOpenModal] = useState(false);
   const [FormModal, setOpenFormModal] = useState(false);
   const [openWhatsAppModal, setOpenWhatsAppModal] = useState(false);
+  const [openEMailModal, setOpenEMailModal] = useState(false);
 
   const openCampaignModal = () => setOpenModal(true);
   const closeCampaignModal = () => setOpenModal(false);
@@ -15,6 +16,8 @@ export const CampaignModalProvider = ({ children }) => {
   const [campaignName, setCampaignName] = useState("");
   const onCloseWhatsAppModal = () => setOpenWhatsAppModal(false);
   const openWhatsFormModal = () => setOpenWhatsAppModal((prev) => !prev);
+  const onCloseEMailModal = () => setOpenEMailModal(false);
+  const openEMailFormModal = () => setOpenEMailModal((prev) => !prev);
 
   return (
     <ModalContext.Provider
@@ -31,6 +34,8 @@ export const CampaignModalProvider = ({ children }) => {
         openWhatsAppModal,
         onCloseWhatsAppModal,
         openWhatsFormModal,
+        openEMailModal,
+        onCloseEMailModal,
       }}
     >
       {children}
