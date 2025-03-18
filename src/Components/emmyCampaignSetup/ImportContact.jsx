@@ -5,7 +5,14 @@ import Papa from "papaparse";
 import Button from "@/Components/buttons/transparentButton";
 import UploadProgress from "@/Components/ProgressBar/UploadProgress";
 
-const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
+const ImportContact = ({
+  isOpen,
+  onClose,
+  contacts,
+  setContacts,
+  setToast,
+  toast,
+}) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
@@ -59,78 +66,99 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
     dragRef.current = null;
   };
 
+  const showToast = (type, title, message) => {
+    console.log("Toast triggered:", { type, title, message });
+    setToast({ show: true, type, title, message });
+    setTimeout(() => {
+      setToast({ show: false, type: "", title: "", message: "" });
+    }, 3000);
+  };
+
   const handleFile = (file) => {
     if (!file) return;
 
     setIsLoading(true);
     setProgress(0);
     setStatusText("Uploading in progress...");
+
     setUploadedFile(file);
-    setUploadError(null); // Reset error on new upload attempt
+    setUploadError(null);
+
+    let currentProgress = 0;
+    const interval = setInterval(() => {
+      currentProgress += 10;
+      setProgress((prev) => (prev < 90 ? prev + 10 : prev));
+      if (currentProgress >= 90) {
+        clearInterval(interval);
+      }
+    }, 300);
 
     try {
       Papa.parse(file, {
         complete: (result) => {
-          const rawData = result.data;
-          let duplicateFound = false;
-
-          const newContacts = rawData
-            .slice(1)
-            .map((row, index) => {
-              const contact = {
-                id:
-                  (contacts.length ? contacts[contacts.length - 1].id : 0) +
-                  index +
-                  1,
-                firstName: row[0]?.trim() || "",
-                lastName: row[1]?.trim() || "",
-                phone: row[2]?.trim() || "",
-                email: row[3]?.trim() || "",
-                group: "N/A",
-              };
-
-              const isDuplicate = contacts.some(
-                (c) =>
-                  c.email === contact.email ||
-                  c.phone === contact.phone ||
-                  (c.firstName === contact.firstName &&
-                    c.lastName === contact.lastName)
-              );
-
-              if (isDuplicate) {
-                duplicateFound = true;
-                return null;
-              }
-              return contact;
-            })
-            .filter(Boolean);
-
-          if (duplicateFound) {
-            alert("Duplicated contact");
-          }
-
-          setParsedContacts(newContacts);
-          setImportedCount(newContacts.length);
-          setIsLoading(false);
+          clearInterval(interval);
           setProgress(100);
-          setStatusText("Uploading completed");
+          setStatusText("Upload complete!");
+
+          const rawData = result.data;
+          const newContacts = rawData.slice(1).map((row, index) => ({
+            id: contacts.length + index + 1,
+            firstName: row[0]?.trim() || "",
+            lastName: row[1]?.trim() || "",
+            email: row[2]?.trim() || "",
+            phone: row[3]?.trim() || "",
+          }));
+
+          // Handle duplicate contacts
+          const existingContactsMap = new Map();
+          contacts.forEach((contact) => {
+            existingContactsMap.set(contact.email || contact.phone, contact);
+          });
+
+          let duplicateCount = 0;
+          const updatedContacts = [...contacts];
+
+          newContacts.forEach((contact) => {
+            const key = contact.email || contact.phone;
+            if (existingContactsMap.has(key)) {
+              duplicateCount++;
+              // Overwrite existing contact
+              const index = updatedContacts.findIndex(
+                (c) => c.email === contact.email || c.phone === contact.phone
+              );
+              updatedContacts[index] = contact;
+            } else {
+              updatedContacts.push(contact);
+            }
+          });
+
+          setContacts(updatedContacts);
+
+          if (duplicateCount > 0) {
+            showToast(
+              "warning",
+              "Duplicate Contacts",
+              `${duplicateCount} duplicate contacts were found and updated.`
+            );
+          } else {
+            showToast(
+              "success",
+              "Import Complete",
+              `${newContacts.length} contacts imported successfully.`
+            );
+          }
         },
         error: (error) => {
-          console.error("Parsing error:", error);
-          setUploadError("Failed to parse file. Please try again.");
-          setIsLoading(false);
-          setProgress(0);
-          setStatusText("Upload failed");
+          clearInterval(interval);
+          setUploadError(error.message);
+          setStatusText("Upload failed.");
+          showToast("error", "Upload Failed", error.message);
         },
-        header: false,
-        skipEmptyLines: true,
       });
-    } catch (err) {
-      console.error("Upload error:", err);
-      setUploadError("An error occurred during upload.");
-      setIsLoading(false);
-      setProgress(0);
-      setStatusText("Upload failed");
+    } catch (error) {
+      clearInterval(interval);
+      setUploadError("An unexpected error occurred.");
+      showToast("error", "Upload Failed", "An unexpected error occurred.");
     }
   };
 
@@ -170,8 +198,12 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
     setUploadedFile(null);
     setParsedContacts([]);
     onClose();
+    showToast(
+      "success",
+      "Upload Successful",
+      "Your recipients have been successfully imported! You're all set to proceed."
+    );
   };
-
   if (!isOpen) return null;
 
   return (
@@ -289,8 +321,8 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
                       </p>
                       <div>
                         <p className="text-[12px] text-[#5E5E5E] font-normal">
-                          File: {uploadedFile.name} {" "} | {" "}
-                          {(uploadedFile.size / 1024).toFixed(2)} KB . {" "}
+                          File: {uploadedFile.name} |{" "}
+                          {(uploadedFile.size / 1024).toFixed(2)} KB .{" "}
                           {new Date(uploadedFile.lastModified)
                             .toLocaleDateString("en-US", {
                               day: "numeric",
@@ -302,7 +334,12 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
                       </div>
                     </div>
                   </div>
-                  <img src={Icons.trashIcon } alt="delete" onClick={handleDeleteFile} className="cursor-pointer" />
+                  <img
+                    src={Icons.trashIcon}
+                    alt="delete"
+                    onClick={handleDeleteFile}
+                    className="cursor-pointer"
+                  />
                 </div>
               ) : null}
             </div>

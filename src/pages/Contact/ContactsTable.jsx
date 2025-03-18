@@ -3,7 +3,12 @@ import { useTable, usePagination } from "react-table";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 
-const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
+const ContactsTable = ({
+  columns,
+  data,
+  isOpenCreateContactModal,
+  contacts,
+}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -27,16 +32,16 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
   );
 
   // If there's no data, display a message or an alternative component
-  if (data.length === 0) {
+  if (contacts.length === 0) {
     return (
-      <div className="w-full rounded-[15px] pb-[60px] pt-[23px] px-[20px] flex flex-col gap-[20px] shadow-md border border-[#EAECF0]">
-        <div className="flex items-center gap-2">
+      <div className="w-full rounded-[15px] h-auto min-h-auto lg:h-[500px] pb-[60px] pt-[23px] flex flex-col gap-[20px] border-[5px] border-[#EAECF0]">
+        <div className="flex items-center gap-2 border-b border-b-[#EAECF0] pb-[23px] px-[20px]">
           <h2 className="text-[18px] font-meidium text-[#3F3E3E]">Contact</h2>
           <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
-            {data.length} Contacts
+            {contacts.length} Contacts
           </p>
         </div>
-        <div className="flex flex-col items-center gap-6 text-center">
+        <div className="flex flex-col items-center gap-6 text-center px-[20px]">
           <img src={Icons.emptyState} alt="empty state" />
           <div>
             <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
@@ -56,21 +61,49 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
     );
   }
 
+  // If there's no data, display a message or an alternative component
+  if (data.length === 0) {
+    return (
+      <div className="w-full h-auto min-h-auto lg:h-[500px] rounded-[15px] pb-[60px] pt-[23px] border-[5px] border-[#EAECF0]">
+        <div className="flex flex-col gap-[20px] w-full lg:h-full ">
+          <div className="flex items-center gap-2 border-b border-b-[#EAECF0] pb-[23px] px-[20px]">
+            <h2 className="text-[18px] font-meidium text-[#3F3E3E]">Contact</h2>
+            <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
+              {data.length} Contacts
+            </p>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-6 text-center px-[20px] h-full w-full">
+            <img src={Icons.emptyUsers} alt="empty state" />
+            <div>
+              <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
+                No users found
+              </h2>
+              <p className="text-[#767676] text-[14px] font-normal w-full md:max-w-[80%] lg:max-w-[63%] mx-auto">
+                Use the search bar or filters to find specific users or ensure
+                your spellings are correct.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full rounded-[15px] pb-[60px] pt-[23px] px-[20px] flex flex-col gap-[20px] shadow-md border border-[#EAECF0] overflow-x-scroll hide-scrollBar">
+    <div className="w-full rounded-[15px] pb-[60px] pt-[23px] flex flex-col gap-[20px] border-[5px] border-[#EAECF0] overflow-x-scroll hide-scrollBar">
       {/* Data Length */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 border-b border-b-[#EAECF0]  pb-[23px] px-[20px] ">
         <h2 className="text-[18px] font-meidium text-[#3F3E3E]">Contact</h2>
         <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
           {data.length} Contacts
         </p>
       </div>
 
-      <div className="overflow-x-scroll hide-scrollBar w-full pb-[70px]">
+      <div className="overflow-x-scroll hide-scrollBar w-full pb-[70px] px-5">
         {/* Table */}
         <table
           {...getTableProps()}
-          className="w-full border-collapse border-spacing-0 shadow whitespace-nowrap text-left"
+          className="w-full border-collapse border-spacing-0 whitespace-nowrap text-left"
         >
           <thead className="bg-[#F9FAFB]">
             {headerGroups.map((headerGroup) => (
@@ -110,17 +143,32 @@ const ContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-4">
-        <button onClick={() => previousPage()} disabled={!canPreviousPage} className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium">
+      <div className="flex items-center justify-between mt-4 px-5">
+        <button
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+          className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium flex items-center gap-2"
+        >
+          <img src={Icons.arrow_right} alt="prev" />
           Prev
         </button>
-        
+
         <p className="text-[#667085] text-[14px] font-medium">
-          Page {"  "}<span className="px-3 py-1 rounded-lg bg-[#383268] text-white text-[14px] font-medium"> {" "}{pageIndex + 1}</span> of {" "} {pageOptions.length}
+          Page {"  "}
+          <span className="px-3 py-1 rounded-lg bg-[#383268] text-white text-[14px] font-medium">
+            {" "}
+            {pageIndex + 1}
+          </span>{" "}
+          of {pageOptions.length}
         </p>
-        
-        <button onClick={() => nextPage()} disabled={!canNextPage} className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium">
+
+        <button
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+          className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium flex items-center gap-2"
+        >
           Next
+          <img src={Icons.arrowLeftPagin} alt="next" />
         </button>
       </div>
     </div>

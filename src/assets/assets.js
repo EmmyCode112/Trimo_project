@@ -20,6 +20,7 @@ import checkboxActive from "./Icons/Checkbox.png";
 import editIcon from "./Icons/edit-2.png";
 import trashIcon from "./Icons/trash.png";
 import FolderIcon from "./Icons/Folder.png";
+import emptyUsers from "./Icons/profile-picture.png";
 
 import TriimoIcon from "./Icons/trimo-logo.png";
 import homeIcon from "./Icons/home-2.png";
@@ -209,4 +210,5 @@ export const Icons = {
   whastsAppPreviewPanel,
   emptyPreviewTemplate,
   emptyTemplate,
+  emptyUsers,
 };

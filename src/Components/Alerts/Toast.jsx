@@ -12,9 +12,11 @@ const Toast = ({ title, message, type, onClose }) => {
 
   return (
     <div
-      className={`fixed z-[999] top-5 right-5  gap-3 p-4 rounded-lg shadow-lg text-white flex items-start md:w-[400px] w-[full] border ${
+      className={`fixed z-[999] top-5 right-5  gap-3 p-4 rounded-lg shadow-lg text-white flex items-start md:w-[400px] w-[90%] border ${
         type === "error"
           ? "bg-[#FAE9EB] border-[#D54B5C]"
+          : type === "warning"
+          ? "bg-[#FBF1E6] border-[#E29133] "
           : "bg-[#F6FEF9] border-[#6CE9A6]"
       }`}
     >
@@ -29,14 +31,22 @@ const Toast = ({ title, message, type, onClose }) => {
         {/* Customizable header */}
         <p
           className={` text-[14px] font-medium ${
-            type === "error" ? "text-[#CB1E33]" : "text-[#027A48]"
+            type === "error"
+              ? "text-[#CB1E33]"
+              : type === "warning"
+              ? "text-[#DB7500]"
+              : "text-[#027A48]"
           }`}
         >
           {title}
         </p>
         <span
           className={` text-[14px] font-normal ${
-            type === "error" ? "text-[#CB1E33]" : "text-[#027A48]"
+            type === "error"
+              ? "text-[#CB1E33]"
+              : type === "warning"
+              ? "text-[#DB7500]"
+              : "text-[#027A48]"
           }`}
         >
           {message}
@@ -45,7 +55,13 @@ const Toast = ({ title, message, type, onClose }) => {
 
       <button onClick={onClose} className="ml-3 text-white font-bold">
         <img
-          src={type === "error" ? Icons.errorIcon : Icons.toastSuccessIcon}
+          src={
+            type === "error"
+              ? Icons.errorIcon
+              : type === "warning"
+              ? Icons.closeXIcon
+              : Icons.toastSuccessIcon
+          }
         />
       </button>
     </div>

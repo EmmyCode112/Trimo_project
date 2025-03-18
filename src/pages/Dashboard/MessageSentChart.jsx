@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar } from "react-chartjs-2";
-import CalenderModal from "./CalenderModal"
+import CalenderModal from "./CalenderModal";
 import Button from "../../Components/buttons/transparentButton";
 import {
   Chart as ChartJS,
@@ -30,53 +30,49 @@ const MessagesSentChart = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-    // Handle clicks outside to close the calendar
-    useEffect(() => {
-      function handleClickOutside(event) {
-        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-          setShowCalendar(false);
-        }
+  // Handle clicks outside to close the calendar
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false);
       }
-  
-      if (showCalendar) {
-        document.addEventListener("mousedown", handleClickOutside);
-      }
-  
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [showCalendar]);
+    }
+
+    if (showCalendar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showCalendar]);
 
   const filters = isMobile
     ? ["12m", "30d", "7d"]
     : ["12 months", "30 days", "7 days", "+ Custom"];
 
-
-    
-
-    const fakeDataByDate = {
-      "2025-01-29": {
-        labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"],
-        datasets: [
-          {
-            label: "WhatsApp",
-            backgroundColor: "#9A2444",
-            data: [100, 120, 110, 130, 140, 150, 160],
-          },
-          {
-            label: "Email",
-            backgroundColor: "#CB1E33",
-            data: [50, 60, 70, 80, 90, 100, 110],
-          },
-          {
-            label: "SMS",
-            backgroundColor: "#383268",
-            data: [30, 40, 50, 60, 70, 80, 90],
-          },
-        ],
-      },
-    };
-    
+  const fakeDataByDate = {
+    "2025-01-29": {
+      labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"],
+      datasets: [
+        {
+          label: "WhatsApp",
+          backgroundColor: "#9A2444",
+          data: [100, 120, 110, 130, 140, 150, 160],
+        },
+        {
+          label: "Email",
+          backgroundColor: "#CB1E33",
+          data: [50, 60, 70, 80, 90, 100, 110],
+        },
+        {
+          label: "SMS",
+          backgroundColor: "#383268",
+          data: [30, 40, 50, 60, 70, 80, 90],
+        },
+      ],
+    },
+  };
 
   const fakeData = {
     last7d: {
@@ -110,37 +106,55 @@ const MessagesSentChart = () => {
     }
   };
 
-
   const handleDateChange = (date) => {
     if (!date) return; // Prevent errors if no date is selected
     const formattedDate = date.toISOString().split("T")[0];
     console.log("Selected Date:", formattedDate);
-  
+
     const selectedData = fakeDataByDate[formattedDate] || {
       labels: [],
       datasets: [],
     };
-  
+
     setChartData(selectedData);
     setShowCalendar(false);
   };
-  
+
   const disableFutureDates = ({ date }) => new Date() < date;
-
-
-  
 
   const data = chartData.labels
     ? chartData
     : {
         labels: [
-          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
         ],
         datasets: [
-          { label: "SMS", backgroundColor: "#383268", data: [200, 250, 150, 180, 200, 220, 210, 230, 220, 240, 260, 210] },
-          { label: "WhatsApp", backgroundColor: "#9A2444", data: [600, 800, 500, 600, 650, 750, 700, 720, 710, 780, 820, 650] },
-          { label: "Email", backgroundColor: "#CB1E33", data: [300, 400, 250, 300, 330, 350, 340, 360, 370, 390, 410, 320] },
+          {
+            label: "SMS",
+            backgroundColor: "#383268",
+            data: [200, 250, 150, 180, 200, 220, 210, 230, 220, 240, 260, 210],
+          },
+          {
+            label: "WhatsApp",
+            backgroundColor: "#9A2444",
+            data: [600, 800, 500, 600, 650, 750, 700, 720, 710, 780, 820, 650],
+          },
+          {
+            label: "Email",
+            backgroundColor: "#CB1E33",
+            data: [300, 400, 250, 300, 330, 350, 340, 360, 370, 390, 410, 320],
+          },
         ],
       };
 
@@ -150,15 +164,21 @@ const MessagesSentChart = () => {
       legend: {
         position: "top",
         align: "end",
-        labels: { usePointStyle: true, pointStyle:  "circle",boxWidth: 8,
-          boxHeight: 8,  font: { size: 13 }, padding: 20 },
+        labels: {
+          usePointStyle: true,
+          pointStyle: "circle",
+          boxWidth: 8,
+          boxHeight: 8,
+          font: { size: 13 },
+          padding: 20,
+        },
       },
     },
     scales: { x: { stacked: true }, y: { stacked: true } },
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md border border-[#EAECF0] w-full">
+    <div className="p-4 bg-white rounded-lg  border-[5px] border-[#EAECF0] w-full">
       <h2 className="text-[18px] font-medium text-[#484848]">
         Messages Sent by Channel
       </h2>
@@ -166,10 +186,10 @@ const MessagesSentChart = () => {
         Analyze message distribution across channels
       </p>
       <div className="mt-[20px] pt-[12px] w-full">
-        <Bar data={data} options={options} className="w-full"/>
+        <Bar data={data} options={options} className="w-full" />
       </div>
       <div className="flex justify-between items-center mt-4">
-      <div className="flex space-x-2">
+        <div className="flex space-x-2">
           {filters.map((filter) => (
             <button
               key={filter}
@@ -182,11 +202,14 @@ const MessagesSentChart = () => {
             </button>
           ))}
         </div>
-        <Button label="View Reports" className="py-[10px] px-[16px] text-[#344054] rounded-[8px] border border-[#D0D5DD] hover:bg-[#eeeff0] text-[13px]" />
+        <Button
+          label="View Reports"
+          className="py-[10px] px-[16px] text-[#344054] rounded-[8px] border border-[#D0D5DD] hover:bg-[#eeeff0] text-[13px]"
+        />
       </div>
 
       {showCalendar && (
-        <CalenderModal 
+        <CalenderModal
           handleDateChange={handleDateChange}
           isOpenCalenderModal={showCalendar}
           onClose={() => setShowCalendar(false)}

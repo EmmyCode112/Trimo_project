@@ -17,7 +17,7 @@ import Campaigns from "./pages/Campaigns/Campaigns";
 import CampaignManager from "@/Components/CampaignManager";
 import SmsCampaign from "./pages/Campaigns/SMSCampaign/SmsCampaign";
 import WhatsAppMessageCreation from "./pages/Campaigns/WhatsAppCampaign/WhatsAppMessageCreation";
-import  WhatsAppCampaign from "./pages/Campaigns/WhatsAppCampaign/WhatsAppCampaign";
+import WhatsAppCampaign from "./pages/Campaigns/WhatsAppCampaign/WhatsAppCampaign";
 import MessageCreation from "./pages/Campaigns/SMSCampaign/MessageCreation";
 import Contact from "./pages/Contact/Contact";
 import Analytics from "./pages/Analytics/Analytics";
@@ -85,13 +85,8 @@ const App = () => {
             <Route path="/account-setup" element={<SetUp />} />
             <Route path="*" element={<Navigate to="/sign-in" />} />
           </>
-<<<<<<< HEAD
         ) : (
-          // Authenticated Layout
-=======
-        ) : ( 
           // Authenticated Layout for authenticated users
->>>>>>> be63e67f7b44f7cded97a782398b760a28ab4a0d
           <Route
             path="/*"
             element={
@@ -117,7 +112,7 @@ const App = () => {
                   <Navbar
                     toggleSidebar={toggleSidebar}
                     isSidebarOpen={isSidebarOpen}
-                  /> 
+                  />
                   <Routes>
                     <Route
                       path="/"
@@ -147,7 +142,7 @@ const App = () => {
                       path={`/campaigns/WhatsApp-campaign/create`}
                       element={<WhatsAppMessageCreation />}
                     />
-                    
+
                     <Route
                       path={`/campaigns/smsCampaign/create`}
                       element={<MessageCreation />}

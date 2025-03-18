@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Button from "../../Components/buttons/transparentButton";
 import { Icons } from "../../assets/assets";
 import ContactsTable from "./ContactsTable";
@@ -10,7 +10,7 @@ import CreateFormModal from "./CreateFormModal";
 import AvailableGroupModal from "./AvailableGroupModal";
 import ImportContact from "./ImportContact";
 import { useNavigate } from "react-router-dom";
-import {useGroups} from "../../redux/GroupProvider/UseGroup"
+import { useGroups } from "../../redux/GroupProvider/UseGroup";
 
 const Contact = () => {
   const navigate = useNavigate();
@@ -25,7 +25,10 @@ const Contact = () => {
   const [availableGroup, setAvailableGroup] = useState(false);
   const [actionDropdown, setActionDropdown] = useState(false);
   const [openDeleteMultipleModal, setOpenDeleteMultipleModal] = useState(false);
-  const { groups, setGroups } = useGroups()
+  const { groups, setGroups } = useGroups();
+  const dropdownRef = useRef(null);
+  const actionDropdownRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [contacts, setContacts] = useState([
     {
@@ -156,33 +159,65 @@ const Contact = () => {
     // Find the group name based on the ID
     const group = groups.find((g) => g.id === groupId);
     const groupName = group ? group.name : "N/A"; // Use "N/A" if group not found
-  
+
     setContacts((prevContacts) =>
       prevContacts.map((contact) =>
-        selectedRows.includes(contact.id) ? { ...contact, group: groupName } : contact
+        selectedRows.includes(contact.id)
+          ? { ...contact, group: groupName }
+          : contact
       )
     );
-  
+
     // Update the group with the selected contacts
     setGroups((prevGroups) =>
       prevGroups.map((g) =>
         g.id === groupId
-          ? { ...g, contacts: [...g.contacts, ...contacts.filter((contact) => selectedRows.includes(contact.id))] }
+          ? {
+              ...g,
+              contacts: [
+                ...g.contacts,
+                ...contacts.filter((contact) =>
+                  selectedRows.includes(contact.id)
+                ),
+              ],
+            }
           : g
       )
     );
-  
+
     setSelectedRows([]); // Clear selection
-  
+
     // Delay closing the modal by 4 seconds
-    setTimeout(() => {
-      setAvailableGroup(false);
-    }, 4000);
   };
-  
-  
-  
-  
+
+  // Function to filter contacts based on search query
+  const filteredContacts = contacts.filter((contact) => {
+    const fullName = `${contact.firstName} ${contact.lastName}`.toLowerCase();
+    return (
+      fullName.includes(searchQuery.toLowerCase()) ||
+      contact.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
+  // Function to handle clicks outside both dropdowns
+  const handleClickOutside = (event) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target) &&
+      actionDropdownRef.current &&
+      !actionDropdownRef.current.contains(event.target)
+    ) {
+      setOpenDropdownRow(null);
+      setActionDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const columns = React.useMemo(
     () => [
@@ -229,7 +264,7 @@ const Contact = () => {
         Header: "",
         id: "actions",
         Cell: ({ row }) => (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <div
               onClick={() =>
                 setOpenDropdownRow((prev) =>
@@ -290,7 +325,7 @@ const Contact = () => {
         </header>
         <div className="flex gap-3 justify-end self-end">
           {selectedRows.length > 0 && (
-            <div className="relative">
+            <div className="relative" ref={actionDropdownRef}>
               <button
                 onClick={() => setActionDropdown((prev) => !prev)}
                 className="flex rounded-[8px] gap-[11px] border border-[#C1BFD0] py-[10px] px-[18px] text-[#383268] text-[16px] font-medium items-center hover:bg-[#e7e7e7]"
@@ -332,7 +367,7 @@ const Contact = () => {
       </div>
 
       <div className="flex items-center gap-[19px] max-sm:flex-wrap">
-        <div className="flex items-center gap-2 px-[10px] rounded-[8px] border border-[#D0D5DD] w-[351px] h-[47px] max-sm:full">
+        <search className="flex items-center gap-2 px-[10px] rounded-[8px] border border-[#D0D5DD] w-[351px] h-[47px] max-sm:full">
           <img
             src={Icons.searchIcon}
             alt="search"
@@ -341,9 +376,11 @@ const Contact = () => {
           <input
             type="text"
             placeholder="Search by name, email"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="p-1 outline-none w-full h-full"
           />
-        </div>
+        </search>
         <div className="flex items-center gap-[19px]">
           <div className="px-[18px] py-[10px] flex items-center gap-[10px] rounded-[8px] border border-[#C1BFD0] cursor-pointer text-[#3F3E3E] hover:bg-[#e7e7e7]">
             <img src={Icons.filterIcon} alt="filter" />
@@ -358,7 +395,8 @@ const Contact = () => {
 
       <ContactsTable
         columns={columns}
-        data={contacts}
+        data={filteredContacts}
+        contacts={contacts}
         isOpenCreateContactModal={() => setOpenCreateContactModal(true)}
       />
 
@@ -395,7 +433,7 @@ const Contact = () => {
           selectedContacts={selectedRows}
           onDelete={deleteSelectedRows}
         />
-      )} 
+      )}
 
       {openCreateFormModal && (
         <CreateFormModal
@@ -406,7 +444,13 @@ const Contact = () => {
         />
       )}
 
-      {availableGroup && <AvailableGroupModal openAvailableGroups={availableGroup}  onClose={()=>setAvailableGroup(false)} moveContactsToGroup={moveContactsToGroup}/>}
+      {availableGroup && (
+        <AvailableGroupModal
+          openAvailableGroups={availableGroup}
+          onClose={() => setAvailableGroup(false)}
+          moveContactsToGroup={moveContactsToGroup}
+        />
+      )}
 
       {openImportModal && (
         <ImportContact
@@ -418,6 +462,6 @@ const Contact = () => {
       )}
     </div>
   );
-}; 
+};
 
 export default Contact;

@@ -1,31 +1,28 @@
-"use client"
-
-import { useState } from "react"
+import { useState } from "react";
 // import { Filter, SlidersHorizontal } from "lucide-react"
-import EmptyState from "@/components/campaigns/EmptyState"
-import SearchBar from "@/components/campaigns/SearchBar"
-import Pagination from "@/components/campaigns/Pagination"
-import CampaignList from "@/components/campaigns/CampaignList"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { Icons } from "../../assets/assets"
-import { useNavigate } from "react-router-dom"
-
+import EmptyState from "@/components/campaigns/EmptyState";
+import SearchBar from "@/components/campaigns/SearchBar";
+import Pagination from "@/components/campaigns/Pagination";
+import CampaignList from "@/components/campaigns/CampaignList";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Icons } from "../../assets/assets";
+import { useNavigate } from "react-router-dom";
 
 const Campaigns = () => {
-  const isMobile = useMediaQuery("(max-width: 640px)")
-  const [showEmptyState, setShowEmptyState] = useState(false)
-  const navigate = useNavigate()
-  const [currentPage, setCurrentPage] = useState(1)
+  const isMobile = useMediaQuery("(max-width: 640px)");
+  const [showEmptyState, setShowEmptyState] = useState(false);
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     messageType: [],
     status: [],
-  })
-  const [activeDropdown, setActiveDropdown] = useState(null)
+  });
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   const handleCreateCampaign = () => {
-    console.log("Create campaign clicked")
-    navigate("/campaigns/list")
-  }
+    console.log("Create campaign clicked");
+    navigate("/campaigns/list");
+  };
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({
@@ -33,8 +30,8 @@ const Campaigns = () => {
       [type]: prev[type].includes(value)
         ? prev[type].filter((v) => v !== value)
         : [...prev[type], value],
-    }))
-  }
+    }));
+  };
 
   return (
     <div className="min-h-screen">
@@ -43,7 +40,9 @@ const Campaigns = () => {
         <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col gap-0">
             <div className="flex items-center justify-between">
-              <h1 className="text-[20px] font-medium text-[#1a1a1a]">View Campaigns</h1>
+              <h1 className="text-[20px] font-medium text-[#1a1a1a]">
+                View Campaigns
+              </h1>
               <button
                 onClick={handleCreateCampaign}
                 className="bg-[#383268] w-[168px] h-[44px] text-white px-4 py-2 rounded-[8px] hover:bg-[#2a2a5a] transition-colors text-sm"
@@ -52,7 +51,8 @@ const Campaigns = () => {
               </button>
             </div>
             <p className="text-[14px] font-[100] text-[#767676]">
-              Easily upload, enter, or organize your contact list for smooth campaign delivery.
+              Easily upload, enter, or organize your contact list for smooth
+              campaign delivery.
             </p>
           </div>
         </div>
@@ -68,7 +68,11 @@ const Campaigns = () => {
           <div className="flex gap-3">
             <div className="relative">
               <button
-                onClick={() => setActiveDropdown(activeDropdown === "filter" ? null : "filter")}
+                onClick={() =>
+                  setActiveDropdown(
+                    activeDropdown === "filter" ? null : "filter"
+                  )
+                }
                 className="px-[18px] py-[10px] h-[44px] flex items-center gap-[10px] rounded-[8px] border border-[#C1BFD0] cursor-pointer text-[#3F3E3E] hover:bg-[#e7e7e7]"
               >
                 <img src={Icons.filterIcon} alt="filter" />
@@ -85,10 +89,14 @@ const Campaigns = () => {
                             <input
                               type="checkbox"
                               checked={filters.messageType.includes(type)}
-                              onChange={() => handleFilterChange("messageType", type)}
+                              onChange={() =>
+                                handleFilterChange("messageType", type)
+                              }
                               className="rounded border-gray-300 mr-2"
                             />
-                            <span className="text-sm text-gray-700">{type}</span>
+                            <span className="text-sm text-gray-700">
+                              {type}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -96,23 +104,29 @@ const Campaigns = () => {
                     <div>
                       <h3 className="text-sm font-medium mb-2">Status</h3>
                       <div className="space-y-2">
-                        {["Sent", "Scheduled", "Ongoing", "Draft"].map((status) => (
-                          <label key={status} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={filters.status.includes(status)}
-                              onChange={() => handleFilterChange("status", status)}
-                              className="rounded border-gray-300 mr-2"
-                            />
-                            <span className="text-sm text-gray-700">{status}</span>
-                          </label>
-                        ))}
+                        {["Sent", "Scheduled", "Ongoing", "Draft"].map(
+                          (status) => (
+                            <label key={status} className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={filters.status.includes(status)}
+                                onChange={() =>
+                                  handleFilterChange("status", status)
+                                }
+                                className="rounded border-gray-300 mr-2"
+                              />
+                              <span className="text-sm text-gray-700">
+                                {status}
+                              </span>
+                            </label>
+                          )
+                        )}
                       </div>
                     </div>
                     <button
                       onClick={() => {
-                        setFilters({ messageType: [], status: [] })
-                        setActiveDropdown(null)
+                        setFilters({ messageType: [], status: [] });
+                        setActiveDropdown(null);
                       }}
                       className="mt-4 w-full text-center text-sm text-[#383268] hover:text-[#2a2a5a]"
                     >
@@ -135,7 +149,9 @@ const Campaigns = () => {
             <div className="bg-white rounded-lg">
               <div className="px-6 border-b  py-4">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-[18px] font-medium text-[#101828]">Campaigns</h2>
+                  <h2 className="text-[18px] font-medium text-[#101828]">
+                    Campaigns
+                  </h2>
                   <span className="bg-[#F5E9EC] text-[#9A2444] text-[12px] font-medium flex items-center justify-center w-[87px] h-[22px] rounded-[16px]">
                     {showEmptyState ? "0" : "15"} campaigns
                   </span>
@@ -145,22 +161,29 @@ const Campaigns = () => {
               {showEmptyState ? (
                 <EmptyState onCreateCampaign={handleCreateCampaign} />
               ) : (
-                <CampaignList filters={filters} onPageChange={setCurrentPage} currentPage={currentPage} />
+                <CampaignList
+                  filters={filters}
+                  onPageChange={setCurrentPage}
+                  currentPage={currentPage}
+                />
               )}
             </div>
 
             {/* Pagination - Only show outside white box on desktop when not empty */}
             {!showEmptyState && (
               <div className="hidden sm:block mt-6">
-                <Pagination currentPage={currentPage} totalPages={10} onPageChange={setCurrentPage} />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={10}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             )}
           </div>
         </div>
       </div>
-            
     </div>
-  )
-}
+  );
+};
 
-export default Campaigns
+export default Campaigns;
