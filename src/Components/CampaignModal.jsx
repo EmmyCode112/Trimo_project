@@ -54,7 +54,7 @@ const CampaignModal = ({ onClose, onOpen }) => {
 
   if (!onOpen) return null;
 
-  const { openFormModal, openWhatsFormModal } = useModal();
+  const { openFormModal, openWhatsFormModal, openEMailFormModal } = useModal();
 
   const handleOpenSmsModal = () => {
     openFormModal();
@@ -62,6 +62,11 @@ const CampaignModal = ({ onClose, onOpen }) => {
   };
   const handleOpenWhatsAppModal = () => {
     openWhatsFormModal();
+    onClose();
+  };
+
+  const handleOpenEmailModal = () => {
+    openEMailFormModal();
     onClose();
   };
 
@@ -129,7 +134,7 @@ const CampaignModal = ({ onClose, onOpen }) => {
                 </div>
               </div>
               {/* email campaign */}
-              <div className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer">
+              <div onClick={handleOpenEmailModal} className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer">
                 <img src={Icons.contactFrameManual} alt="import contact" />
                 <div className="flex items-center justify-between gap-[20px] max-sm:gap-2.5">
                   <div>

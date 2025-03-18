@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { SideBarIcons, Icons } from "../../assets/assets";
 import CampaignModal from '../CampaignModal';
 import { useModal } from '@/redux/UseCampaignModal';
+import CreateContactModal from '@/pages/Contact/CreateContactModal';
 
 // Define the sub-navigation items for each main nav item that has them
 const subNavItems = {
@@ -50,6 +51,8 @@ const Sidebar = ({ isSidebarOpen }) => {
       openCampaignModal(); // ✅ Opens modal when "Start Campaign" is clicked
     }
   };
+
+  
 
   const links = [
     { label: "Home", Icon: SideBarIcons.homeIcon, route: "/" },
@@ -270,6 +273,13 @@ const Sidebar = ({ isSidebarOpen }) => {
           className={`rotate-90 w-[20px] h-[20px] transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
         />
       </div>
+
+      {openModal && (
+        <CampaignModal
+          onClose={closeCampaignModal}
+          onOpen={openCampaignModal}
+        />
+      )}
     </div> 
   );
 };

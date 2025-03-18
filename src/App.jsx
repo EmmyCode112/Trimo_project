@@ -26,6 +26,7 @@ import Wallet from "./pages/Wallet/Wallet";
 import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
 import EmailEditorPage from "./pages/Campaigns/EmailCampaign";
+import CampaignPage from "./pages/Campaigns/Campaigns";
 
 import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
@@ -125,6 +126,7 @@ const App = () => {
                       element={<CampaignPage />}
                     /> */}
                     <Route path="/contacts" element={<Contact />} />
+                    <Route path="/campaigns/email" element={<CampaignPage />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
                     <Route path="/wallet" element={<Wallet />} />
