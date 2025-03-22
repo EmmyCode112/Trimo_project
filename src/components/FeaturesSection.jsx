@@ -10,10 +10,9 @@ const featureCards = [
     transform: "translate(69px, 46px) scale(0.95)",
     width: "328px",
     borderRadius: "9.41px",
-    borderWidth: "2px",
-    borderColor: "#383268",
-    padding: "8.94px 9.41px",
-    zIndex: 5
+    padding: "0",
+    zIndex: 5,
+    imageUrl: "/sms.svg"
   },
   {
     id: 2,
@@ -24,9 +23,10 @@ const featureCards = [
     width: "425px",
     borderRadius: "10.33px",
     borderWidth: "2px",
-    borderColor: "#383268",
-    padding: "8.94px 9.41px",
-    zIndex: 4
+    borderColor: "",
+    padding: "0",
+    zIndex: 4,
+    imageUrl: "/email.svg"
   },
   {
     id: 3,
@@ -37,9 +37,10 @@ const featureCards = [
     width: "329px",
     borderRadius: "8px",
     borderWidth: "2px",
-    borderColor: "#383268",
-    padding: "9.41px",
-    zIndex: 3
+    borderColor: "",
+    padding: "0",
+    zIndex: 3,
+    imageUrl: "/whatsapp.svg"
   },
   {
     id: 4,
@@ -50,9 +51,10 @@ const featureCards = [
     width: "356px",
     borderRadius: "8.65px",
     borderWidth: "2.51px",
-    borderColor: "#383268",
-    padding: "10.21px",
-    zIndex: 2
+    borderColor: "",
+    padding: "0",
+    zIndex: 2,
+    imageUrl: "/otp.svg"
   },
   {
     id: 5,
@@ -63,9 +65,10 @@ const featureCards = [
     width: "248px",
     borderRadius: "7.11px",
     borderWidth: "0.36px",
-    borderColor: "#383268",
-    padding: "6.75px 7.11px",
-    zIndex: 1
+    borderColor: "",
+    padding: "0",
+    zIndex: 1,
+    imageUrl: "/secure.svg"
   },
   {
     id: 6,
@@ -76,9 +79,10 @@ const featureCards = [
     width: "558px",
     borderRadius: "10.49px",
     borderWidth: "0.52px",
-    borderColor: "#383268",
-    padding: "10.64px",
-    zIndex: 0
+    borderColor: "",
+    padding: "0",
+    zIndex: 0,
+    imageUrl: "message.svg"
   }
 ];
 
@@ -119,11 +123,11 @@ const FeaturesSection = () => {
 
   return (
     <section ref={sectionRef} className="py-24 px-4 max-w-[1440px] mx-auto fade-up" id="features">
-      <div className="text-center mb-12">
-        <div className="inline-block rounded-[37px] bg-[#EBEBF099] py-[7px] px-[10px] w-[131px] h-[34px] mb-4">
+      <div className="text-center w-full flex items-center flex-col mb-12">
+        <div className="flex items-center justify-center rounded-[37px] bg-[#EBEBF099] py-[7px] px-[10px] w-[131px] h-[34px] mb-4">
           <span className="text-[#484848] font-general font-medium text-[14px] leading-[20px]">Features</span>
         </div>
-        <h2 className="text-[40px] font-general font-semibold leading-tight mb-8">
+        <h2 className="text-[40px] font-semibold leading-tight mb-8">
           The complete toolbox for customer engagement
         </h2>
       </div>
@@ -144,40 +148,37 @@ const FeaturesSection = () => {
                 style={{ backgroundColor: card.bgColor }}
               >
                 <div 
-                  className="card-mockup absolute" 
+                  className="image-container absolute" 
                   style={{ 
                     transform: card.transform,
                     width: card.width,
-                    borderRadius: card.borderRadius,
-                    borderWidth: card.borderWidth,
-                    padding: card.padding,
-                    borderColor: card.borderColor,
-                    backgroundColor: "white",
+                    // borderRadius: card.borderRadius,
+                    // borderWidth: card.borderWidth,
+                    // borderColor: card.borderColor,
                     boxShadow: "0px 4px 17.6px 0px rgba(0,0,0,0.06)",
                     height: "auto",
-                    minHeight: "120px"
+                    minHeight: "120px",
+                    overflow: "hidden"
                   }}
                 >
-                  {/* This is where card mockup UI would go */}
-                  <div className="safari-toolbar">
-                    <div className="safari-controls">
-                      <div className="safari-controls-dot safari-controls-red"></div>
-                      <div className="safari-controls-dot safari-controls-yellow"></div>
-                      <div className="safari-controls-dot safari-controls-green"></div>
-                    </div>
-                  </div>
-                  <div className="p-2">
-                    {/* Placeholder content */}
-                    <div className="w-1/2 h-4 bg-gray-100 rounded mb-2"></div>
-                    <div className="w-3/4 h-3 bg-gray-100 rounded"></div>
-                  </div>
+                  {/* Using image instead of mockup */}
+                  <img 
+                    src={card.imageUrl} 
+                    alt={card.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback for testing if image doesn't load
+                      e.target.src = "/api/placeholder/400/300";
+                      e.target.alt = "Placeholder";
+                    }}
+                  />
                 </div>
               </div>
               <CardContent className="p-6">
-                <h3 className="font-general font-semibold text-[24px] leading-[36px] mb-2">
+                <h3 className="font-general text-triimo-gray font-semibold text-[24px] leading-[36px] mb-2">
                   {card.title}
                 </h3>
-                <p className="font-general font-medium text-[18px] leading-[28px] text-gray-600">
+                <p className="leading-[28px] font-medium text-[18px] leading-[28px] text-[#969696]">
                   {card.description}
                 </p>
               </CardContent>

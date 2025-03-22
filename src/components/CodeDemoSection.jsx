@@ -60,27 +60,27 @@ const CodeDemoSection = () => {
   }, [currentLine]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-[#310C16] text-white fade-up" id="code-demo">
+    <section ref={sectionRef} className="py-24 bg-[#410F1D] text-white fade-up" id="code-demo">
       <div className="max-w-[1440px] mx-auto px-4">
         <div className="max-w-[1218px] mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-[106px]">
           <div className="lg:w-1/2 fade-up">
-            <h2 className="text-[40px] font-general font-semibold leading-tight mb-6">
+            <h2 className="text-[32px] lg:w-[427px] font-semibold leading-[48px] mb-6">
               Send your first text message in a matter of minutes
             </h2>
-            <p className="text-[18px] font-general font-medium leading-[28px] mb-8 opacity-90">
+            <p className="text-[18px]  font-medium leading-[28px] mb-8 text-[#f1f1f1]">
               Sign up for a free Twilio account and grab one of our seven official server-side SDKs to get started. Send your first text message, phone call, or email in minutes and when you're ready to launch your app, upgrade to a pay-as-you-go plan.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="px-6 py-3 bg-transparent border border-white rounded-lg font-medium hover:bg-white hover:text-[#310C16] transition-colors">
+              <a href="#" className="px-6 py-3 text-triimo-gray bg-transparent bg-white border border-white rounded-lg font-medium hover:bg-white hover:text-[#310C16] transition-colors">
                 View docs
               </a>
-              <a href="#" className="px-6 py-3 bg-white text-[#310C16] rounded-lg font-medium hover:bg-opacity-90 transition-colors">
+              <a href="#" className="px-6 py-3 border border-white text-[white] rounded-lg font-medium hover:bg-opacity-90 transition-colors">
                 Sign up
               </a>
             </div>
           </div>
           
-          <div className="lg:w-1/2 w-full max-w-[658px] bg-[#310C16] rounded-lg border border-gray-800 fade-up">
+          <div className="lg:w-1/2 w-full max-w-[658px] bg-[#310C16] fade-">
             <div className="p-6 overflow-hidden font-mono text-sm">
               <pre className="text-left">
                 {codeLines.slice(0, currentLine).map((line, index) => {
@@ -134,50 +134,50 @@ const CodeDemoSection = () => {
         </div>
         
         <div className="max-w-[1218px] mx-auto mt-[45px]">
-          <div className="bg-[#310C16] border border-gray-800 rounded-[15px] p-6 lg:p-[27px] grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-[36px] fade-up">
+          <div className="bg-[#310C16] rounded-[15px] p-6 lg:p-[27px] grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-[36px] fade-up">
             <div>
-              <h3 className="text-[20px] font-general font-semibold mb-2">Official SDKs</h3>
-              <p className="text-[16px] opacity-80 font-general">
+              <h3 className="text-[24px] font-semibold mb-4">Official SDKs</h3>
+              <p className="text-[18px] text-[#F1F1F1]">
                 Build quickly and confidently with our SDKs for Node.js, Python, C#, Java, PHP, Ruby, and Go.
               </p>
             </div>
             
             <div>
-              <h3 className="text-[20px] font-general font-semibold mb-2">Triimo Functions</h3>
-              <p className="text-[16px] opacity-80 font-general">
+              <h3 className="text-[24px] font-semibold mb-4">Triimo Functions</h3>
+              <p className="text-[18px] text-[#F1F1F1]">
                 Bring ideas to life without having to host your own code by deploying with Triimo Functions.
               </p>
             </div>
             
             <div>
-              <h3 className="text-[20px] font-general font-semibold mb-2">99.95%+ API uptime</h3>
-              <p className="text-[16px] opacity-80 font-general">
+              <h3 className="text-[24px] font-semibold mb-4">99.95%+ API uptime</h3>
+              <p className="text-[18px] text-[#F1F1F1]">
                 Reliable availability you can trust to power your app's most important features.
               </p>
             </div>
           </div>
           
           <div className="text-center mt-16 fade-up">
-            <p className="text-[18px] font-general font-medium mb-12">Join 4,000+ companies already growing</p>
+            <p className="text-[16px]  font-medium mb-12">Join 4,000+ companies already growing</p>
             
-            <div className="flex flex-wrap justify-center gap-12">
+            <div className="flex flex-wrap w-full max-w-[1216px]  items-center h-[48px] justify-between gap-12">
               <div className="w-[120px] h-[40px] flex items-center">
-                <span className="text-white text-2xl font-bold">coinbase</span>
+                <img src="/coinbase.svg" alt="" className="" />
               </div>
               <div className="w-[120px] h-[40px] flex items-center">
-                <span className="text-white text-2xl font-bold">Spotify</span>
+                <img src="/spotify.svg" alt="" className="" />
               </div>
               <div className="w-[120px] h-[40px] flex items-center">
-                <span className="text-white text-2xl font-bold">slack</span>
+                <img src="/slack.svg" alt="" className="" />
               </div>
               <div className="w-[120px] h-[40px] flex items-center">
-                <span className="text-white text-2xl font-bold">Dropbox</span>
+                <img src="/dropbox.svg" alt="" className="" />
               </div>
               <div className="w-[120px] h-[40px] flex items-center">
-                <span className="text-white text-2xl font-bold">webflow</span>
+                <img src="/webflow.svg" alt="" className="" />
               </div>
               <div className="w-[120px] h-[40px] flex items-center">
-                <span className="text-white text-2xl font-bold">zoom</span>
+                <img src="/zoom.svg" alt="" className="" />
               </div>
             </div>
           </div>

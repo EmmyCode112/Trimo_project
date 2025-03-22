@@ -59,8 +59,8 @@ const Index = () => {
         <HeroSection />
         <UseCasesSection />
         <FeaturesSection />
-        <HowTriimoWorksSection />
         <CodeDemoSection />
+        <HowTriimoWorksSection />
         <TestimonialsSection />
         <FAQSection />
         <SubscriptionSection />
