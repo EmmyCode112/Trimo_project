@@ -33,6 +33,7 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
+import Index from "./pages/Home/Index";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -80,8 +81,9 @@ const App = () => {
     <Router>
       <Routes>
         {/* Public Routes */}
-        {!isAuthenticated ? (
+        {isAuthenticated ? (
           <>
+            <Route path="/home" element={<Index />} />
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset-password" element={<PasswordReset />} />
@@ -91,7 +93,7 @@ const App = () => {
         ) : ( 
           // Authenticated Layout for authenticated users
           <Route
-            path="/*"
+            path="*"
             element={
               <div className="h-[100vh] overflow-hidden flex relative">
                 {/* Overlay for mobile */}
@@ -118,7 +120,7 @@ const App = () => {
                   /> 
                   <Routes>
                     <Route
-                      path="/"
+                      path="/dashboard"
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
