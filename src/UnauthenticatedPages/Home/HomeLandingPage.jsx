@@ -3,7 +3,7 @@ import UseCasesSection from "../Components/landingPage/UseCasesSection";
 import FeatureSection from "../Components/landingPage/FeatureSection";
 import TriimoFunctionSection from "../Components/landingPage/TriimoFunctionSection";
 import StepByStepSection from "../Components/landingPage/StepByStepSection";
-import Analysis from "../Components/landingPage/analysis";
+import Analysis from "../Components/landingPage/Analysis";
 import Testimonial from "../Components/landingPage/Testimonial";
 import FaqSection from "../Components/landingPage/FaqSection";
 import Subscribe from "../Components/landingPage/Subscribe";

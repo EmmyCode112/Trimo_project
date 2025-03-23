@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Button } from './ui/button';
+
 import { Skeleton } from './ui/skeleton';
 
 const HowTriimoWorksSection = () => {

@@ -40,22 +40,25 @@ const HeroSection = () => {
             />
           </div>
           
-          <div className="max-w-content mx-auto px-4 py-16 flex flex-col items-center gap-12 md:gap-16">
+          <div className="max-w-content mx-auto px-4 py-16 flex flex-col items-center gap-6">
             <div 
               ref={el => elementsRef.current[0] = el} 
-              className="fade-up px-[10px] py-[7px] bg-[#EBEBF099] backdrop-blur-sm rounded-[37px] inline-flex items-center justify-center"
+              className="fade-up px-[10px] mt-9 py-[7px] bg-[#EBEBF099] backdrop-blur-sm rounded-[37px] inline-flex items-center justify-center"
             >
               <span className="text-sm font-medium text-triimo-gray">No Credit Card Needed for Sign up</span>
             </div>
             
             <div className="text-center space-y-6">
-              <h1 
-                ref={el => elementsRef.current[1] = el} 
-                className="fade-up text-3xl md:text-5xl font-semibold leading-tight tracking-tight"
-              >
-                Effortless <span className="font-figma-hand font-bold gradient-text">Multi-Channel <br/> Messaging</span> for Your Business
-              </h1>
-              
+            <h2 className="text-[48px] max-sm:text-[28px] font-bold mt-4 text-[#1A1A1A] w-full md:w-[80%] lg:w-[70%] leading-[60px] mx-auto">
+          Effortless{" "}
+          <span className="bg-gradient-to-r from-[#9A2444] to-[#383268] bg-clip-text text-transparent">
+            multi-channel{" "}
+          </span>
+          <span className="bg-gradient-to-r from-[#CB1E33] to-[#9A2444] bg-clip-text text-transparent">
+            messaging{" "}
+          </span>
+          for your Business
+        </h2>              
               <p 
                 ref={el => elementsRef.current[2] = el} 
                 className="fade-up text-lg font-medium text-triimo-gray max-w-[435px] mx-auto"

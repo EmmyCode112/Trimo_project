@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 
+
 const featureCards = [
   {
     id: 1,
@@ -82,7 +83,7 @@ const featureCards = [
     borderColor: "",
     padding: "0",
     zIndex: 0,
-    imageUrl: "message.svg"
+    imageUrl: '/analytics.png',
   }
 ];
 

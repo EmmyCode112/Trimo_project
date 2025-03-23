@@ -31,15 +31,11 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-layout mx-auto px-6 h-20 flex items-center justify-between">
-        <div className="flex items-center bg-black h-[26px] object-cover w-[70px]">
-          <Link to="/" className="flex  items-center">
-            <img 
+          <img 
               src={Logo} 
               alt="Triimo Logo" 
-              className="h-[26px] object-cover w-[70px]"
+              className="h-[26px] scale-150 object-cover w-[70px]"
             />
-          </Link>
-        </div>
         
         <nav className="hidden md:flex items-center gap-8">
           <Link 

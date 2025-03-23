@@ -14,7 +14,7 @@ const Navbar = () => {
     { link: "Home", routes: "/" },
     { link: "Features", routes: "/features" },
     { link: "Use Cases", routes: "/use_cases" },
-    { link: "API Documentation", routes: "/docs/api" },
+    { link: "API Documentation", routes: "/api/docs" },
     { link: "About Us", routes: "/about-us" },
     { link: "Contact", routes: "/contact-us" },
   ];
