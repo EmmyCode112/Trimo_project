@@ -88,13 +88,14 @@ const UseCasesPage = () => {
               </ul>
             </div>
           </div>
-          <div className="w-full md:w-1/2 fade-up">
+          <div className="w-full md:w-1/2 fade-up relative">
+            <div className="w-[560px] h-[512px] relative">
               <img 
                 src="/campaign.svg" 
                 alt="Marketing Campaign Dashboard" 
-                className="w-[433px] h-[308px] object-cover absolute right-0 rounded-[10px]"
-                style={{ top: '42px', left: '-24px' }}
+                className="w-[560px] h-[512px] object-cover rounded-[10px]"
               />
+            </div>
           </div>
         </div>
       </section>
@@ -140,12 +141,11 @@ const UseCasesPage = () => {
             </div>
           </div>
           <div className="w-full md:w-1/2 fade-up relative">
-            <div className="w-full md:w-[415px] h-[340px] bg-[#FAFAFA] border border-[#F1F1F1] rounded-[10px] overflow-hidden">
+            <div className="w-[560px] h-[512px] relative">
               <img 
                 src="/lovable-uploads/13d011da-3acc-4be0-873a-ddd83f9ec2f9.png" 
                 alt="API Documentation" 
-                className="w-[433px] h-[308px] object-cover absolute md:relative border-2 border-[#383268] rounded-[10px]"
-                style={{ top: '42px', left: '-24px' }}
+                className="w-[560px] h-[512px] object-cover rounded-[10px] border-2 border-[#383268]"
               />
             </div>
           </div>
@@ -194,12 +194,11 @@ const UseCasesPage = () => {
             </div>
           </div>
           <div className="w-full md:w-1/2 fade-up relative">
-            <div className="w-full md:w-[415px] h-[340px] bg-[#FAFAFA] border border-[#F1F1F1] rounded-[10px] overflow-hidden">
+            <div className="w-[560px] h-[512px] relative">
               <img 
                 src="/lovable-uploads/6b6f5846-c01c-4876-b51a-61155489c955.png" 
                 alt="Customer Messaging Dashboard" 
-                className="w-[433px] h-[308px] object-cover absolute md:relative border-2 border-[#383268] rounded-[10px]"
-                style={{ top: '42px', left: '-24px' }}
+                className="w-[560px] h-[512px] object-cover rounded-[10px] border-2 border-[#383268]"
               />
             </div>
           </div>
