@@ -26,6 +26,9 @@ import Wallet from "./pages/Wallet/Wallet";
 import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
 import CampaignPage from "./pages/Campaigns/EmailCampaign";
+import WhatsAppPage from "./pages/Home/WhatsAppPage";
+import EmailPage from "./pages/Home/EmailPage";
+import SMSPage from "./pages/Home/SMSPage";
 import Home from "./pages/Campaigns/Email/page";
 // import CampaignPage from "./pages/Campaigns/Campaigns";
 
@@ -35,6 +38,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
 import Index from "./pages/Home/Index";
 import UseCasesPage from "./pages/Home/UseCasePage";
+import ApiHome from "./pages/Home/APIHome";
+import ApiDocumentation from "./pages/Home/ApiDocumentation";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -86,6 +91,11 @@ const App = () => {
           <>
             <Route path="/home" element={<Index />} />
             <Route path="/use-cases" element={<UseCasesPage />} />
+            <Route path="/email" element={<EmailPage />} />
+            <Route path="/whatsapp" element={<WhatsAppPage />} />
+            <Route path="/api-documentation" element={<ApiDocumentation />} />
+            <Route path="/api-home" element={<ApiHome />} />
+            <Route path="/sms" element={<SMSPage />} />
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset-password" element={<PasswordReset />} />
