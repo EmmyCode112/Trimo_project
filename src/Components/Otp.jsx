@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 const OTPInput = ({ length = 6, onSubmit, error, setError }) => {
   const [otp, setOtp] = useState(new Array(length).fill(""));
   const [mask, setMask] = useState(new Array(length).fill(false));
-//   const [error, setError] = useState(""); 
+  //   const [error, setError] = useState("");
   const inputsRef = useRef([]);
 
   const handleChange = (value, index) => {
@@ -90,7 +90,7 @@ const OTPInput = ({ length = 6, onSubmit, error, setError }) => {
             ref={(el) => (inputsRef.current[index] = el)}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
-            className={`w-10 h-10 text-center border rounded ${
+            className={`w-10 h-10 text-center border rounded outline-[#383268] ${
               error ? "border-red-500" : "border-gray-300"
             }`}
           />

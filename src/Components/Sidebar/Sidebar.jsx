@@ -1,44 +1,55 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SideBarIcons, Icons } from "../../assets/assets";
-import CampaignModal from '../CampaignModal';
-import { useModal } from '@/redux/UseCampaignModal';
-import CreateContactModal from '@/pages/Contact/CreateContactModal';
+import CampaignModal from "../CampaignModal";
+import { useModal } from "@/redux/UseCampaignModal";
 
-// Define the sub-navigation items for each main nav item that has them
-const subNavItems = {
-  campaigns: [
-    { label: "New Campaign", route: "/campaigns/new" },
-    { label: "View All Campaigns", route: "/campaigns", count: 10 }
-  ],
-  contacts: [
-    { label: "All Contacts", route: "/contacts", count: 10 },
-    { label: "Groups", route: "/groups", count: 10 }
-  ],
-  templates: [
-    { label: "Manage Template", route: "/campaigns/email" },
-    { label: "Create New Template", route: "/campaigns/template" }
-  ],
-  analytics: [
-    { label: "Dashboard Analytics", route: "/analytics" },
-    { label: "Detailed Report", route: "/analytics/report" }
-  ],
-  wallet: [
-    { label: "Wallet Overview", route: "/wallet" },
-    { label: "Transaction History", route: "/wallet/history" }
-  ],
-  integration: [
-    { label: "API Documentation", route: "/integration/docs" },
-    { label: "API Key Management", route: "/integration/keys" },
-    { label: "Webhook Setup", route: "/integration/webhooks" }
-  ],
-  notifications: [
-    { label: "All Notifications", route: "/notifications", count: 10 },
-    { label: "Notification Settings", route: "/notifications/settings" }
-  ]
-};
+import { useGroups } from "@/redux/GroupProvider/UseGroup";
+import { useContacts } from "@/redux/ContactProvider/UseContact";
+import { useNotification } from "@/redux/NotificationProvider/UseNotification";
 
 const Sidebar = ({ isSidebarOpen }) => {
+  const { groups } = useGroups();
+  const { contacts } = useContacts();
+  const { notifications } = useNotification();
+
+  // Define the sub-navigation items for each main nav item that has them
+  const subNavItems = {
+    campaigns: [
+      { label: "New Campaign", route: "/campaigns/new" },
+      { label: "View All Campaigns", route: "/campaigns", count: 10 },
+    ],
+    contacts: [
+      { label: "All Contacts", route: "/contacts", count: contacts.length },
+      { label: "Groups", route: "/groups", count: groups.length },
+    ],
+    templates: [
+      { label: "Manage Template", route: "/campaigns/email" },
+      { label: "Create New Template", route: "/campaigns/template" },
+    ],
+    analytics: [
+      { label: "Dashboard Analytics", route: "/analytics" },
+      { label: "Detailed Report", route: "/analytics/report" },
+    ],
+    wallet: [
+      { label: "Wallet Overview", route: "/wallet" },
+      { label: "Transaction History", route: "/wallet/history" },
+    ],
+    integration: [
+      { label: "API Documentation", route: "/integration/docs" },
+      { label: "API Key Management", route: "/integration/keys" },
+      { label: "Webhook Setup", route: "/integration/webhooks" },
+    ],
+    notifications: [
+      {
+        label: "All Notifications",
+        route: "/notifications",
+        count: notifications.length,
+      },
+      { label: "Notification Settings", route: "/notifications/settings" },
+    ],
+  };
+
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeLink, setActiveLink] = useState(() => {
     return localStorage.getItem("activeRoute") || "/dashboard";
@@ -52,49 +63,47 @@ const Sidebar = ({ isSidebarOpen }) => {
     }
   };
 
-  
-
   const links = [
-    { label: "Home", Icon: SideBarIcons.homeIcon, route: "/" },
+    { label: "Home", Icon: SideBarIcons.homeIcon, route: "/dashboard" },
     {
       label: "Campaigns",
       Icon: SideBarIcons.campaignIcon,
       route: "/campaigns",
       hasSubNav: true,
-      key: "campaigns"
+      key: "campaigns",
     },
-    { 
-      label: "Contacts", 
-      Icon: SideBarIcons.contactIcon, 
+    {
+      label: "Contacts",
+      Icon: SideBarIcons.contactIcon,
       route: "/contacts",
       hasSubNav: true,
-      key: "contacts"
+      key: "contacts",
     },
-    { 
-      label: "Templates", 
+    {
+      label: "Templates",
       Icon: SideBarIcons.templateIcon,
       hasSubNav: true,
-      key: "templates"
+      key: "templates",
     },
     {
       label: "Analytics",
       Icon: SideBarIcons.analyticsIcon,
       route: "/analytics",
       hasSubNav: true,
-      key: "analytics"
+      key: "analytics",
     },
-    { 
-      label: "Wallet", 
-      Icon: SideBarIcons.walletIcon, 
+    {
+      label: "Wallet",
+      Icon: SideBarIcons.walletIcon,
       route: "/wallet",
       hasSubNav: true,
-      key: "wallet"
+      key: "wallet",
     },
-    { 
-      label: "Integration", 
+    {
+      label: "Integration",
       Icon: SideBarIcons.integrationIcon,
       hasSubNav: true,
-      key: "integration"
+      key: "integration",
     },
     {
       label: "Notification",
@@ -102,7 +111,7 @@ const Sidebar = ({ isSidebarOpen }) => {
       route: "/notifications",
       hasSubNav: true,
       key: "notifications",
-      count: 10
+      count: notifications.length,
     },
     { label: "Settings", Icon: SideBarIcons.settingIcon, route: "/settings" },
   ];
@@ -118,9 +127,9 @@ const Sidebar = ({ isSidebarOpen }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -158,22 +167,28 @@ const Sidebar = ({ isSidebarOpen }) => {
   };
 
   return (
-    <div 
-      ref={sidebarRef} 
+    <div
+      ref={sidebarRef}
       className={`bg-[#383268] h-full flex flex-col justify-between transition-all duration-300 ease-in-out group relative
-        ${isExpanded ? 'w-[263px]' : 'w-[82px] hover:w-[263px]'}`}
+        ${isExpanded ? "w-[263px]" : "w-[82px] hover:w-[263px]"}`}
     >
       <div className="w-full h-full flex flex-col gap-y-3">
         <div className="w-full flex items-center">
           <img
             src={SideBarIcons.TriimoIcon}
             alt="Logo"
-            className={`w-[24px] transition-all duration-300 ${isExpanded ? 'w-full' : 'group-hover:w-full hidden group-hover:block'}`}
+            className={`w-[24px] transition-all duration-300 ${
+              isExpanded
+                ? "w-full"
+                : "group-hover:w-full hidden group-hover:block"
+            }`}
           />
           <img
             src={SideBarIcons.HeaderIcon}
             alt="Logo"
-            className={`w-full mt-3 transition-all duration-300 ${isExpanded ? 'hidden' : 'block group-hover:hidden'}`}
+            className={`w-full mt-3 transition-all duration-300 ${
+              isExpanded ? "hidden" : "block group-hover:hidden"
+            }`}
           />
         </div>
 
@@ -182,9 +197,13 @@ const Sidebar = ({ isSidebarOpen }) => {
             <li key={index} className="relative">
               <div
                 onClick={() => handleNavClick(link)}
-                className={`flex items-center py-2 px-3 cursor-pointer rounded-[10px] justify-between text-[#EBEBF0] font-medium w-[50px] ${isExpanded ? 'w-auto' : 'group-hover:w-auto'}
+                className={`flex items-center py-2 px-3 cursor-pointer rounded-[10px] justify-between text-[#EBEBF0] font-medium w-[50px] ${
+                  isExpanded ? "w-auto" : "group-hover:w-auto"
+                }
                   hover:bg-[#e9e9e92f] ${
-                    activeLink === link.route || activeDropdown === link.key ? "bg-[#e9e9e92f]" : ""
+                    activeLink === link.route || activeDropdown === link.key
+                      ? "bg-[#e9e9e92f]"
+                      : ""
                   } ${link.label === "Settings" ? "mt-auto" : ""}`}
               >
                 <div className="flex gap-3 items-center min-w-[24px]">
@@ -193,7 +212,13 @@ const Sidebar = ({ isSidebarOpen }) => {
                     alt={link.label}
                     className="w-[24px] h-[24px]"
                   />
-                  <span className={`transition-opacity duration-300 whitespace-nowrap font-['General Sans'] ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                  <span
+                    className={`transition-opacity duration-300 whitespace-nowrap font-['General Sans'] ${
+                      isExpanded
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-100"
+                    }`}
+                  >
                     {link.label}
                   </span>
                 </div>
@@ -207,9 +232,11 @@ const Sidebar = ({ isSidebarOpen }) => {
                     <img
                       src={Icons.arrowRight}
                       alt=""
-                      className={`w-[20px] h-[20px] transition-all duration-300 transform ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} ${
-                        activeDropdown === link.key ? "rotate-90" : ""
-                      }`}
+                      className={`w-[20px] h-[20px] transition-all duration-300 transform ${
+                        isExpanded
+                          ? "opacity-100"
+                          : "opacity-0 group-hover:opacity-100"
+                      } ${activeDropdown === link.key ? "rotate-90" : ""}`}
                     />
                   )}
                 </div>
@@ -225,7 +252,7 @@ const Sidebar = ({ isSidebarOpen }) => {
                         key={subIndex}
                         onClick={() => {
                           if (subItem.route === "/campaigns/new") {
-                            handleCreateCampaign('Start Campaign')
+                            handleCreateCampaign("Start Campaign");
                           } else {
                             handleSubNavClick(subItem.route);
                           }
@@ -239,11 +266,13 @@ const Sidebar = ({ isSidebarOpen }) => {
                       >
                         <span>{subItem.label}</span>
                         {subItem.count && (
-                          <span className={`px-2 py-0.5 rounded-full text-xs ${
-                            activeLink === subItem.route
-                              ? "bg-white text-[#383268]"
-                              : "bg-[#F4F4F5] text-[#383268]"
-                          }`}>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-xs ${
+                              activeLink === subItem.route
+                                ? "bg-white text-[#383268]"
+                                : "bg-[#F4F4F5] text-[#383268]"
+                            }`}
+                          >
                             {subItem.count}
                           </span>
                         )}
@@ -262,7 +291,11 @@ const Sidebar = ({ isSidebarOpen }) => {
           <div className="w-[40px] h-[40px] min-w-[40px] bg-[#9A2444] text-white flex items-center justify-center rounded-full text-lg font-medium">
             {getUserInitial(user.name)}
           </div>
-          <div className={`transition-opacity duration-300 whitespace-nowrap ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          <div
+            className={`transition-opacity duration-300 whitespace-nowrap ${
+              isExpanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            }`}
+          >
             <h3 className="text-sm">{user.name}</h3>
             <p className="text-[#E7E7E7] text-[13px] font-[300]">{user.role}</p>
           </div>
@@ -270,17 +303,19 @@ const Sidebar = ({ isSidebarOpen }) => {
         <img
           src={Icons.arrowRight}
           alt=""
-          className={`rotate-90 w-[20px] h-[20px] transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          className={`rotate-90 w-[20px] h-[20px] transition-opacity duration-300 ${
+            isExpanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          }`}
         />
       </div>
 
-      {openModal && (
+      {/* {openModal && (
         <CampaignModal
           onClose={closeCampaignModal}
           onOpen={openCampaignModal}
         />
-      )}
-    </div> 
+      )} */}
+    </div>
   );
 };
 

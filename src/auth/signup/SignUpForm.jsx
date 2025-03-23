@@ -222,26 +222,6 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
       {/* Work Phone Input */}
       <label className="flex flex-col gap-2">
         <p className="text-sm font-medium text-gray-800">Work Phone</p>
-        {/* <div className="flex gap-2 px-4 py-2 border border-gray-300 rounded-lg items-center">
-          <img src={Icons.naira} alt="" className="signin-icons" />
-          <input
-            type="text"
-            placeholder="+234 904 666 0706"
-            className="w-full outline-none border-none"
-            value={workPhone}
-            onChange={(e) => {
-              setWorkPhone(e.target.value);
-              if (!validateWorkPhone(e.target.value)) {
-                setErrors((prev) => ({
-                  ...prev,
-                  workPhone: "Work Phone must contain only numbers.",
-                }));
-              } else {
-                setErrors((prev) => ({ ...prev, workPhone: "" }));
-              }
-            }}
-          />
-        </div> */}
 
         <PhoneNumberInput
           country={"ng"} // Default country

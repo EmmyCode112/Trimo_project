@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -13,6 +13,7 @@ import {
   ComposedChart,
 } from "recharts";
 import Button from "../../Components/buttons/transparentButton";
+import CalenderModal from "./CalenderModal";
 
 const data = [
   { month: "Jan", value: 90 },
@@ -43,11 +44,24 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const ResponseTrendsChart = () => {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateChange = (date) => {
+    if (!date) return;
+    console.log("Selected Date:", date.toISOString().split("T")[0]);
+    setSelectedDate(date);
+    setShowCalendar(false);
+  };
+  const disableFutureDates = ({ date }) => new Date() < date;
+
   return (
     <div className="p-6 bg-white border-[5px] border-[#F1F1F1] rounded-lg w-full">
       <div className="border-b border-gray-200 pb-4 mb-4">
-        <h2  className="text-[#3F3E3E] text-[18px] font-medium">Response Trends</h2>
-        <p  className="text-[#767676] text-sm">
+        <h2 className="text-[#3F3E3E] text-[18px] font-medium">
+          Response Trends
+        </h2>
+        <p className="text-[#767676] text-sm">
           Monitor recent delivery rate across channels for optimal performance
         </p>
       </div>
@@ -92,12 +106,19 @@ const ResponseTrendsChart = () => {
             label="12 months"
             className="px-4 py-2 text-sm rounded-[8px]"
           />
-          <Button label="30 days" className="px-4 py-2 text-sm rounded-[8px]" />
+          <Button
+            label="30 days"
+            className="px-4 py-2 text-sm rounded-[8px] hover:bg-[#eeeff0] "
+          />
 
-          <Button label="7 days" className="px-4 py-2 text-sm rounded-[8px]" />
+          <Button
+            label="7 days"
+            className="px-4 py-2 text-sm rounded-[8px] hover:bg-[#eeeff0] "
+          />
           <Button
             label="+ Custom"
-            className="px-4 py-2 text-sm rounded-[8px]"
+            className="px-4 py-2 text-sm rounded-[8px] hover:bg-[#eeeff0] "
+            onClick={() => setShowCalendar(true)}
           />
         </div>
         <Button
@@ -105,6 +126,17 @@ const ResponseTrendsChart = () => {
           className="py-[10px] px-[16px] text-[#344054] rounded-[8px] border border-[#D0D5DD] hover:bg-[#eeeff0] text-[13px]"
         />
       </div>
+
+      {showCalendar && (
+        <CalenderModal
+          handleDateChange={handleDateChange}
+          isOpenCalenderModal={showCalendar}
+          onClose={() => setShowCalendar(false)}
+          setShowCalendar={setShowCalendar}
+          disableFutureDates={disableFutureDates}
+          selectedDate={selectedDate}
+        />
+      )}
     </div>
   );
 };

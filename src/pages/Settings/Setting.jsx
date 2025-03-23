@@ -1,43 +1,47 @@
-import { useState } from "react"
-import EditProfileModal from "@/components/settings/EditProfileModal"
-import ProfileSettings from "@/components/settings/ProfileSettings"
-import SecuritySettings from "@/components/settings/SecuritySettings"
-import TeamSettings from "@/components/settings/TeamSettings"
-import TeamManagement from "@/components/settings/TeamManagement"
-import RoleManagement from "@/components/settings/RoleManagement"
+import { useState } from "react";
+import EditProfileModal from "@/components/settings/EditProfileModal";
+import ProfileSettings from "@/components/settings/ProfileSettings";
+import SecuritySettings from "@/components/settings/SecuritySettings";
+import TeamSettings from "@/components/settings/TeamSettings";
+import TeamManagement from "@/components/settings/TeamManagement";
+import RoleManagement from "@/components/settings/RoleManagement";
 
 const Settings = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState("profile")
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
 
   const tabs = [
     { id: "profile", label: "Profile Settings" },
     { id: "team", label: "Role & Permissions" },
     { id: "management", label: "Team Management" },
     { id: "security", label: "Security Settings" },
-  ]
+  ];
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "profile":
-        return <ProfileSettings onEditClick={() => setIsModalOpen(true)} />
+        return <ProfileSettings onEditClick={() => setIsModalOpen(true)} />;
       case "security":
-        return <SecuritySettings />
+        return <SecuritySettings />;
       case "team":
-        return <RoleManagement />
+        return <RoleManagement />;
       case "management":
-        return <TeamManagement />
+        return <TeamManagement />;
       default:
-        return <ProfileSettings onEditClick={() => setIsModalOpen(true)} />
+        return <ProfileSettings onEditClick={() => setIsModalOpen(true)} />;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="w-full px-6 py-4">
-        <h1 className="text-[20px] text-[#1A1A1A] font-medium">Account Settings</h1>
-        <p className="text-[#767676] font-normal text-[14px] mt-1">Manage your API keys securely for accessing Triimo's services.</p>
+        <h1 className="text-[20px] text-[#1A1A1A] font-medium">
+          Account Settings
+        </h1>
+        <p className="text-[#767676] font-normal text-[14px] mt-1">
+          Manage your API keys securely for accessing Triimo's services.
+        </p>
       </div>
 
       {/* Main Content */}
@@ -50,7 +54,9 @@ const Settings = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 border w-auto px-3 h-[42px] rounded-[10px] text-[1rem] flex items-center justify-center text-[#1A1A1A] whitespace-nowrap ${
-                  activeTab === tab.id ? "bg-[#EBEBF0] border-none" : "border-transparent"
+                  activeTab === tab.id
+                    ? "bg-[#EBEBF0] border-none"
+                    : "border-transparent"
                 }`}
               >
                 {tab.label}
@@ -74,23 +80,29 @@ const Settings = () => {
                 {tab.label}
               </button>
             ))}
-            <button className="py-2 px-4 text-left text-[#CB1E33] mt-2 hover:bg-[#FAFAFA] rounded-lg">Logout</button>
+            <button
+              className="py-2 px-4 text-left text-[#CB1E33] mt-2 hover:bg-[#FAFAFA] rounded-lg"
+  
+            >
+              Logout
+            </button>
           </div>
 
           {/* Tab Content */}
           <div className="max-w-[825px] rounded-[12px] max-h-[650px] border border-[#F1F1F1] bg-[#FAFAFA] p-2 flex items-center justify-center">
-  <div className="w-full max-w-[813px] max-h-[630px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">
-    {renderTabContent()}
-  </div>
-</div>
-
+            <div className="w-full max-w-[813px] max-h-[630px] border rounded-[10px] border-[#F1F1F1] bg-white p-4">
+              {renderTabContent()}
+            </div>
+          </div>
         </div>
       </div>
 
-      <EditProfileModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <EditProfileModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Settings
-
+export default Settings;

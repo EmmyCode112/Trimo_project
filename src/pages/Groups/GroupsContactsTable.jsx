@@ -3,7 +3,12 @@ import { useTable, usePagination } from "react-table";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 
-const GroupsContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
+const GroupsContactsTable = ({
+  columns,
+  data,
+  isOpenCreateContactModal,
+  contacts,
+}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -27,13 +32,13 @@ const GroupsContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
   );
 
   // If there's no data, display a message or an alternative component
-  if (data.length === 0) {
+  if (contacts.length === 0) {
     return (
       <div className="w-full rounded-[15px] pb-[60px] pt-[23px] px-[20px] flex flex-col gap-[20px] shadow-md border border-[#EAECF0]">
         <div className="flex items-center gap-2">
           <h2 className="text-[18px] font-meidium text-[#3F3E3E]">Contacts</h2>
           <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
-            {data.length} {data.length > 1 ?  "Contacts" : "Contact"}
+            {data.length} {data.length > 1 ? "Contacts" : "Contact"}
           </p>
         </div>
         <div className="flex flex-col items-center gap-6 text-center">
@@ -110,37 +115,34 @@ const GroupsContactsTable = ({ columns, data, isOpenCreateContactModal }) => {
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between mt-4">
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between mt-4 px-5">
         <button
           onClick={() => previousPage()}
           disabled={!canPreviousPage}
-          className="flex items-center gap-2 cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium"
+          className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium flex items-center gap-2"
         >
-          <img src={Icons.arrow_right} alt=" " />
-          Previous
+          <img src={Icons.arrow_right} alt="prev" />
+          Prev
         </button>
-        <div className="flex items-center gap-2">
-          {pageOptions.map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => gotoPage(pageNumber)}
-              className={`px-3 py-1 rounded-lg ${
-                pageIndex === pageNumber
-                  ? "bg-[#383268] text-white"
-                  : "text-[#667085] hover:text-[#1A1A1A]"
-              } text-[14px] font-medium`}
-            >
-              {pageNumber + 1}
-            </button>
-          ))}
-        </div>
+
+        <p className="text-[#667085] text-[14px] font-medium">
+          Page {"  "}
+          <span className="px-3 py-1 rounded-lg bg-[#383268] text-white text-[14px] font-medium">
+            {" "}
+            {pageIndex + 1}
+          </span>{" "}
+          of {pageOptions.length}
+        </p>
+
         <button
           onClick={() => nextPage()}
           disabled={!canNextPage}
-          className="flex items-center gap-2 cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px]  font-medium"
+          className="cursor-pointer text-[#667085] hover:text-[#1A1A1A] text-[14px] font-medium flex items-center gap-2"
         >
           Next
-          <img src={Icons.arrowLeftPagin} alt=" " />
+          <img src={Icons.arrowLeftPagin} alt="next" />
         </button>
       </div>
     </div>

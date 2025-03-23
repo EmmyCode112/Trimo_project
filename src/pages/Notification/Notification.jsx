@@ -2,44 +2,9 @@ import { useState } from "react";
 import "./NotificationTableStyles.css";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-
+import { useNotification } from "@/redux/NotificationProvider/UseNotification";
 const Notification = () => {
-  const [notifications] = useState([
-    {
-      type: "Low Balance",
-      message:
-        "Low balance detected. Add credits in Wallet to avoid campaign interruptions.",
-      action: "Add Credit",
-      icon: Icons.warningIcon,
-      textColor: "#81740E",
-      bgColor: "#FDFBEC",
-    },
-    {
-      type: "Failed Message Alert",
-      message: "High delivery failure rate on Campaign XYZ",
-      action: "View Details",
-      icon: Icons.warningIcon,
-      textColor: "#BD1000",
-      bgColor: "#FFF3F2",
-    },
-    {
-      type: "Inactive Campaigns",
-      message: "It’s been a while since your last campaign",
-      action: "Start Campaign",
-      icon: Icons.pendingIcon,
-      textColor: "#121212",
-      bgColor: "#F1F1F1",
-    },
-    {
-      type: "Account Security",
-      message:
-        "Unusual account activity detected! Check your security settings to safeguard your account.",
-      action: "Review Security",
-      icon: Icons.keyIcon,
-      textColor: "#000000",
-      bgColor: "#E3F2FD",
-    },
-  ]);
+  const { notifications } = useNotification();
 
   return (
     <>
@@ -72,7 +37,7 @@ const Notification = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {notifications.length > 6 ? (
+                  {notifications.length > 0 ? (
                     notifications.map((notification, index) => (
                       <tr
                         key={index}

@@ -1,0 +1,6 @@
+.hero-section {
+  background: url("/public/landingPageHeroBg.png") no-repeat;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}

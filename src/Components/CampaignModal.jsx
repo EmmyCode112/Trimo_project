@@ -74,6 +74,7 @@ const CampaignModal = ({ onClose, onOpen }) => {
     <div className="fixed flex items-center justify-center max-md:items-end inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
+        onClick={(e) => e.stopPropagation()}
         className={` bg-white ${
           isMobile
             ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
@@ -134,7 +135,10 @@ const CampaignModal = ({ onClose, onOpen }) => {
                 </div>
               </div>
               {/* email campaign */}
-              <div onClick={handleOpenEmailModal} className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer">
+              <div
+                onClick={handleOpenEmailModal}
+                className="bg-white rounded-[20px] flex items-center flex-col p-[10px] gap-y-[13px] cursor-pointer"
+              >
                 <img src={Icons.contactFrameManual} alt="import contact" />
                 <div className="flex items-center justify-between gap-[20px] max-sm:gap-2.5">
                   <div>

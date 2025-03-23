@@ -3,7 +3,7 @@ import "./NotificationTableStyles.css";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 import { useModal } from "../../redux/UseCampaignModal";
-import CampaignModal from "../../Components/CampaignModal";
+// import CampaignModal from "../../Components/CampaignModal";
 const NotificationAlert = () => {
   const { openCampaignModal, openModal, closeCampaignModal } = useModal();
 
@@ -134,12 +134,12 @@ const NotificationAlert = () => {
         </div>
       </div>
 
-      {openModal && (
+      {/* {openModal && (
         <CampaignModal
           onClose={closeCampaignModal}
           onOpen={openCampaignModal}
         />
-      )}
+      )} */}
     </container>
   );
 };

@@ -10,6 +10,7 @@ import successIcon from "./Icons/successImage.png";
 import houseIcon from "./Icons/company-icon.png";
 import welcomePic from "./Icons/woman-pic.png";
 import arrowRight from "./Icons/arrow-right.png";
+import arrowLeft from "./Icons/arrow-left.png";
 import contacts2Users from "./Icons/profile-2user.png";
 import sortIcon from "./Icons/sort.png";
 import folderIcon from "./Icons/Folder.png";
@@ -21,8 +22,8 @@ import editIcon from "./Icons/edit-2.png";
 import trashIcon from "./Icons/trash.png";
 import FolderIcon from "./Icons/Folder.png";
 import emptyUsers from "./Icons/profile-picture.png";
-
-  // omo bro
+import triimoWebsiteLogo from "./Icons/1.png";
+// omo bro
 import TriimoIcon from "./Icons/trimo-logo.png";
 import homeIcon from "./Icons/home-2.png";
 import homeIconActive from "./Icons/home.png";
@@ -75,23 +76,30 @@ import errorIcon from "./Icons/errorIcon.png";
 import toastSuccessIcon from "./Icons/errorIcon.png";
 import ErrorWarning from "./Icons/warning-1.png";
 import successWarning from "./Icons/tick-square.png";
+import dashboardPreview from "./Icons/Body.png";
 import whastsAppPreviewPanel from "./Icons/whatsAppPrev.png";
 // import addCircle from './Icons/campaign/add-circle.svg'
 import tremplate_campaign_update from "./templates/campaign_update.png";
 import template_menu from "./templates/menu.png";
 import template_discount from "./templates/discount.png";
 import template_festive from "./templates/festive.png";
-
 import template_product_intro from "./templates/product_intro.png";
 import template_school from "./templates/school.png";
 import template_service_intro from "./templates/service_intro.png";
 import template_testimonial from "./templates/testimonial.png";
 import template_update from "./templates/update.png";
 import HeaderIcon from "./Icons/Header.png";
-
 import emptyTemplate from "./Icons/emptyTemplate.png";
 import emptyPreviewTemplate from "./Icons/emptyPreviewTemplate.png";
-
+import addCircle from "./Icons/campaign/add-circle.svg";
+import documentCode from "./Icons/campaign/document-code.svg";
+import icon2 from "./Icons/campaign/icon2.svg";
+import icon3 from "./Icons/campaign/icon3.svg";
+import imageIcon from "./Icons/campaign/image-01.svg";
+import icon4 from "./Icons/campaign/icon4.svg";
+import paragraph from "./Icons/campaign/paragraph.svg";
+import star from "./Icons/campaign/star.svg";
+import textCreation from "./Icons/campaign/text-creation.svg";
 export const templates = [
   {
     name: "Campaign update",
@@ -155,6 +163,7 @@ export const Icons = {
   profile,
   naira,
   arrowLeftPagin,
+  arrowLeft,
   successIcon,
   houseIcon,
   welcomePic,
@@ -211,5 +220,19 @@ export const Icons = {
   whastsAppPreviewPanel,
   emptyPreviewTemplate,
   emptyTemplate,
+  addCircle,
   emptyUsers,
+  triimoWebsiteLogo,
+  dashboardPreview,
+};
+export {
+  addCircle,
+  documentCode,
+  icon2,
+  icon3,
+  imageIcon,
+  icon4,
+  paragraph,
+  star,
+  textCreation,
 };

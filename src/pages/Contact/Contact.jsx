@@ -11,8 +11,11 @@ import AvailableGroupModal from "./AvailableGroupModal";
 import ImportContact from "./ImportContact";
 import { useNavigate } from "react-router-dom";
 import { useGroups } from "../../redux/GroupProvider/UseGroup";
+import { useContacts } from "@/redux/ContactProvider/UseContact";
 
 const Contact = () => {
+  const { contacts, setContacts } = useContacts();
+
   const navigate = useNavigate();
   const [openDropdownRow, setOpenDropdownRow] = useState(null);
   const [isOpenEditModal, setIsOpenModal] = useState(false);
@@ -29,57 +32,6 @@ const Contact = () => {
   const dropdownRef = useRef(null);
   const actionDropdownRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      firstName: "Timothy",
-      lastName: "Eke",
-      email: "andrew@triimo.com",
-      phone: "+234 792 241 5655",
-      group: "N/A",
-    },
-    {
-      id: 2,
-      firstName: "Naomi",
-      lastName: "Aganaba",
-      email: "tanoribeau@gmail.com",
-      phone: "+234 704 442 5317",
-      group: "N/A",
-    },
-    {
-      id: 3,
-      firstName: "Sarah",
-      lastName: "Okano",
-      email: "penelope@gmail.com",
-      phone: "+234 709 657 6467",
-      group: "N/A",
-    },
-    {
-      id: 4,
-      firstName: "Daniel",
-      lastName: "Ojo",
-      email: "owenorton@gmail.com",
-      phone: "+234 806 310 3944",
-      group: "N/A",
-    },
-    {
-      id: 5,
-      firstName: "Rebecca",
-      lastName: "Nwachukwu",
-      email: "akwabtom@gmail.com",
-      phone: "+234 703 501 4280",
-      group: "N/A",
-    },
-    {
-      id: 6,
-      firstName: "Margaret",
-      lastName: "Alanira",
-      email: "abujifinast@icloud.com",
-      phone: "+234 813 201 1725",
-      group: "N/A",
-    },
-  ]);
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
@@ -307,12 +259,6 @@ const Contact = () => {
 
   return (
     <div className="px-[31px] py-[32px] flex flex-col gap-[22px]">
-      <div
-        onClick={() => navigate("/groups")}
-        className="cursor-pointer text-[#EBEBF0]"
-      >
-        <p>Groups</p>
-      </div>
       <div className="flex justify-between items-center flex-wrap gap-[20px]">
         <header>
           <h1 className="text-[#1A1A1A] text-[24px] font-medium">

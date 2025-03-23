@@ -27,6 +27,11 @@ import Notification from "./pages/Notification/Notification";
 import Groups from "./pages/Groups/Groups";
 import CampaignPage from "./pages/Campaigns/EmailCampaign";
 import Home from "./pages/Campaigns/Email/page";
+import LandingPage from "./UnauthenticatedPages/Home/LandingPage";
+import HomeLandingPage from "./UnauthenticatedPages/Home/HomeLandingPage";
+import ContactUs from "./UnauthenticatedPages/Contact/ContactUs";
+import About from "./UnauthenticatedPages/About/About";
+import UseCases from "./UnauthenticatedPages/UseCases/UseCases";
 // import CampaignPage from "./pages/Campaigns/Campaigns";
 
 import Sidebar from "./Components/Sidebar/Sidebar";
@@ -86,7 +91,13 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset-password" element={<PasswordReset />} />
             <Route path="/account-setup" element={<SetUp />} />
-            <Route path="*" element={<Navigate to="/sign-in" />} />
+            <Route path="/" element={<LandingPage />}>
+              <Route index path="/" element={<HomeLandingPage />} />
+              <Route path="/contact-us" element={<ContactUs />} />
+              <Route path="/about-us" element={<About />} />
+              <Route path="/use_cases" element={<UseCases />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Route>
           </>
         ) : (
           // Authenticated Layout for authenticated users
@@ -118,7 +129,7 @@ const App = () => {
                   />
                   <Routes>
                     <Route
-                      path="/"
+                      path="/dashboard"
                       element={<Dashboard handleLogout={handleLogout} />}
                     />
                     <Route path="/campaigns" element={<Campaigns />} />
@@ -138,10 +149,7 @@ const App = () => {
                       path={`/campaigns/smsCampaign`}
                       element={<SmsCampaign />}
                     />
-                    <Route
-                      path={`/campaigns/template`}
-                      element={<Home />}
-                    />
+                    <Route path={`/campaigns/template`} element={<Home />} />
                     <Route
                       path={`/campaigns/WhatsApp-campaign`}
                       element={<WhatsAppCampaign />}

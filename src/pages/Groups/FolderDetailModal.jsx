@@ -27,6 +27,7 @@ const FolderDetailModal = ({
   const [selectedRow, setSelectedRow] = useState(null);
   const [editContact, setEditContact] = useState(false);
   const [importContact, setImportContact] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const modalRef = useRef(null);
   const deleteModalRef = useRef(null); // Ref for DeleteModal
@@ -171,6 +172,15 @@ const FolderDetailModal = ({
     console.log(setSelectedRow(id));
   };
 
+  // Function to filter contacts based on search query
+  const filteredContacts = contacts.filter((contact) => {
+    const fullName = `${contact.firstName} ${contact.lastName}`.toLowerCase();
+    return (
+      fullName.includes(searchQuery.toLowerCase()) ||
+      contact.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
   const columns = useMemo(
     () => [
       {
@@ -308,6 +318,8 @@ const FolderDetailModal = ({
                 />
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by name, email"
                   className="p-1 outline-none w-full h-full"
                 />
@@ -315,7 +327,8 @@ const FolderDetailModal = ({
             </div>
             <GroupsContactsTable
               columns={columns}
-              data={contacts}
+              data={filteredContacts}
+              contacts={contacts}
               isOpenCreateContactModal={() => setOpenCreateNewContact(true)}
             />
           </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../Components/buttons/transparentButton";
-import { Icons } from "../../assets/assets";
+import Button from "@/Components/buttons/transparentButton";
+import { Icons } from "@/assets/assets";
 import { useNavigate } from "react-router-dom";
-import OTPInput from "../../Components/Otp";
+import OTPInput from "@/Components/Otp";
 
 const SignupOTP = ({ isClosedOtp }) => {
   const [successfulOtp, setSuccessfulOtp] = useState(false);
@@ -41,7 +41,7 @@ const SignupOTP = ({ isClosedOtp }) => {
   };
 
   return (
-    <div className="bg-white w-full flex items-center justify-center">
+    <div className=" w-full flex items-center justify-center min-h-screen h-full ">
       {!successfulOtp ? (
         <div className="w-[40%] mx-auto gap-[22px] flex flex-col auth-right-container">
           <Button
@@ -61,7 +61,12 @@ const SignupOTP = ({ isClosedOtp }) => {
           </div>
           <div>
             <p className="text-[14px] font-medium">Email Verification</p>
-            <OTPInput length={6} onSubmit={handleOtpSubmit} error={error} setError={setError}/>
+            <OTPInput
+              length={6}
+              onSubmit={handleOtpSubmit}
+              error={error}
+              setError={setError}
+            />
             <div className="flex items-center gap-3 mt-3">
               {otpRequested ? (
                 countdown > 0 ? (

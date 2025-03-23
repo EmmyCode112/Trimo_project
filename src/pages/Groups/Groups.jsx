@@ -8,10 +8,10 @@ import DeleteGroupModal from "./DeleteGroupModal";
 import FolderDetailModal from "./FolderDetailModal";
 import "./Groups.css";
 
-import {useGroups} from "../../redux/GroupProvider/UseGroup"
+import { useGroups } from "../../redux/GroupProvider/UseGroup";
 
 const Group = () => {
-  const { groups, setGroups } = useGroups()
+  const { groups, setGroups } = useGroups();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -19,8 +19,7 @@ const Group = () => {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [openCreateFormModal, setOpenCreateFormModal] = useState(false);
-
-
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleCreateGroup = (groupName) => {
     const isDuplicate = groups.some(
@@ -59,6 +58,12 @@ const Group = () => {
     setSelectedFolder(folder);
   };
 
+  const filteredGroups = groups.filter((group) => {
+    const groupName = group.name.toLowerCase();
+
+    return groupName.includes(searchQuery.toLowerCase());
+  });
+
   return (
     <div className="px-[31px] py-[32px] flex flex-col gap-[22px]">
       <div className="flex justify-between items-center header-wrapper gap-[20px]">
@@ -94,20 +99,26 @@ const Group = () => {
         <input
           type="text"
           placeholder="Search group name"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="p-1 outline-none w-full h-full"
         />
       </div>
 
-      <div>
+      {groups.length === 0 ? (
+        <EmptyState setIsModalOpen={setIsModalOpen} data={groups} />
+      ) : (
+        <div>
           <GroupsContainer
-            data={groups}
+            data={filteredGroups}
+            groups={groups}
             toggleSelection={toggleSelection}
             selectedFolders={selectedFolders}
             setOpenDeleteModal={setOpenDeleteModal}
             openFolderDetails={openFolderDetails}
           />
-
-      </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <CreateGroupModal
@@ -138,7 +149,6 @@ const Group = () => {
           setGroups={setGroups}
         />
       )}
-      
     </div>
   );
 };
