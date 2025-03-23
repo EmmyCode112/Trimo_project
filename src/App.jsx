@@ -34,6 +34,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
 import Index from "./pages/Home/Index";
+import UseCasesPage from "./pages/Home/UseCasePage";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -84,6 +85,7 @@ const App = () => {
         {isAuthenticated ? (
           <>
             <Route path="/home" element={<Index />} />
+            <Route path="/use-cases" element={<UseCasesPage />} />
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset-password" element={<PasswordReset />} />
