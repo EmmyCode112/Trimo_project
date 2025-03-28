@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Footer from "@/UnauthenticatedPages/Components/Footer/Footer"
 import { Link } from 'react-router-dom';
 import HowTriimoWorksSection from '@/components/HowTriimoWorksSection';
 import SubscriptionSection from '@/components/SubscriptionSection';
