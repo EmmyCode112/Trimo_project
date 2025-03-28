@@ -26,13 +26,14 @@ const Footer = () => {
           </p>
           <ul className="flex flex-col gap-3">
             <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-              SMS Messaging
+              <Link to="/sms">SMS Messaging</Link>
             </li>
             <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-              Email Messaging
+            <Link to="/email">Email Messaging</Link>
+
             </li>
             <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-              WhatsApp
+              <Link to="/whatsapp">WhatsApp</Link>
             </li>
           </ul>
         </div>
