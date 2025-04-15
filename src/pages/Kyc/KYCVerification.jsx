@@ -45,18 +45,12 @@ const KYCVerification = () => {
     },
   ];
 
-  const handleNext = () => {
-    setStep(step + 1);
-  };
-
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
+  const handleNext = () => setStep(step + 1);
+  const handleBack = () => step > 1 && setStep(step - 1);
 
   return (
-    <div className="p-6">
+    <main className="p-6">
+      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold">KYC Verification</h1>
         <p className="text-gray-500">Verify your identity and get started</p>
@@ -68,41 +62,69 @@ const KYCVerification = () => {
           <StepsIndicator currentStep={step} />
         </div>
 
-        {/* Main Content */}
-        <Card className="w-3/4">
-          <CardContent className="p-6">
-            {step === 1 && (
-              <>
-                <DocumentSelection 
-                  documentTypes={documentTypes}
-                  onNext={handleNext}
-                />
-                <UploadSection onNext={handleNext} />
-              </>
-            )}
-            
-            {step === 2 && (
-              <SelfieSection onNext={handleNext} />
-            )}
+        {/* Main Content - Double Border Design */}
+        <div className="w-3/4">
+          <div className="absolute w-[825px] h-[690px] bg-neutral-50 rounded-xl overflow-hidden border border-solid border-[#f1f1f1]">
+            <div className="relative w-[813px] h-[678px] m-1.5 bg-white rounded-[10px] overflow-hidden border border-solid border-[#f1f1f1]">
+              <div className="p-7">
+                {step === 1 && (
+                  <>
+                    <DocumentSelection 
+                      documentTypes={documentTypes}
+                      onNext={handleNext}
+                    />
+                    <UploadSection onNext={handleNext} />
+                  </>
+                )}
+                
+                {step === 2 && (
+                  <SelfieSection onNext={handleNext} />
+                )}
 
-            {step === 3 && (
-              <ReviewSection onComplete={handleNext} />
-            )}
+                {step === 3 && (
+                  <ReviewSection 
+                    onBack={handleBack}
+                    onSubmit={handleNext}
+                  />
+                )}
+              </div>
 
-            <div className="flex justify-end gap-4 mt-8">
-              {step > 1 && (
-                <Button variant="outline" onClick={handleBack}>
-                  Back
+              {/* Action Buttons */}
+              <div className="absolute bottom-6 right-7 flex items-center gap-3">
+                {step > 1 && (
+                  <Button
+                    variant="outline"
+                    className="px-6 py-2 text-foundationbrandprimary-blueprimary-blue-500 bg-foundationbrandprimary-blueprimary-blue-50"
+                    onClick={handleBack}
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button
+                  variant="default"
+                  className="px-6 py-2 bg-foundationbrandprimary-blueprimary-blue-500 text-white"
+                  onClick={handleNext}
+                >
+                  {step === 3 ? 'Submit Verification' : 'Next'}
                 </Button>
-              )}
-              <Button onClick={handleNext}>
-                {step === 3 ? 'Complete' : 'Next'}
-              </Button>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Floating Action Button */}
+          <Button
+            variant="default"
+            className="absolute w-16 h-16 top-[648px] left-[1002px] bg-foundationbrandprimary-blueprimary-blue-500 rounded-[32px] shadow-state-shadow p-0"
+          >
+            <img
+              className="absolute w-8 h-[27px] top-[19px] left-4"
+              alt="Frame"
+              src="/frame-22.svg"
+            />
+          </Button>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

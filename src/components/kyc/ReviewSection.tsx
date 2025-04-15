@@ -74,21 +74,7 @@ export const ReviewSection = ({ onBack, onSubmit }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-end gap-4 mt-4">
-        <Button
-          variant="outline"
-          onClick={onBack}
-          className="px-6 py-2"
-        >
-          Back
-        </Button>
-        <Button
-          onClick={onSubmit}
-          className="px-6 py-2 bg-[#46366B] text-white hover:bg-[#46366B]/90"
-        >
-          Submit Verification
-        </Button>
-      </div>
+      
     </div>
   );
 }; 

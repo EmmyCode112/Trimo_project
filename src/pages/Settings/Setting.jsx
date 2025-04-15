@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditProfileModal from "@/components/settings/EditProfileModal";
 import ProfileSettings from "@/components/settings/ProfileSettings";
 import SecuritySettings from "@/components/settings/SecuritySettings";
@@ -7,6 +8,7 @@ import TeamManagement from "@/components/settings/TeamManagement";
 import RoleManagement from "@/components/settings/RoleManagement";
 
 const Settings = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
 
@@ -15,7 +17,16 @@ const Settings = () => {
     { id: "team", label: "Role & Permissions" },
     { id: "management", label: "Team Management" },
     { id: "security", label: "Security Settings" },
+    { id: "kyc", label: "KYC Verification" },
   ];
+
+  const handleTabChange = (tabId) => {
+    if (tabId === "kyc") {
+      navigate("/settings/kyc");
+      return;
+    }
+    setActiveTab(tabId);
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -40,7 +51,7 @@ const Settings = () => {
           Account Settings
         </h1>
         <p className="text-[#767676] font-normal text-[14px] mt-1">
-          Manage your API keys securely for accessing Triimo's services.
+          Manage your API keys securely for accessing Triimo&apos;s services.
         </p>
       </div>
 
@@ -52,7 +63,7 @@ const Settings = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`py-2 border w-auto px-3 h-[42px] rounded-[10px] text-[1rem] flex items-center justify-center text-[#1A1A1A] whitespace-nowrap ${
                   activeTab === tab.id
                     ? "bg-[#EBEBF0] border-none"
@@ -72,7 +83,7 @@ const Settings = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`py-2 w-[221px] h-[42px] text-[#1A1A1A] text-[16px] font-medium px-4 flex items-center justify-start text-left rounded-[10px] ${
                   activeTab === tab.id ? "bg-[#FAFAFA]" : "hover:bg-[#FAFAFA]"
                 }`}
