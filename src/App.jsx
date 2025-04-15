@@ -45,6 +45,7 @@ import { loginSuccess, logout } from "@/redux/slice/authSlice";
 import Index from "./pages/Home/Index";
 import UseCasesPage from "./pages/Home/UseCasePage";
 import ApiHome from "./pages/Home/APIHome";
+import KYCVerification from "./pages/Kyc/KYCVerification";
 // import ApiDocumentation from "./pages/Home/ApiDocumentation";
 
 const App = () => {
@@ -156,6 +157,7 @@ const App = () => {
                     <Route path="/campaigns/email" element={<CampaignPage />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/settings" element={<Setting />} />
+                    <Route path="/settings/kyc" element={<KYCVerification />} />
                     <Route path="/wallet" element={<Wallet />} />
                     <Route path="/groups" element={<Groups />} />
                     <Route path="/notifications" element={<Notification />} />
