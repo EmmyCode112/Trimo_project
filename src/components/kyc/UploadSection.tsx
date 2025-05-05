@@ -1,6 +1,8 @@
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { useKYCStore } from '@/lib/store2';
+import { UploadCloud } from 'lucide-react';
+
 
 export const UploadSection = ({ onNext }) => {
   const {
@@ -40,26 +42,19 @@ export const UploadSection = ({ onNext }) => {
   const renderUploadBox = (type, progress, isUploaded) => {
     if (progress > 0 && progress < 100) {
       return (
-        <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 relative overflow-hidden">
-          {/* Green overlay with progress */}
-          <div 
-            className="absolute inset-0 bg-green-50 transition-all" 
-            style={{ width: `${progress}%` }}
-          />
-          
-          <div className="relative z-10">
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-full bg-white border-2 border-green-500 flex items-center justify-center">
-                <span className="text-green-500 font-medium">{`${progress}%`}</span>
+        <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 bg-green-50">
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center justify-center w-full">
+              <div className="w-10 h-10 bg-red-500 rounded flex items-center justify-center">
+                <span className="text-white text-xs font-medium uppercase">PDF</span>
               </div>
+            </div>
+            <div className="text-center">
               <div className="text-sm font-medium">Uploading Document</div>
-              <div className="text-xs text-gray-500">{`${progress}% Completed`}</div>
-              <div className="flex items-center gap-1 mt-2">
-                <div className="w-4 h-4">
-                  <img src="/pdf-icon.svg" alt="PDF" className="w-full h-full" />
-                </div>
-                <span className="text-xs text-gray-500">PDF</span>
+              <div className="w-full mt-2 mb-1">
+                <Progress value={progress} className="h-2 bg-green-100" indicatorClassName="bg-green-500" />
               </div>
+              <div className="text-xs text-gray-500">{`${progress}% Completed`}</div>
             </div>
           </div>
         </div>
@@ -75,10 +70,9 @@ export const UploadSection = ({ onNext }) => {
           accept="image/*,.pdf"
         />
         <div className="flex flex-col items-center gap-2">
-          <img
-            src="/vuesax-linear-add-square.svg"
-            alt="Upload"
-            className="w-10 h-10 text-gray-400"
+          <UploadCloud 
+            size={40}
+            className="text-gray-400"
           />
           <div className="text-sm font-medium">
             Click to upload {type} view
@@ -127,16 +121,7 @@ export const UploadSection = ({ onNext }) => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col w-[572px] items-start gap-[7px]">
-        <h2 className="relative self-stretch mt-[-1.00px] font-body-lg-medium text-foundationbrandprimary-blackprimary-black-400">
-          Intermediate Verification
-        </h2>
-        <p className="w-fit text-foundationtextgreygrey-500 text-[length:var(--body-sm-regular-font-size)] leading-[var(--body-sm-regular-line-height)] whitespace-nowrap relative font-body-sm-regular">
-          Fill in the parts inside completing the interviewer's personal
-        </p>
-      </div>
-
+    <div className="flex flex-col gap-6 mt-9">
       <div className="flex gap-4">
         <div className="flex-1">
           {renderUploadBox('front', frontProgress, frontUploaded)}

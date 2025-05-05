@@ -1,28 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { useKYCStore } from '@/lib/store2';
-import { Card } from '../ui/card';
+import { Camera } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 export const SelfieSection = ({ onNext }) => {
-  const { setSelfieUploaded } = useKYCStore();
-  const [selfieImage, setSelfieImage] = useState(null);
-  const [verificationStatus, setVerificationStatus] = useState({
-    faceMatch: 'Match with ID',
-    livenessCheck: 'Passed',
-    status: 'Pending Review'
-  });
+  const { setSelfieImage, setSelfieUploaded } = useKYCStore();
+  const [localSelfieImage, setLocalSelfieImage] = useState(null);
+  const [cameraActive, setCameraActive] = useState(false);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [stream, setStream] = useState(null);
 
-  const handleTakePhoto = () => {
-    // Simulate taking a photo
-    setTimeout(() => {
-      setSelfieUploaded(true);
-      setSelfieImage('/placeholder-selfie.jpg'); // Replace with actual captured image
-      onNext();
-    }, 1000);
+  const activateCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "user" },
+        audio: false 
+      });
+      
+      setStream(mediaStream);
+      setCameraActive(true);
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+    } catch (err) {
+      console.error("Error accessing camera:", err);
+      toast({
+        title: "Camera Error",
+        description: "Could not access camera. Please check permissions.",
+        variant: "destructive"
+      });
+      // Fallback for testing
+      setCameraActive(true);
+    }
   };
 
+  const handleTakePhoto = () => {
+    if (!cameraActive) return;
+    
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    
+    if (canvas && video) {
+      const context = canvas.getContext('2d');
+      // Match canvas dimensions to video dimensions
+      canvas.width = video.videoWidth || 300;
+      canvas.height = video.videoHeight || 300;
+      
+      // Draw the current video frame to the canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Convert canvas to data URL
+      const imageDataURL = canvas.toDataURL('image/png');
+      setLocalSelfieImage(imageDataURL);
+      setSelfieImage(imageDataURL); // Store in global state
+      
+      // Stop camera stream
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      
+      setCameraActive(false);
+      setSelfieUploaded(true);
+      
+      toast({
+        title: "Selfie Captured",
+        description: "Your selfie has been successfully captured.",
+        variant: "default"
+      });
+    } else {
+      // Fallback for testing
+      const fallbackImage = '/placeholder-selfie.jpg';
+      setLocalSelfieImage(fallbackImage);
+      setSelfieImage(fallbackImage); // Store in global state
+      setCameraActive(false);
+      setSelfieUploaded(true);
+      
+      toast({
+        title: "Selfie Captured",
+        description: "Your selfie has been successfully captured.",
+        variant: "default"
+      });
+    }
+  };
+
+  // Clean up camera stream when component unmounts
+  useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
+
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col gap-2">
         <h2 className="text-xl font-semibold text-gray-900">
@@ -34,116 +108,62 @@ export const SelfieSection = ({ onNext }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex gap-8 mt-4">
-        {!selfieImage ? (
-          // Camera Section
-          <div className="flex-1">
-            <div className="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8">
-              <div className="flex flex-col items-center gap-6">
-                {/* Camera Circle */}
-                <div className="relative">
-                  <div className="w-48 h-48 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center">
-                    <img
-                      src="/camera-icon.svg"
-                      alt="Camera"
-                      className="w-16 h-16 text-gray-400"
+      <div className="flex mt-6">
+        {/* Camera Section */}
+        <div className="flex-1">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 w-[395px]">
+            <div className="flex flex-col items-center gap-6">
+              {/* Camera Circle */}
+              <div className="relative cursor-pointer" onClick={activateCamera}>
+                <div className="w-48 h-48 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
+                  {!localSelfieImage && !cameraActive ? (
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="#D1D1D6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M3 16.8V9.2C3 8.0799 3 7.51984 3.21799 7.09202C3.40973 6.71569 3.71569 6.40973 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H7.25464C7.37758 6 7.43905 6 7.49576 5.9935C7.79166 5.95961 8.05705 5.79559 8.21969 5.54609C8.25086 5.49827 8.27836 5.44328 8.33333 5.33333C8.44329 5.11342 8.49827 5.00346 8.56062 4.90782C8.8859 4.40882 9.41668 4.08078 10.0085 4.01299C10.1219 4 10.2448 4 10.4907 4H13.5093C13.7552 4 13.8781 4 13.9915 4.01299C14.5833 4.08078 15.1141 4.40882 15.4394 4.90782C15.5017 5.00345 15.5567 5.11345 15.6667 5.33333C15.7216 5.44329 15.7491 5.49827 15.7803 5.54609C15.943 5.79559 16.2083 5.95961 16.5042 5.9935C16.561 6 16.6224 6 16.7454 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.09202C21 7.51984 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#D1D1D6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  ) : cameraActive ? (
+                    <video 
+                      ref={videoRef} 
+                      className="min-w-full min-h-full object-cover" 
+                      autoPlay 
+                      playsInline 
+                      muted
                     />
-                  </div>
-                  {/* Dotted Circle Overlay */}
-                  <div className="absolute inset-0 w-48 h-48 rounded-full border-2 border-dashed border-gray-300 animate-pulse" />
+                  ) : (
+                    <img 
+                      src={localSelfieImage} 
+                      alt="Selfie" 
+                      className="min-w-full min-h-full object-cover" 
+                    />
+                  )}
                 </div>
-
-                {/* Instructions */}
-                <p className="text-sm text-gray-500 text-center max-w-sm">
-                  Position your face within the circle and ensure your face is clearly visible. Remove glasses and hats for better results.
-                </p>
-
-                {/* Take Photo Button */}
-                <Button
-                  onClick={handleTakePhoto}
-                  className="bg-[#46366B] hover:bg-[#46366B]/90 text-white flex items-center gap-2 px-6 py-2 rounded-md"
-                >
-                  <svg 
-                    className="w-5 h-5" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                    />
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  Take Photo
-                </Button>
               </div>
+
+              {/* Hidden canvas for capturing photos */}
+              <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+              {/* Instructions */}
+              <p className="text-sm text-gray-500 text-center max-w-xs">
+                Position your face within the circle and ensure your face is clearly visible. Remove glasses and hats for better results.
+              </p>
             </div>
           </div>
-        ) : (
-          // Review Cards
-          <div className="flex-1 grid grid-cols-2 gap-4">
-            {/* ID Card Verification */}
-            <Card className="p-4">
-              <h3 className="font-medium mb-4">ID Card Verification</h3>
-              <div className="aspect-video bg-gray-100 rounded-lg mb-4">
-                {/* ID Card Preview */}
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">ID Number</span>
-                  <span>BD1234567890</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Issue Date</span>
-                  <span>10 January 2020</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Expiry Date</span>
-                  <span>10 January 2030</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Status</span>
-                  <span className="text-yellow-500">Pending Review</span>
-                </div>
-              </div>
-            </Card>
 
-            {/* Selfie Verification */}
-            <Card className="p-4">
-              <h3 className="font-medium mb-4">Selfie Verification</h3>
-              <div className="aspect-video bg-gray-100 rounded-lg mb-4">
-                {selfieImage && (
-                  <img src={selfieImage} alt="Selfie" className="w-full h-full object-cover rounded-lg" />
-                )}
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Face Match</span>
-                  <span>{verificationStatus.faceMatch}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Liveness Check</span>
-                  <span className="text-green-500">{verificationStatus.livenessCheck}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Status</span>
-                  <span className="text-yellow-500">{verificationStatus.status}</span>
-                </div>
-              </div>
-            </Card>
-          </div>
-        )}
+          <div className="flex justify-center mt-4">
+        <Button
+          onClick={handleTakePhoto}
+          className="bg-[#46366B] w-full hover:bg-[#46366B]/90 text-white px-8 py-2 rounded-md flex items-center gap-2 w-[200px] justify-center"
+          disabled={!cameraActive}
+        >
+          <Camera size={18} />
+          Take Photo
+        </Button>
+      </div>
+          
+        </div>
 
         {/* Guidelines Section */}
-        <div className="w-80">
+        <div className="ml-8 mt-4">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Guidelines for a successful verification:
           </h3>
@@ -163,6 +183,18 @@ export const SelfieSection = ({ onNext }) => {
           </ul>
         </div>
       </div>
+
+      {/* Take Photo Button - Centered below the box */}
+      {/* <div className="flex justify-center mt-4">
+        <Button
+          onClick={handleTakePhoto}
+          className="bg-[#46366B] hover:bg-[#46366B]/90 text-white px-8 py-2 rounded-md flex items-center gap-2 w-[200px] justify-center"
+          disabled={!cameraActive}
+        >
+          <Camera size={18} />
+          Take Photo
+        </Button>
+      </div> */}
     </div>
   );
 }; 

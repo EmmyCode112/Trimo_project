@@ -9,7 +9,7 @@ import { useKYCStore } from "@/lib/store2";
 import StepsIndicator from '@/components/kyc/StepsIndicator';
 
 const KYCVerification = () => {
-  const { step, setStep } = useKYCStore();
+  const { step, setStep, documentType, selfieUploaded } = useKYCStore();
 
   // Document type options
   const documentTypes = [
@@ -45,14 +45,22 @@ const KYCVerification = () => {
     },
   ];
 
-  const handleNext = () => setStep(step + 1);
+  const handleNext = () => {
+    if (step === 3) {
+      // Handle submission
+      console.log("Verification submitted");
+    } else {
+      setStep(step + 1);
+    }
+  };
+  
   const handleBack = () => step > 1 && setStep(step - 1);
 
   return (
     <main className="p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold">KYC Verification</h1>
+        <h1 className="text-2xl font-medium">KYC Verification</h1>
         <p className="text-gray-500">Verify your identity and get started</p>
       </div>
 
@@ -73,7 +81,7 @@ const KYCVerification = () => {
                       documentTypes={documentTypes}
                       onNext={handleNext}
                     />
-                    <UploadSection onNext={handleNext} />
+                    {documentType && <UploadSection onNext={handleNext} />}
                   </>
                 )}
                 
@@ -104,24 +112,13 @@ const KYCVerification = () => {
                   variant="default"
                   className="px-6 py-2 bg-foundationbrandprimary-blueprimary-blue-500 text-white"
                   onClick={handleNext}
+                  disabled={(step === 1 && !documentType) || (step === 2 && !selfieUploaded)}
                 >
                   {step === 3 ? 'Submit Verification' : 'Next'}
                 </Button>
               </div>
             </div>
           </div>
-
-          {/* Floating Action Button */}
-          <Button
-            variant="default"
-            className="absolute w-16 h-16 top-[648px] left-[1002px] bg-foundationbrandprimary-blueprimary-blue-500 rounded-[32px] shadow-state-shadow p-0"
-          >
-            <img
-              className="absolute w-8 h-[27px] top-[19px] left-4"
-              alt="Frame"
-              src="/frame-22.svg"
-            />
-          </Button>
         </div>
       </div>
     </main>

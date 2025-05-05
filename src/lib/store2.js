@@ -1,8 +1,11 @@
 import { create } from 'zustand';
 
-const initialState = {
+export const useKYCStore = create((set) => ({
   step: 1,
   documentType: null,
+  idNumber: '',
+  issueDate: '',
+  expiryDate: '',
   frontFile: null,
   backFile: null,
   frontProgress: 0,
@@ -10,18 +13,19 @@ const initialState = {
   frontUploaded: false,
   backUploaded: false,
   selfieUploaded: false,
-};
-
-export const useKYCStore = create((set) => ({
-  ...initialState,
+  selfieImage: null,
+  
   setStep: (step) => set({ step }),
-  setDocumentType: (type) => set({ documentType: type }),
-  setFrontFile: (file) => set({ frontFile: file }),
-  setBackFile: (file) => set({ backFile: file }), 
-  setFrontProgress: (progress) => set({ frontProgress: progress }),
-  setBackProgress: (progress) => set({ backProgress: progress }),
-  setFrontUploaded: (uploaded) => set({ frontUploaded: uploaded }),
-  setBackUploaded: (uploaded) => set({ backUploaded: uploaded }),
-  setSelfieUploaded: (uploaded) => set({ selfieUploaded: uploaded }),
-  reset: () => set(initialState),
+  setDocumentType: (documentType) => set({ documentType }),
+  setIdNumber: (idNumber) => set({ idNumber }),
+  setIssueDate: (issueDate) => set({ issueDate }),
+  setExpiryDate: (expiryDate) => set({ expiryDate }),
+  setFrontFile: (frontFile) => set({ frontFile }),
+  setBackFile: (backFile) => set({ backFile }),
+  setFrontProgress: (frontProgress) => set({ frontProgress }),
+  setBackProgress: (backProgress) => set({ backProgress }),
+  setFrontUploaded: (frontUploaded) => set({ frontUploaded }),
+  setBackUploaded: (backUploaded) => set({ backUploaded }),
+  setSelfieUploaded: (selfieUploaded) => set({ selfieUploaded }),
+  setSelfieImage: (selfieImage) => set({ selfieImage }),
 }));
