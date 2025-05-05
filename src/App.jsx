@@ -8,6 +8,9 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import "./App.css";
 
+// Import the ScrollToTop component
+import ScrollToTop from "./components/ScrollToTop";
+
 import Signin from "@/auth/signin/Signin";
 import Signup from "@/auth/signup/Signup";
 import SetUp from "./auth/AccountSetUp/SetUp";
@@ -92,9 +95,12 @@ const App = () => {
 
   return (
     <Router>
+      {/* Add ScrollToTop component here */}
+      <ScrollToTop />
+      
       <Routes>
         {/* Public Routes */}
-        {isAuthenticated ? (
+        {!isAuthenticated ? (
           <>
             <Route path="/home" element={<Index />} />
             <Route path="/use-cases" element={<UseCasesPage />} />
