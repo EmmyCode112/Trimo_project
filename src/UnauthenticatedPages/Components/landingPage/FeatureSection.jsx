@@ -11,13 +11,13 @@ const FeatureSection = () => {
     {
       image: images.email,
       title: "Email Messaging",
-      content: "High delivery succes rate and strong encryption for your data",
+      content: "High delivery success rate and strong encryption for your data",
     },
     {
       image: images.whatsApp,
       title: "WhatsApp Messaging",
       content:
-        "Seamlessly intergrate Triimo's capability into your apllications",
+        "Seamlessly intergrate Triimo's capability into your applications",
     },
     {
       image: images.otp,
@@ -28,16 +28,16 @@ const FeatureSection = () => {
     {
       image: images.secure,
       title: "Secure & Reliable",
-      content: "High delivery succes rate and strong encryption for your data",
+      content: "High delivery success rate and strong encryption for your data",
     },
     {
       image: images.analytics,
       title: "Real-Time Analytics",
-      content: "High delivery succes rate and strong encryption for your data",
+      content: "High delivery success rate and strong encryption for your data",
     },
   ];
   return (
-    <div className="mt-[60px] flex flex-col gap-y-[42px] px-[65px]">
+    <div className="mt-[60px] flex flex-col gap-y-[42px] px-[25px] md:px-[45px] lg:px-[65px]">
       <div className="flex flex-col gap-[14px]">
         <p className="bg-[#EBEBF099] rounded-full py-2 px-[10px] text-[#484848] text-[14px] font-normal w-[143px] mx-auto flex justify-center">
           Features Section
@@ -48,19 +48,19 @@ const FeatureSection = () => {
       </div>
 
       <div className=" flex gap-5 ">
-        <div className=" flex gap-5 lg:flex-wrap justify-between">
+        <div className=" flex gap-5 flex-wrap justify-center lg:justify-between max-sm:justify-center w-full">
           {cardItems.map((items, index) => (
             <div
               key={index}
-              className="lg:basis-[30%] w-full md:w-1/2 border border-[#F1F1F1] rounded-[15px] pb-[21px]"
+              className="sm:w-[330px]  w-full border border-[#F1F1F1] rounded-[15px] pb-[21px]"
             >
               <img
                 src={items.image}
                 alt={items.title}
-                className="rounded-t-[15px] h-[202px]"
+                className="rounded-t-[15px] h-[202px] w-full"
               />
               <div className="flex flex-col gap-y-2 pt-[23px] px-[20px] md:pl-4 lg:pl-7 lg:pr-[60px] md:pr-[30px]">
-                <h2 className="text-[22px] font-smibold text-[#3F3E3E]">
+                <h2 className="text-[22px] font-semibold text-[#3F3E3E]">
                   {items.title}
                 </h2>
                 <p className="text-[#969696] text-[16px] font-normal">

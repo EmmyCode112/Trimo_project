@@ -44,9 +44,9 @@ const Analysis = () => {
         </p>
       </div>
 
-      <div className="flex justify-center gap-[20px] max-sm:flex-wrap md:gap-[40px] lg:gap-[54px] w-full">
-        <div className="flex flex-col items-center gap-3">
-          <h3 className="text-[32px] md:text-[40px] text-[#DB7500] tracking-[-2%] font-semibold">
+      <div className="flex justify-center gap-[15px] md:gap-[40px] lg:gap-[54px] w-full flex-wrap max-sm:flex-col items-center text-center">
+        <div className="flex flex-col gap-3">
+          <h3 className="md:text-[40px] text-[27px] text-[#DB7500] tracking-[-2%] font-semibold">
             {startCount && (
               <CountUp
                 end={1_000_000}
@@ -60,8 +60,8 @@ const Analysis = () => {
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <h3 className="text-[32px] md:text-[40px] text-[#DB7500] tracking-[-2%] font-semibold">
+        <div className="flex flex-col gap-3">
+          <h3 className="md:text-[40px] text-[27px] text-[#DB7500] tracking-[-2%] font-semibold">
             {startCount && (
               <>
                 {" "}
@@ -75,8 +75,8 @@ const Analysis = () => {
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <h3 className="text-[32px] md:text-[40px] text-[#DB7500] tracking-[-2%] font-semibold">
+        <div className="flex flex-col gap-3">
+          <h3 className="md:text-[40px] text-[27px] text-[#DB7500] tracking-[-2%] font-semibold">
             {startCount && (
               <>
                 <CountUp

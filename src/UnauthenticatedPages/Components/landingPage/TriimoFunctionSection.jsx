@@ -3,8 +3,8 @@ import { images } from "../assets/assets";
 
 const TriimoFunctionSection = () => {
   return (
-    <div className="w-full lg:px-[105px] py-[96px] bg-[#410F1D] flex flex-col gap-[42px] mt-[60px]">
-      <div className="flex justify-between w-full items-start md:flex-wrap-reverse md:gap-x-[50px] lg:gap-[106px] gap-y-[40px]">
+    <div className="w-full px-[25px] sm:px-[45px] md:px-[65px] lg:px-[105px] py-[20px] sm:py-[50px] py-[96px] bg-[#410F1D] flex flex-col gap-[42px] mt-[60px]">
+      <div className="flex justify-between w-full items-center max-md:flex-col gap-y-[40px]">
         <div className="flex flex-col gap-[23px] basis-[40%]">
           <h1 className="leading-[48px] text-[32px] text-white font-semibold">
             Send your first text message in a matter of minutes
@@ -30,7 +30,7 @@ const TriimoFunctionSection = () => {
           <img src={images.functionReview} alt="" className="" />
         </div>
       </div>
-      <div className="flex justify-between w-full bg-[#310C16] py-[25px] px-[27px] rounded-[15px] flex-wrap">
+      <div className="flex justify-between w-full bg-[#310C16] py-[25px] gap-y-3 px-[27px] rounded-[15px] flex-wrap">
         <div className="flex flex-col gap-[14px] lg:basis-[30%]">
           <h2 className="text-white text-[24px] font-semibold">
             Officail SDKs
@@ -63,7 +63,7 @@ const TriimoFunctionSection = () => {
       <div className="text-center text-[#EAECF0] text-[18px] font-medium">
         Join 4,000+ companies already growing
       </div>
-      <div className="flex justify-between w-full items-center gap-5 lg:flex-wrap">
+      <div className="flex justify-between w-full items-center gap-x-5 gap-y-2 flex-wrap">
         <img src={images.coinbase} className="cursor-pointer" />
         <img src={images.spotify} className="cursor-pointer" />
         <img src={images.slack} className="cursor-pointer" />

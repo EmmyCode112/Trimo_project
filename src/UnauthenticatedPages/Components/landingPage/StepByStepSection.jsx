@@ -2,7 +2,7 @@ import Button from "@/Components/buttons/transparentButton";
 import { images } from "../assets/assets";
 const StepByStepSection = () => {
   return (
-    <div className="mt-[60px] lg:px-[105px] mb-[56px]">
+    <div className="mt-[60px] px-[20px] md:px-[65px] lg:px-[105px] mb-[56px]">
       <div className="flex flex-col gap-[14px]">
         <p className="bg-[#EBEBF099] rounded-full py-2 px-[10px] text-[#484848] text-[14px] font-normal w-[143px] mx-auto flex justify-center">
           Step-by-Step
@@ -16,7 +16,7 @@ const StepByStepSection = () => {
         </p>
       </div>
       <div className="flex flex-col gap-y-[50px] mt-[78px] w-full">
-        <div className="flex items-center gap-x-[68px] max-md:flex-col gap-y-[20px] w-full">
+        <div className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full ">
           <div className="border border-[#F1F1F1] rounded-[10px] bg-[#FAFAFA] pt-[42px] pr-[78px]">
             <img
               src={images.Desktop1}
@@ -42,7 +42,7 @@ const StepByStepSection = () => {
                 communication goals.
               </li>
             </ul>
-            <div>
+            <div className="flex max-sm:justify-center">
               <Button
                 label="Sign Up for Free"
                 className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054]"
@@ -50,7 +50,7 @@ const StepByStepSection = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-x-[68px] max-md:flex-col gap-y-[20px] w-full">
+        <div className="flex items-center gap-x-[68px] max-lg:flex-col-reverse gap-y-[20px] w-full ">
           <div className="flex flex-col gap-y-5">
             <h2 className="text-[#3F3E3E] text-[24px] font-semibold">
               Upload your contact or connect via API
@@ -69,7 +69,7 @@ const StepByStepSection = () => {
                 reusable contact lists.
               </li>
             </ul>
-            <div>
+            <div className="flex max-sm:justify-center">
               <Button
                 label="Learn More"
                 className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054]"
@@ -85,7 +85,7 @@ const StepByStepSection = () => {
             />
           </div>
         </div>
-        <div className="flex items-center gap-x-[68px] max-md:flex-col gap-y-[20px] w-full">
+        <div className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full ">
           <div className="border border-[#F1F1F1] rounded-[10px] bg-[#FAFAFA] pt-[42px] pr-[78px]">
             <img
               src={images.Desktop1}
@@ -114,7 +114,7 @@ const StepByStepSection = () => {
                 Use actionable insights to optimize future campaigns.
               </li>
             </ul>
-            <div>
+            <div className="flex max-sm:justify-center">
               <Button
                 label="Start Your First Campaign"
                 className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054]"

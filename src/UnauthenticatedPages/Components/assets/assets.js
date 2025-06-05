@@ -34,8 +34,24 @@ import person2 from "./images/carouselImage2.png";
 import person3 from "./images/carouselImage3.png";
 import person4 from "./images/carouselImage4.png";
 import person5 from "./images/carouselImage5.png";
+import aboutImage from "./images/aboutImage.png";
+import Team1 from "./images/Team3.png";
+import Team2 from "./images/Team2.png";
+import Team3 from "./images/Team1.png";
+import Team4 from "./images/Team4.png";
+import ball from "./images/ball.png";
+import mailIcon from "./images/mail.png";
+import messageIcon from "./images/message-circle.png";
 
 export const images = {
+  messageIcon,
+  mailIcon,
+  ball,
+  Team1,
+  Team2,
+  Team3,
+  Team4,
+  aboutImage,
   person1,
   person2,
   person3,

@@ -24,9 +24,9 @@ const FaqSection = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-[96px] px-[105px] gap-[64px]">
+    <div className="flex flex-col justify-center items-center mt-[96px] px-[20px] md:px-[65px] lg:px-[105px] gap-[64px]">
       <div className="flex flex-col gap-5 items-center text-center">
-        <h2 className="text-[#101828] text-[32px] font-semibold">
+        <h2 className="text-[#101828] text-[26px] md:text-[32px] font-semibold">
           Frequently Asked Questions
         </h2>
         <p className="text-[#767676] text-[18px] font-normal">
@@ -34,11 +34,11 @@ const FaqSection = () => {
         </p>
       </div>
 
-      <div className="px-8 flex flex-col gap-8 lg:w-[60%] md:w-[80%] w-[100%]">
+      <div className="lg:px-8 flex flex-col gap-8 w-full lg:w-[60%] md:w-[80%]">
         {dropdownItem.map((item, index) => (
           <div
             key={index}
-            className="border border-[#EAECF0] shadow py-6 px-3 flex flex-col gap-2"
+            className="border border-[#EAECF0] shadow py-6 px-3 flex flex-col gap-2 w-full"
           >
             {/* Clickable Question */}
             <div

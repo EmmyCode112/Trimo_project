@@ -24,7 +24,7 @@ const Signin = () => {
     const userData = { email }; // You can modify this as needed
     Cookies.set("authToken", "dummyAuthToken", { expires: 7 });
     dispatch(loginSuccess(userData));
-    navigate("/");
+    navigate("/dashboard/overview");
   };
 
   const validateEmail = (email) => {

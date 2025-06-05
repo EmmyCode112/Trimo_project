@@ -121,7 +121,7 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
   const handleNext = () => {
     if (campaignName.trim()) {
       //   const formattedName = formatCampaignName(campaignName);
-      navigate(`/campaigns/smsCampaign`);
+      navigate(`/dashboard/campaigns/smsCampaign`);
       onClose();
     }
   };

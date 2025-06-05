@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import "./App.css";
 
-// Import the ScrollToTop component
 import ScrollToTop from "./components/ScrollToTop";
 
 import Signin from "@/auth/signin/Signin";
@@ -39,7 +38,11 @@ import HomeLandingPage from "./UnauthenticatedPages/Home/HomeLandingPage";
 import ContactUs from "./UnauthenticatedPages/Contact/ContactUs";
 import About from "./UnauthenticatedPages/About/About";
 import UseCases from "./UnauthenticatedPages/UseCases/UseCases";
-// import CampaignPage from "./pages/Campaigns/Campaigns";
+import Community from "./UnauthenticatedPages/Community/Community";
+import PrivacyPolicy from "./UnauthenticatedPages/PrivacyPolicy/PrivacyPolicy";
+import ServiceAgreement from "./UnauthenticatedPages/ServiceAgreement/ServiceAgreement";
+import CodeOfConduct from "./UnauthenticatedPages/CodeOfConduct/CodeOfConduct";
+import TermsAndCondition from "./UnauthenticatedPages/TermsAndCondition/TermsAndCondition";
 
 import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
@@ -49,149 +52,136 @@ import Index from "./pages/Home/Index";
 import UseCasesPage from "./pages/Home/UseCasePage";
 import ApiHome from "./pages/Home/APIHome";
 import KYCVerification from "./pages/Kyc/KYCVerification";
-// import ApiDocumentation from "./pages/Home/ApiDocumentation";
+
+const AuthenticatedLayout = ({
+  toggleSidebar,
+  isSidebarOpen,
+  handleLogout,
+}) => (
+  <div className="h-[100vh] overflow-hidden flex relative">
+    {isSidebarOpen && (
+      <div
+        className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
+        onClick={toggleSidebar}
+      />
+    )}
+
+    <div
+      className={`${
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      } transition-transform duration-300 ease-in-out fixed md:relative z-30 h-full`}
+    >
+      <Sidebar />
+    </div>
+
+    <div className="flex-1 overflow-y-scroll">
+      <Navbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+      <Routes>
+        <Route
+          path="overview"
+          element={<Dashboard handleLogout={handleLogout} />}
+        />
+        <Route path="campaigns" element={<Campaigns />} />
+        <Route path="contacts" element={<Contact />} />
+        <Route path="campaigns/email" element={<CampaignPage />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="settings" element={<Setting />} />
+        <Route path="settings/kyc" element={<KYCVerification />} />
+        <Route path="wallet" element={<Wallet />} />
+        <Route path="groups" element={<Groups />} />
+        <Route path="notifications" element={<Notification />} />
+        <Route path="campaigns/smsCampaign" element={<SmsCampaign />} />
+        <Route path="campaigns/template" element={<Home />} />
+        <Route
+          path="campaigns/WhatsApp-campaign"
+          element={<WhatsAppCampaign />}
+        />
+        <Route
+          path="campaigns/WhatsApp-campaign/create"
+          element={<WhatsAppMessageCreation />}
+        />
+        <Route
+          path="campaigns/smsCampaign/create"
+          element={<MessageCreation />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to="/dashboard/overview" replace />}
+        />
+      </Routes>
+      <CampaignManager />
+    </div>
+  </div>
+);
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [openFormModal, setOpenFormModal] = useState(false);
-
   const dispatch = useDispatch();
 
-  // Load authentication state on mount
   useEffect(() => {
     const token = Cookies.get("authToken");
     const userData = Cookies.get("userData");
-
     if (token && userData) {
-      dispatch(loginSuccess(JSON.parse(userData))); // Restore authentication state
+      dispatch(loginSuccess(JSON.parse(userData)));
     }
   }, [dispatch]);
 
-  // Handle sidebar visibility based on screen size
   useEffect(() => {
     const handleResize = () => {
       setIsSidebarOpen(window.innerWidth > 768);
     };
-
-    // Set initial state
     handleResize();
-
-    // Add event listener
     window.addEventListener("resize", handleResize);
-
-    // Cleanup
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <Router>
-      {/* Add ScrollToTop component here */}
       <ScrollToTop />
-      
       <Routes>
-        {/* Public Routes */}
         {!isAuthenticated ? (
           <>
-            <Route path="/home" element={<Index />} />
-            <Route path="/use-cases" element={<UseCasesPage />} />
-            <Route path="/email" element={<EmailPage />} />
-            <Route path="/whatsapp" element={<WhatsAppPage />} />
-            <Route path="/api/docs" element={<ApiDocumentation />} />
-            <Route path="/api-home" element={<ApiHome />} />
-            <Route path="/sms" element={<SMSPage />} />
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset-password" element={<PasswordReset />} />
             <Route path="/account-setup" element={<SetUp />} />
             <Route path="/" element={<LandingPage />}>
-              <Route index path="/" element={<HomeLandingPage />} />
-              <Route path="/contact-us" element={<ContactUs />} />
-              <Route path="/about-us" element={<About />} />
-              <Route path="/use_cases" element={<UseCases />} />
+              <Route index element={<HomeLandingPage />} />
+              <Route path="features/email" element={<EmailPage />} />
+              <Route path="features/whatsapp" element={<WhatsAppPage />} />
+              <Route path="features/sms" element={<SMSPage />} />
+              <Route path="api/docs" element={<ApiDocumentation />} />
+              <Route path="api-home" element={<ApiHome />} />
+              <Route path="contact-us" element={<ContactUs />} />
+              <Route path="about-us" element={<About />} />
+              <Route path="community" element={<Community />} />
+              <Route path="privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="legal-agreement" element={<ServiceAgreement />} />
+              <Route path="code-of-conduct" element={<CodeOfConduct />} />
+              <Route path="terms-condition" element={<TermsAndCondition />} />
+              <Route path="use_cases" element={<UseCases />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Route>
           </>
         ) : (
-          // Authenticated Layout for authenticated users
           <Route
-            path="*"
+            path="/dashboard/*"
             element={
-              <div className="h-[100vh] overflow-hidden flex relative">
-                {/* Overlay for mobile */}
-                {isSidebarOpen && (
-                  <div
-                    className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
-                    onClick={() => setIsSidebarOpen(false)}
-                  />
-                )}
-
-                {/* Sidebar with responsive positioning */}
-                <div
-                  className={`${
-                    isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-                  } transition-transform duration-300 ease-in-out fixed md:relative z-30 h-full`}
-                >
-                  <Sidebar />
-                </div>
-
-                <div className="flex-1 overflow-y-scroll">
-                  <Navbar
-                    toggleSidebar={toggleSidebar}
-                    isSidebarOpen={isSidebarOpen}
-                  />
-                  <Routes>
-                    <Route
-                      path="/dashboard"
-                      element={<Dashboard handleLogout={handleLogout} />}
-                    />
-                    <Route path="/campaigns" element={<Campaigns />} />
-                    {/* <Route
-                      path="/campaigns/create"
-                      element={<CampaignPage />}
-                    /> */}
-                    <Route path="/contacts" element={<Contact />} />
-                    <Route path="/campaigns/email" element={<CampaignPage />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/settings" element={<Setting />} />
-                    <Route path="/settings/kyc" element={<KYCVerification />} />
-                    <Route path="/wallet" element={<Wallet />} />
-                    <Route path="/groups" element={<Groups />} />
-                    <Route path="/notifications" element={<Notification />} />
-                    {/* <Route path={`/campaigns/${campaignName}`} element={<SmsCampaign />} />  */}
-                    <Route
-                      path={`/campaigns/smsCampaign`}
-                      element={<SmsCampaign />}
-                    />
-                    <Route path={`/campaigns/template`} element={<Home />} />
-                    <Route
-                      path={`/campaigns/WhatsApp-campaign`}
-                      element={<WhatsAppCampaign />}
-                    />
-                    <Route
-                      path={`/campaigns/WhatsApp-campaign/create`}
-                      element={<WhatsAppMessageCreation />}
-                    />
-
-                    <Route
-                      path={`/campaigns/smsCampaign/create`}
-                      element={<MessageCreation />}
-                    />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                  </Routes>
-
-                  <CampaignManager />
-                </div>
-              </div>
+              <AuthenticatedLayout
+                toggleSidebar={toggleSidebar}
+                isSidebarOpen={isSidebarOpen}
+                handleLogout={handleLogout}
+              />
             }
           />
         )}

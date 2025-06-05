@@ -4,7 +4,7 @@ import Button from "@/Components/buttons/transparentButton";
 const UseCases = () => {
   return (
     <div>
-      <div className="w-full flex flex-col gap-[14px] items-center justify-center bg-gradient-to-r from-[#CB1E33] via-[#9A2444] to-[#383268] h-[504px] text-center">
+      <div className="w-full flex flex-col gap-[14px] items-center justify-center bg-gradient-to-r from-[#CB1E33] via-[#9A2444] to-[#383268] h-[504px] text-center mt-[100px]">
         <h2 className="text-white font-semibold text-[48px] leading-[60px] lg:max-w-[60%]">
           Discover How TRIIMO Powers Your Communications
         </h2>

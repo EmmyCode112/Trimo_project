@@ -64,7 +64,7 @@ const WhatsAppCampaign = () => {
   // Handle Next Button Click
   const handleNext = () => {
     if (!NextButtonDisabled) {
-      navigate("/campaigns/WhatsApp-campaign/create");
+      navigate("/dashboard/campaigns/WhatsApp-campaign/create");
     }
   };
   useEffect(() => {

@@ -107,7 +107,7 @@ const CreateWhatsAppCampaignFormModal = ({ onClose, onOpen }) => {
   const handleNext = () => {
     if (campaignName.trim()) {
       //   const formattedName = formatCampaignName(campaignName);
-      navigate(`/campaigns/whatsApp-campaign`);
+      navigate(`/dashboard/campaigns/whatsApp-campaign`);
       onClose();
     }
   };

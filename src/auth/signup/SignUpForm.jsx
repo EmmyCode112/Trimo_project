@@ -1,7 +1,7 @@
 import Button from "@/Components/buttons/transparentButton";
 import { Icons } from "@/assets/assets";
 import PhoneNumberInput from "@/Components/PhoneNumberInput";
-
+import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 
 const SignUpForm = ({ setShowOtpPopUp }) => {
@@ -329,7 +329,9 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
         />
         <label htmlFor="terms" className="text-sm cursor-pointer ">
           I agree to the triimo{" "}
-          <span className="text-[#4285F4]">Terms & Conditions</span>
+          <Link to="/terms-condition" className="text-[#4285F4]">
+            Terms & Conditions
+          </Link>
         </label>
       </div>
 

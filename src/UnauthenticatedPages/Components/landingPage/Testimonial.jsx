@@ -2,8 +2,8 @@ import { images } from "../assets/assets";
 
 const Testimonial = () => {
   return (
-    <div className="lg:px-[105px] py-[60px] flex flex-col gap-[42px] bg-[#383268]">
-      <h2 className="text-[32px] text-white font-semibold text-center">
+    <div className="px-[20px] md:px-[65px] lg:px-[105px] py-[60px] flex flex-col gap-[42px] bg-[#383268]">
+      <h2 className="text-[26px] md:text-[32px] text-white font-semibold text-center">
         What Our Customers Say
       </h2>
       <div className="flex flex-wrap w-full justify-center gap-5">

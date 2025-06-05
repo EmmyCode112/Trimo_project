@@ -64,7 +64,7 @@ const SmsCampaign = () => {
   // Handle Next Button Click
   const handleNext = () => {
     if (!NextButtonDisabled) {
-      navigate("/campaigns/smsCampaign/create");
+      navigate("/dashboard/campaigns/smsCampaign/create");
     }
   };
   useEffect(() => {

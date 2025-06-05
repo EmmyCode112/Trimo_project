@@ -17,36 +17,43 @@ const Sidebar = ({ isSidebarOpen }) => {
   const subNavItems = {
     campaigns: [
       { label: "New Campaign", route: "/campaigns/new" },
-      { label: "View All Campaigns", route: "/campaigns", count: 10 },
+      { label: "View All Campaigns", route: "/dashboard/campaigns", count: 10 },
     ],
     contacts: [
-      { label: "All Contacts", route: "/contacts", count: contacts.length },
-      { label: "Groups", route: "/groups", count: groups.length },
+      {
+        label: "All Contacts",
+        route: "/dashboard/contacts",
+        count: contacts.length,
+      },
+      { label: "Groups", route: "/dashboard/groups", count: groups.length },
     ],
     templates: [
-      { label: "Manage Template", route: "/campaigns/email" },
-      { label: "Create New Template", route: "/campaigns/template" },
+      { label: "Manage Template", route: "/dashboard/campaigns/email" },
+      { label: "Create New Template", route: "/dashboard/campaigns/template" },
     ],
     analytics: [
-      { label: "Dashboard Analytics", route: "/analytics" },
-      { label: "Detailed Report", route: "/analytics/report" },
+      { label: "Dashboard Analytics", route: "/dashboard/analytics" },
+      { label: "Detailed Report", route: "/dashboard/analytics/report" },
     ],
     wallet: [
-      { label: "Wallet Overview", route: "/wallet" },
-      { label: "Transaction History", route: "/wallet/history" },
+      { label: "Wallet Overview", route: "/dashboard/wallet" },
+      { label: "Transaction History", route: "/dashboard/wallet/history" },
     ],
     integration: [
-      { label: "API Documentation", route: "/integration/docs" },
-      { label: "API Key Management", route: "/integration/keys" },
-      { label: "Webhook Setup", route: "/integration/webhooks" },
+      { label: "API Documentation", route: "/dashboard/integration/docs" },
+      { label: "API Key Management", route: "/dashboard/integration/keys" },
+      { label: "Webhook Setup", route: "/dashboard/integration/webhooks" },
     ],
     notifications: [
       {
         label: "All Notifications",
-        route: "/notifications",
+        route: "/dashboard/notifications",
         count: notifications.length,
       },
-      { label: "Notification Settings", route: "/notifications/settings" },
+      {
+        label: "Notification Settings",
+        route: "/dashboard/notifications/settings",
+      },
     ],
   };
 
@@ -64,18 +71,22 @@ const Sidebar = ({ isSidebarOpen }) => {
   };
 
   const links = [
-    { label: "Home", Icon: SideBarIcons.homeIcon, route: "/dashboard" },
+    {
+      label: "Home",
+      Icon: SideBarIcons.homeIcon,
+      route: "/dashboard/overview",
+    },
     {
       label: "Campaigns",
       Icon: SideBarIcons.campaignIcon,
-      route: "/campaigns",
+      route: "/dashboard/campaigns",
       hasSubNav: true,
       key: "campaigns",
     },
     {
       label: "Contacts",
       Icon: SideBarIcons.contactIcon,
-      route: "/contacts",
+      route: "/dashboard/contacts",
       hasSubNav: true,
       key: "contacts",
     },
@@ -88,14 +99,14 @@ const Sidebar = ({ isSidebarOpen }) => {
     {
       label: "Analytics",
       Icon: SideBarIcons.analyticsIcon,
-      route: "/analytics",
+      route: "/dashboard/analytics",
       hasSubNav: true,
       key: "analytics",
     },
     {
       label: "Wallet",
       Icon: SideBarIcons.walletIcon,
-      route: "/wallet",
+      route: "/dashboard/wallet",
       hasSubNav: true,
       key: "wallet",
     },
@@ -108,12 +119,16 @@ const Sidebar = ({ isSidebarOpen }) => {
     {
       label: "Notification",
       Icon: SideBarIcons.notificationIcon,
-      route: "/notifications",
+      route: "/dashboard/notifications",
       hasSubNav: true,
       key: "notifications",
       count: notifications.length,
     },
-    { label: "Settings", Icon: SideBarIcons.settingIcon, route: "/settings" },
+    {
+      label: "Settings",
+      Icon: SideBarIcons.settingIcon,
+      route: "/dashboard/settings",
+    },
   ];
 
   const navigate = useNavigate();

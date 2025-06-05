@@ -7,16 +7,25 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation: {
+        "slide-down": "slideDown 0.3s ease-out",
+      },
+      keyframes: {
+        slideDown: {
+          "0%": { opacity: 0, transform: "translateY(-10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+      },
       maxWidth: {
-        'layout': '1440px',
-        'content': '1216px',
+        layout: "1440px",
+        content: "1216px",
       },
       colors: {
         basewhite: "var(--basewhite)",
         "foundationbranddeep-purpledeep-purple-400":
           "var(--foundationbranddeep-purpledeep-purple-400)",
         "foundationbranddeep-purpledeep-purple-50":
-          "var(--foundationbranddeep-purpledeep-purple-50)", 
+          "var(--foundationbranddeep-purpledeep-purple-50)",
         "foundationbranddeep-purpledeep-purple-500":
           "var(--foundationbranddeep-purpledeep-purple-500)",
         "foundationbrandmaronmaron-400": "var(--foundationbrandmaronmaron-400)",
@@ -92,16 +101,16 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         triimo: {
-          gray: '#484848',
-          border: '#C1BFD0',
-          badge: '#EBEBF099',
-          red: '#CB1E33',
-          purple: '#383268',
+          gray: "#484848",
+          border: "#C1BFD0",
+          badge: "#EBEBF099",
+          red: "#CB1E33",
+          purple: "#383268",
         },
       },
       fontFamily: {
         "body-lg-medium": "var(--body-lg-medium-font-family)",
-        "body-md-medium": "var(--body-md-medium-font-family)", 
+        "body-md-medium": "var(--body-md-medium-font-family)",
         "body-md-normal": "var(--body-md-normal-font-family)",
         "body-md-regular": "var(--body-md-regular-font-family)",
         "body-sm-medium": "var(--body-sm-medium-font-family)",
@@ -111,15 +120,15 @@ module.exports = {
         "body-xs-medium": "var(--body-xs-medium-font-family)",
         sans: [
           "ui-sans-serif",
-          "system-ui", 
+          "system-ui",
           "sans-serif",
           '"Apple Color Emoji"',
           '"Segoe UI Emoji"',
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
         ],
-        'general': ['General Sans', 'sans-serif'],
-        'figma-hand': ['Figma Hand', 'cursive'],
+        general: ["General Sans", "sans-serif"],
+        "figma-hand": ["Figma Hand", "cursive"],
       },
       boxShadow: {
         "focus-ring-4px-primary-100": "var(--focus-ring-4px-primary-100)",
@@ -140,29 +149,29 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        'fade-in': {
-          from: { opacity: '0', transform: 'translateY(10px)' },
-          to: { opacity: '1', transform: 'translateY(0)' }
+        "fade-in": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
-        'fade-in-slow': {
-          from: { opacity: '0', transform: 'translateY(20px)' },
-          to: { opacity: '1', transform: 'translateY(0)' }
+        "fade-in-slow": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
-        'slide-in': {
-          from: { opacity: '0', transform: 'translateY(20px)' },
-          to: { opacity: '1', transform: 'translateY(0)' }
-        }
+        "slide-in": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        'fade-in': 'fade-in 0.4s ease-out',
-        'fade-in-slow': 'fade-in-slow 0.6s ease-out forwards',
-        'slide-in': 'slide-in 0.5s ease-out forwards'
+        "fade-in": "fade-in 0.4s ease-out",
+        "fade-in-slow": "fade-in-slow 0.6s ease-out forwards",
+        "slide-in": "slide-in 0.5s ease-out forwards",
       },
     },
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
   },
   plugins: [],
   darkMode: ["class"],
-}
+};
