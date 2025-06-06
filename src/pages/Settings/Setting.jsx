@@ -22,7 +22,7 @@ const Settings = () => {
 
   const handleTabChange = (tabId) => {
     if (tabId === "kyc") {
-      navigate("/settings/kyc");
+      navigate("/dashboard/settings/kyc");
       return;
     }
     setActiveTab(tabId);
