@@ -1,8 +1,29 @@
 import Button from "@/Components/buttons/transparentButton";
 import { images } from "../assets/assets";
+import { useEffect, useRef } from "react";
+import { fadeIn, slideInLeft, slideInRight, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
+
 const StepByStepSection = () => {
+  const sectionRef = useRef(null);
+  const stepsRef = useRef(null);
+
+  useEffect(() => {
+    // Animate the section title
+    scrollTriggerAnimation(sectionRef.current, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+    });
+
+    // Animate the steps with stagger effect
+    if (stepsRef.current) {
+      const steps = stepsRef.current.children;
+      staggerChildren(stepsRef.current, steps, 0.5);
+    }
+  }, []);
+
   return (
-    <div className="mt-[60px] px-[20px] md:px-[65px] lg:px-[105px] mb-[56px]">
+    <div ref={sectionRef} className="mt-[60px] px-[20px] md:px-[65px] lg:px-[105px] mb-[56px]">
       <div className="flex flex-col gap-[14px]">
         <p className="bg-[#EBEBF099] rounded-full py-2 px-[10px] text-[#484848] text-[14px] font-normal w-[143px] mx-auto flex justify-center">
           Step-by-Step
@@ -15,7 +36,7 @@ const StepByStepSection = () => {
           messaging seamless`}
         </p>
       </div>
-      <div className="flex flex-col gap-y-[50px] mt-[78px] w-full">
+      <div ref={stepsRef} className="flex flex-col gap-y-[50px] mt-[78px] w-full">
         <div className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full ">
           <div className="border border-[#F1F1F1] rounded-[10px] bg-[#FAFAFA] pt-[42px] pr-[78px]">
             <img

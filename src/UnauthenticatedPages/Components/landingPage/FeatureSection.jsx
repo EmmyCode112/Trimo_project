@@ -1,5 +1,16 @@
 import { images } from "../assets/assets";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const FeatureSection = () => {
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const imageRef = useRef(null);
+
   const cardItems = [
     {
       image: images.sms,
@@ -7,7 +18,6 @@ const FeatureSection = () => {
       content:
         "Track delivery rate, open rate and engagement metrics with ease",
     },
-
     {
       image: images.email,
       title: "Email Messaging",
@@ -36,41 +46,74 @@ const FeatureSection = () => {
       content: "High delivery success rate and strong encryption for your data",
     },
   ];
+
+  useEffect(() => {
+    const animations = [];
+
+    // Animate the title and subtitle
+    if (titleRef.current && subtitleRef.current) {
+      animations.push(
+        gsap.from([titleRef.current, subtitleRef.current], {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: "power3.out",
+        })
+      );
+    }
+
+    // Animate the image with a scroll-triggered effect
+    if (imageRef.current) {
+      animations.push(
+        gsap.from(imageRef.current, {
+          scale: 0.8,
+          opacity: 0,
+          duration: 1.5,
+          scrollTrigger: {
+            trigger: imageRef.current,
+            start: "top center",
+            end: "bottom center",
+            scrub: 1,
+          },
+          ease: "power2.out",
+        })
+      );
+    }
+
+    // Cleanup function
+    return () => {
+      animations.forEach(anim => {
+        if (anim && anim.kill) {
+          anim.kill();
+        }
+      });
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
   return (
-    <div className="mt-[60px] flex flex-col gap-y-[42px] px-[25px] md:px-[45px] lg:px-[65px]">
+    <div ref={sectionRef} className="mt-[60px] px-[25px] sm:px-[45px] lg:px-[65px]">
       <div className="flex flex-col gap-[14px]">
         <p className="bg-[#EBEBF099] rounded-full py-2 px-[10px] text-[#484848] text-[14px] font-normal w-[143px] mx-auto flex justify-center">
-          Features Section
+          Feature Section
         </p>
-        <h2 className="text-[#1A1A1A] text-[32px] font-bold max-sm:text-[22px] text-center">
-          The complete toolbox for customer engagement
+        <h2 ref={titleRef} className="text-[#1A1A1A] text-[32px] font-bold max-sm:text-[22px] text-center">
+          Features that make us stand out
         </h2>
+        <p ref={subtitleRef} className="text-[#484848] text-[18px] font-medium text-center">
+          We provide the best features for your business
+        </p>
       </div>
 
-      <div className=" flex gap-5 ">
-        <div className=" flex gap-5 flex-wrap justify-center lg:justify-between max-sm:justify-center w-full">
-          {cardItems.map((items, index) => (
-            <div
-              key={index}
-              className="sm:w-[330px]  w-full border border-[#F1F1F1] rounded-[15px] pb-[21px]"
-            >
-              <img
-                src={items.image}
-                alt={items.title}
-                className="rounded-t-[15px] h-[202px] w-full"
-              />
-              <div className="flex flex-col gap-y-2 pt-[23px] px-[20px] md:pl-4 lg:pl-7 lg:pr-[60px] md:pr-[30px]">
-                <h2 className="text-[22px] font-semibold text-[#3F3E3E]">
-                  {items.title}
-                </h2>
-                <p className="text-[#969696] text-[16px] font-normal">
-                  {items.content}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className=" flex gap-5"></div>
+      <div className="mt-[36px]">
+        <img
+          ref={imageRef}
+          src={images.featureImage}
+          alt="feature"
+          className="w-full h-auto"
+          draggable="false"
+        />
       </div>
     </div>
   );

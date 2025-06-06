@@ -1,23 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import CountUp from "react-countup";
+import { fadeIn, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
 
 const Analysis = () => {
   const [startCount, setStartCount] = useState(false);
   const sectionRef = useRef(null);
+  const statsRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setStartCount(true);
-          observer.disconnect(); // Stop observing after it runs once
+          observer.disconnect();
         }
       },
-      { threshold: 0.5 } // Trigger when 50% of the section is visible
+      { threshold: 0.5 }
     );
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
+    }
+
+    // Animate the section title
+    scrollTriggerAnimation(sectionRef.current, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+    });
+
+    // Animate the stats with stagger effect
+    if (statsRef.current) {
+      const stats = statsRef.current.children;
+      staggerChildren(statsRef.current, stats, 0.5);
     }
 
     return () => observer.disconnect();
@@ -27,7 +42,7 @@ const Analysis = () => {
   const formatNumber = (num) => {
     if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + "B+";
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M+";
-    return num.toLocaleString(); // Format smaller numbers normally
+    return num.toLocaleString();
   };
 
   return (
@@ -44,7 +59,7 @@ const Analysis = () => {
         </p>
       </div>
 
-      <div className="flex justify-center gap-[20px] max-sm:flex-wrap md:gap-[40px] lg:gap-[54px] w-full">
+      <div ref={statsRef} className="flex justify-center gap-[20px] max-sm:flex-wrap md:gap-[40px] lg:gap-[54px] w-full">
         <div className="flex flex-col items-center gap-3">
           <h3 className="text-[32px] md:text-[40px] text-[#DB7500] tracking-[-2%] font-semibold">
             {startCount && (

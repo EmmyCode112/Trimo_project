@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { images } from "../assets/assets";
+import { fadeIn, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
 
 const FaqSection = () => {
   const [openIndex, setOpenIndex] = useState(0); // First FAQ open by default
+  const sectionRef = useRef(null);
+  const faqsRef = useRef(null);
 
   const dropdownItem = [
     {
       question: "What messaging channels does Triimo support?",
-      ans: "Yes, you can try us for free for 30 days. If you want, we’ll provide you with a free, personalized 30-minute onboarding call to get you up and running as soon as possible.",
+      ans: "Yes, you can try us for free for 30 days. If you want, we'll provide you with a free, personalized 30-minute onboarding call to get you up and running as soon as possible.",
     },
     {
       question: "Can I try Triimo for free?",
@@ -19,12 +22,27 @@ const FaqSection = () => {
     },
   ];
 
+  useEffect(() => {
+    // Animate the section title
+    scrollTriggerAnimation(sectionRef.current, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+    });
+
+    // Animate the FAQs with stagger effect
+    if (faqsRef.current) {
+      const faqs = faqsRef.current.children;
+      staggerChildren(faqsRef.current, faqs, 0.5);
+    }
+  }, []);
+
   const toggleDropdown = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-[96px] px-[20px] md:px-[65px] lg:px-[105px] gap-[64px]">
+    <div ref={sectionRef} className="flex flex-col justify-center items-center mt-[96px] px-[20px] md:px-[65px] lg:px-[105px] gap-[64px]">
       <div className="flex flex-col gap-5 items-center text-center">
         <h2 className="text-[#101828] text-[26px] md:text-[32px] font-semibold">
           Frequently Asked Questions
@@ -34,7 +52,7 @@ const FaqSection = () => {
         </p>
       </div>
 
-      <div className="lg:px-8 flex flex-col gap-8 w-full lg:w-[60%] md:w-[80%]">
+      <div ref={faqsRef} className="lg:px-8 flex flex-col gap-8 w-full lg:w-[60%] md:w-[80%]">
         {dropdownItem.map((item, index) => (
           <div
             key={index}

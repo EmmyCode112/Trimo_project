@@ -1,15 +1,35 @@
 import { images } from "../assets/assets";
+import { useEffect, useRef } from "react";
+import { fadeIn, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
 
 const Testimonial = () => {
+  const sectionRef = useRef(null);
+  const testimonialsRef = useRef(null);
+
+  useEffect(() => {
+    // Animate the section title
+    scrollTriggerAnimation(sectionRef.current, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+    });
+
+    // Animate the testimonials with stagger effect
+    if (testimonialsRef.current) {
+      const testimonials = testimonialsRef.current.children;
+      staggerChildren(testimonialsRef.current, testimonials, 0.5);
+    }
+  }, []);
+
   return (
-    <div className="px-[20px] md:px-[65px] lg:px-[105px] py-[60px] flex flex-col gap-[42px] bg-[#383268]">
+    <div ref={sectionRef} className="px-[20px] md:px-[65px] lg:px-[105px] py-[60px] flex flex-col gap-[42px] bg-[#383268]">
       <h2 className="text-[26px] md:text-[32px] text-white font-semibold text-center">
         What Our Customers Say
       </h2>
-      <div className="flex flex-wrap w-full justify-center gap-5">
+      <div ref={testimonialsRef} className="flex flex-wrap w-full justify-center gap-5">
         <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
-            We’ve been using Untitled to kick start every new project and can’t
+            We've been using Untitled to kick start every new project and can't
             imagine working without it.
           </p>
           <div className="flex items-end justify-between">
@@ -29,7 +49,7 @@ const Testimonial = () => {
         </div>
         <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
-            We’ve been using Untitled to kick start every new project and can’t
+            We've been using Untitled to kick start every new project and can't
             imagine working without it.
           </p>
           <div className="flex items-end justify-between">
@@ -49,7 +69,7 @@ const Testimonial = () => {
         </div>
         <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
-            We’ve been using Untitled to kick start every new project and can’t
+            We've been using Untitled to kick start every new project and can't
             imagine working without it.
           </p>
           <div className="flex items-end justify-between">
@@ -69,7 +89,7 @@ const Testimonial = () => {
         </div>
         <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
-            We’ve been using Untitled to kick start every new project and can’t
+            We've been using Untitled to kick start every new project and can't
             imagine working without it.
           </p>
           <div className="flex items-end justify-between">
