@@ -3,8 +3,10 @@ import { Icons } from "@/assets/assets";
 import PhoneNumberInput from "@/Components/PhoneNumberInput";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
+import { useAuth } from '@/context/AuthContext';
 
 const SignUpForm = ({ setShowOtpPopUp }) => {
+  const { register } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [workPhone, setWorkPhone] = useState("");
@@ -98,7 +100,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     );
   }, [email, password, firstName, lastName, workPhone, confirmPassword]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -127,8 +129,33 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // Proceed only when there are no validation errors
-      setShowOtpPopUp(true);
+      try {
+        // Prepare user data for registration
+        const userData = {
+          firstname: firstName,
+          lastname: lastName,
+          email: email,
+          country_code: "+234", // Default to Nigeria for now
+          phone_number: workPhone,
+          password: password,
+          confirm_password: confirmPassword
+        };
+
+        console.log('Submitting registration data:', userData);
+        const response = await register(userData);
+        console.log('Registration successful:', response);
+        
+        // Show OTP form if registration was successful
+        setShowOtpPopUp(true);
+      } catch (error) {
+        console.error('Registration failed:', error);
+        // Handle API validation errors
+        if (error.err_msg) {
+          setErrors(error.err_msg);
+        } else {
+          setErrors({ submit: "Registration failed. Please try again." });
+        }
+      }
     }
   };
 

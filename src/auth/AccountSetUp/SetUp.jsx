@@ -7,17 +7,27 @@ import CaseSixty from "./SixtyPercentSetUp";
 import CaseEighty from "./EightyPercentSetUp";
 import CaseHundred from "./HundredPercentSetUp";
 import PopUp from "./PopUp";
+import { useAuth } from "@/context/AuthContext";
 
 const SetUp = () => {
   const [selectedEmployees, setSelectedEmployees] = useState("");
   const [formData, setFormData] = useState({ companyName: "", workPhone: "" });
   const [currentStep, setCurrentStep] = useState(1);
-  const [successfulSetup, setSuccessfulSetup] = useState(false)
+  const [successfulSetup, setSuccessfulSetup] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   
+  const navigate = useNavigate();
+  const { completeProfile } = useAuth();
+
   const handleEmployeeSelect = (value) => setSelectedEmployees(value);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear error when user types
+    if (errors[e.target.name]) {
+      setErrors(prev => ({ ...prev, [e.target.name]: "" }));
+    }
   };
 
   const isFormValid =
@@ -25,13 +35,39 @@ const SetUp = () => {
     formData.workPhone.trim() &&
     selectedEmployees;
 
-  const handleProceed = () => {
+  const handleProceed = async () => {
     if (isFormValid) {
-      setCurrentStep((prevStep) => prevStep + 1); // Move to the next step
+      try {
+        setLoading(true);
+        // Prepare profile data
+        const profileData = {
+          company_name: formData.companyName,
+          work_phone_number: formData.workPhone,
+          number_of_employees: selectedEmployees,
+          country_code: "+234", // Default to Nigeria for now
+          what_to_achieve: [], // These will be filled in subsequent steps
+          best_describes: [] // These will be filled in subsequent steps
+        };
+
+        console.log('Submitting profile data:', profileData);
+        const response = await completeProfile(profileData);
+        console.log('Profile completion response:', response);
+
+        if (response.msg === "") {
+          setCurrentStep((prevStep) => prevStep + 1);
+        }
+      } catch (error) {
+        console.error('Profile completion failed:', error);
+        if (error.err_msg) {
+          setErrors(error.err_msg);
+        } else {
+          setErrors({ submit: "Failed to complete profile. Please try again." });
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
-
-  const navigate = useNavigate();
 
   const renderStep = () => {
     switch (currentStep) {
@@ -41,7 +77,7 @@ const SetUp = () => {
             <h4 className="font-[600] text-[28px] tracking-[-2px]">
               Setup Triimo to work for your business
             </h4>
-            <form>
+            <form onSubmit={(e) => { e.preventDefault(); handleProceed(); }}>
               {/* Company Name */}
               <label className="flex flex-col gap-[6px]">
                 <p className="text-[14px] font-[500] text-[#1A1A1A]">
@@ -58,6 +94,9 @@ const SetUp = () => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.company_name && (
+                  <p className="text-red-500 text-sm">{errors.company_name}</p>
+                )}
               </label>
 
               {/* Work Phone */}
@@ -76,6 +115,9 @@ const SetUp = () => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.work_phone_number && (
+                  <p className="text-red-500 text-sm">{errors.work_phone_number}</p>
+                )}
               </label>
 
               {/* Number of Employees */}
@@ -111,16 +153,24 @@ const SetUp = () => {
                     </div>
                   ))}
                 </div>
+                {errors.number_of_employees && (
+                  <p className="text-red-500 text-sm">{errors.number_of_employees}</p>
+                )}
               </fieldset>
+
+              {/* Error Message */}
+              {errors.submit && (
+                <p className="text-red-500 text-sm mb-4">{errors.submit}</p>
+              )}
 
               {/* Proceed Button */}
               <Button
-                label="Proceed"
-                disabled={!isFormValid}
+                type="submit"
+                label={loading ? "Processing..." : "Proceed"}
+                disabled={!isFormValid || loading}
                 className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] ${
-                  isFormValid ? "opacity-100" : "opacity-50 cursor-not-allowed"
+                  isFormValid && !loading ? "opacity-100" : "opacity-50 cursor-not-allowed"
                 }`}
-                onClick={handleProceed}
               />
             </form>
           </div>
@@ -133,13 +183,14 @@ const SetUp = () => {
             <CaseEighty handleProceed={handleProceed}/>
           </div>
         );
-
-        case 4: return (
+      case 4:
+        return (
           <div>
             <CaseHundred setSuccessfulSetup={setSuccessfulSetup}/>
           </div>
-        )
-
+        );
+      default:
+        return null;
     }
   };
 

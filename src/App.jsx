@@ -7,6 +7,7 @@ import {
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import "./App.css";
+import { AuthProvider } from "./context/AuthContext";
 
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -146,47 +147,49 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <ScrollToTop />
-      <Routes>
-        {!isAuthenticated ? (
-          <>
-            <Route path="/sign-in" element={<Signin />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/reset-password" element={<PasswordReset />} />
-            <Route path="/account-setup" element={<SetUp />} />
-            <Route path="/" element={<LandingPage />}>
-              <Route index element={<HomeLandingPage />} />
-              <Route path="features/email" element={<EmailPage />} />
-              <Route path="features/whatsapp" element={<WhatsAppPage />} />
-              <Route path="features/sms" element={<SMSPage />} />
-              <Route path="api/docs" element={<ApiDocumentation />} />
-              <Route path="api-home" element={<ApiHome />} />
-              <Route path="contact-us" element={<ContactUs />} />
-              <Route path="about-us" element={<About />} />
-              <Route path="community" element={<Community />} />
-              <Route path="privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="legal-agreement" element={<ServiceAgreement />} />
-              <Route path="code-of-conduct" element={<CodeOfConduct />} />
-              <Route path="terms-condition" element={<TermsAndCondition />} />
-              <Route path="use_cases" element={<UseCases />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Route>
-          </>
-        ) : (
-          <Route
-            path="/dashboard/*"
-            element={
-              <AuthenticatedLayout
-                toggleSidebar={toggleSidebar}
-                isSidebarOpen={isSidebarOpen}
-                handleLogout={handleLogout}
-              />
-            }
-          />
-        )}
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+          {!isAuthenticated ? (
+            <>
+              <Route path="/sign-in" element={<Signin />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/reset-password" element={<PasswordReset />} />
+              <Route path="/account-setup" element={<SetUp />} />
+              <Route path="/" element={<LandingPage />}>
+                <Route index element={<HomeLandingPage />} />
+                <Route path="features/email" element={<EmailPage />} />
+                <Route path="features/whatsapp" element={<WhatsAppPage />} />
+                <Route path="features/sms" element={<SMSPage />} />
+                <Route path="api/docs" element={<ApiDocumentation />} />
+                <Route path="api-home" element={<ApiHome />} />
+                <Route path="contact-us" element={<ContactUs />} />
+                <Route path="about-us" element={<About />} />
+                <Route path="community" element={<Community />} />
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="legal-agreement" element={<ServiceAgreement />} />
+                <Route path="code-of-conduct" element={<CodeOfConduct />} />
+                <Route path="terms-condition" element={<TermsAndCondition />} />
+                <Route path="use_cases" element={<UseCases />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </Route>
+            </>
+          ) : (
+            <Route
+              path="/dashboard/*"
+              element={
+                <AuthenticatedLayout
+                  toggleSidebar={toggleSidebar}
+                  isSidebarOpen={isSidebarOpen}
+                  handleLogout={handleLogout}
+                />
+              }
+            />
+          )}
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 

@@ -3,6 +3,7 @@ import Button from "@/Components/buttons/transparentButton";
 import { Icons } from "@/assets/assets";
 import { useNavigate } from "react-router-dom";
 import OTPInput from "@/Components/Otp";
+import { useAuth } from "@/context/AuthContext";
 
 const SignupOTP = ({ isClosedOtp }) => {
   const [successfulOtp, setSuccessfulOtp] = useState(false);
@@ -10,7 +11,7 @@ const SignupOTP = ({ isClosedOtp }) => {
   const [countdown, setCountdown] = useState(60); // Start at 60 seconds
   const [otpRequested, setOtpRequested] = useState(false);
   const [error, setError] = useState("");
-
+  const { verifyOTP } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,12 +32,20 @@ const SignupOTP = ({ isClosedOtp }) => {
     setOtpRequested(true);
   };
 
-  const handleOtpSubmit = (submittedOtp) => {
-    console.log("Submitted OTP:", submittedOtp);
-    if (submittedOtp === otp) {
-      setSuccessfulOtp(true);
-    } else {
-      setError("Incorrect OTP. Please try again.");
+  const handleOtpSubmit = async (submittedOtp) => {
+    try {
+      console.log('Submitting OTP:', submittedOtp);
+      const response = await verifyOTP(submittedOtp);
+      console.log('OTP verification response:', response);
+      
+      if (response.msg === "") {
+        setSuccessfulOtp(true);
+      } else {
+        setError("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error('OTP verification failed:', error);
+      setError(error.msg || "Failed to verify OTP. Please try again.");
     }
   };
 
@@ -55,8 +64,8 @@ const SignupOTP = ({ isClosedOtp }) => {
               Account Verification
             </h4>
             <p className="text-[#767676] font-[500]">
-              We’ve sent a verification code to your phone and a link to your
-              email. Let’s secure your account!
+              We've sent a verification code to your phone and a link to your
+              email. Let's secure your account!
             </p>
           </div>
           <div>
@@ -104,7 +113,7 @@ const SignupOTP = ({ isClosedOtp }) => {
               Registration was Successful
             </h4>
             <p className="text-[#767676] font-[500] text-center">
-              {`You're all set! Your TRIIMO account is ready. Next up: a quick setup to personalize your experience. Let’s get started!`}
+              {`You're all set! Your TRIIMO account is ready. Next up: a quick setup to personalize your experience. Let's get started!`}
             </p>
           </div>
           <Button
