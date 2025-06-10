@@ -7,13 +7,13 @@ const Footer = () => {
     <div className="flex flex-col w-full pt-[64px] px-[40px] md:px-[65px] lg:px-[140px] pb-[48px] bg-[#F9FAFB] mt-[48px] gap-[64px]">
       <div className="flex max-lg:flex-wrap gap-[32px]  lg:justify-between">
         <div className="flex flex-col gap-8 lg:mr-[16px] basis-auto lg:basis-[30%]">
-          <Link to={"/#"}>
+          <a href="/">
             <img
               src={Icons.triimoWebsiteLogo}
               alt="logo"
               className="w-[80px] cursor-pointer"
             />
-          </Link>
+          </a>
           <p className="text-[#667085] text-[15px] font-normal">
             Design amazing digital experiences that create more happy in the
             world.
@@ -26,15 +26,20 @@ const Footer = () => {
               Features
             </p>
             <ul className="flex flex-col gap-3">
+              <Link to="/features/sms">
               <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
                 SMS Messaging
-              </li>
-              <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
+              </li></Link>
+              <Link to="/features/email">
+                <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
                 Email Messaging
               </li>
+              </Link>
+              <Link to="/features/whatsapp">
               <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
                 WhatsApp
               </li>
+              </Link>
             </ul>
           </div>
           <div>

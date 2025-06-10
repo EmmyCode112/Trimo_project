@@ -78,7 +78,7 @@ const Navbar = () => {
                   }`}
                 >
                   {link.link}
-                </span>
+              </span>
 
                 {isDropdownOpen && (
                   <div className="absolute top-full left-0 mt-2 bg-white border rounded shadow-md w-[180px] z-50">

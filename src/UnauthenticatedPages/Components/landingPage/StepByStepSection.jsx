@@ -1,30 +1,35 @@
 import Button from "@/Components/buttons/transparentButton";
 import { images } from "../assets/assets";
-import { useEffect, useRef } from "react";
-import { fadeIn, slideInLeft, slideInRight, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const StepByStepSection = () => {
-  const sectionRef = useRef(null);
-  const stepsRef = useRef(null);
-
   useEffect(() => {
-    // Animate the section title
-    scrollTriggerAnimation(sectionRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
+    // Initialize AOS (Animate On Scroll) library
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once while scrolling down
+      easing: "ease-in-out", // Easing function for the animation
+      offset: 100, // Offset (in pixels) from the original trigger point
+      disable: "mobile", // Disable animations on mobile devices
     });
+    // Cleanup AOS on component unmount
 
-    // Animate the steps with stagger effect
-    if (stepsRef.current) {
-      const steps = stepsRef.current.children;
-      staggerChildren(stepsRef.current, steps, 0.5);
-    }
+    return () => {
+      AOS.refresh(); // Refresh AOS to ensure it works correctly on re-render
+    };
   }, []);
 
+  const navigate = useNavigate();
+
   return (
-    <div ref={sectionRef} className="mt-[60px] px-[20px] md:px-[65px] lg:px-[105px] mb-[56px]">
-      <div className="flex flex-col gap-[14px]">
+    <div className="mt-[60px] px-[20px] md:px-[65px] lg:px-[105px] mb-[56px]">
+      <div
+        className="flex flex-col gap-[14px]"
+        data-aos="fade-up"
+        data-aos-duration="500"
+      >
         <p className="bg-[#EBEBF099] rounded-full py-2 px-[10px] text-[#484848] text-[14px] font-normal w-[143px] mx-auto flex justify-center">
           Step-by-Step
         </p>
@@ -36,8 +41,12 @@ const StepByStepSection = () => {
           messaging seamless`}
         </p>
       </div>
-      <div ref={stepsRef} className="flex flex-col gap-y-[50px] mt-[78px] w-full">
-        <div className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full ">
+      <div className="flex flex-col gap-y-[50px] mt-[78px] w-full">
+        <div
+          className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full "
+          data-aos="fade-up"
+          data-aos-duration="500"
+        >
           <div className="border border-[#F1F1F1] rounded-[10px] bg-[#FAFAFA] pt-[42px] pr-[78px]">
             <img
               src={images.Desktop1}
@@ -63,15 +72,25 @@ const StepByStepSection = () => {
                 communication goals.
               </li>
             </ul>
-            <div className="flex max-sm:justify-center">
+            <div
+              className="flex max-sm:justify-center"
+              data-aos="fade-left"
+              data-aos-duration="500"
+              data-aos-delay="100"
+            >
               <Button
                 label="Sign Up for Free"
-                className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054]"
+                onClick={() => navigate("/signup")}
+                className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054] hover:bg-[#383268] hover:text-white"
               />
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-x-[68px] max-lg:flex-col-reverse gap-y-[20px] w-full ">
+        <div
+          className="flex items-center gap-x-[68px] max-lg:flex-col-reverse gap-y-[20px] w-full "
+          data-aos="fade-up"
+          data-aos-duration="500"
+        >
           <div className="flex flex-col gap-y-5">
             <h2 className="text-[#3F3E3E] text-[24px] font-semibold">
               Upload your contact or connect via API
@@ -90,10 +109,15 @@ const StepByStepSection = () => {
                 reusable contact lists.
               </li>
             </ul>
-            <div className="flex max-sm:justify-center">
+            <div
+              className="flex max-sm:justify-center"
+              data-aos="fade-right"
+              data-aos-duration="500"
+              data-aos-delay="100"
+            >
               <Button
                 label="Learn More"
-                className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054]"
+                className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054] hover:bg-[#383268] hover:text-white"
               />
             </div>
           </div>
@@ -106,7 +130,11 @@ const StepByStepSection = () => {
             />
           </div>
         </div>
-        <div className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full ">
+        <div
+          className="flex items-center gap-x-[68px] max-lg:flex-col gap-y-[20px] w-full "
+          data-aos="fade-up"
+          data-aos-duration="500"
+        >
           <div className="border border-[#F1F1F1] rounded-[10px] bg-[#FAFAFA] pt-[42px] pr-[78px]">
             <img
               src={images.Desktop1}
@@ -135,10 +163,15 @@ const StepByStepSection = () => {
                 Use actionable insights to optimize future campaigns.
               </li>
             </ul>
-            <div className="flex max-sm:justify-center">
+            <div
+              className="flex max-sm:justify-center"
+              data-aos="fade-left"
+              data-aos-duration="500"
+              data-aos-delay="100"
+            >
               <Button
                 label="Start Your First Campaign"
-                className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054]"
+                className="border border-[#C1BFD0] rounded-[8px] px-[18px] py-[10px] text-[#344054] hover:bg-[#383268] hover:text-white"
               />
             </div>
           </div>

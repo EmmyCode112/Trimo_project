@@ -1,43 +1,31 @@
 import { images } from "../assets/assets";
 import Button from "@/Components/buttons/transparentButton";
-import { useEffect, useRef } from "react";
-import { fadeIn, slideInLeft, slideInRight, scrollTriggerAnimation } from "@/utils/animations";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+// import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const Subscribe = () => {
-  const sectionRef = useRef(null);
-  const avatarRef = useRef(null);
-  const contentRef = useRef(null);
-  const formRef = useRef(null);
-
   useEffect(() => {
-    // Animate the section
-    scrollTriggerAnimation(sectionRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
+    // Initialize AOS (Animate On Scroll) library
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once while scrolling down
+      easing: "ease-in-out", // Easing function for the animation
+      offset: 100, // Offset (in pixels) from the original trigger point
+      disable: "mobile", // Disable animations on mobile devices
     });
+    // Cleanup AOS on component unmount
 
-    // Animate the avatar group
-    if (avatarRef.current) {
-      fadeIn(avatarRef.current, 0.5);
-    }
-
-    // Animate the content
-    if (contentRef.current) {
-      slideInLeft(contentRef.current, 0.7);
-    }
-
-    // Animate the form
-    if (formRef.current) {
-      slideInRight(formRef.current, 0.9);
-    }
+    return () => {
+      AOS.refresh(); // Refresh AOS to ensure it works correctly on re-render
+    };
   }, []);
 
+  // const navigate = useNavigate();
   return (
-    <div ref={sectionRef} className="flex flex-col mt-[96px] md:px-[65px] lg:px-[140px] gap-8">
+    <div className="flex flex-col mt-[96px] md:px-[65px] lg:px-[140px] gap-8">
       <div className="bg-[#FAFAFA] items-center justify-center flex flex-col gap-[32px] pt-[32px]">
         <img
-          ref={avatarRef}
           src={images.avatarGroup}
           alt="avatar groups"
           className="w-[120px]"
@@ -47,7 +35,11 @@ const Subscribe = () => {
         </p>
       </div>
       <div className="flex justify-between items-start gap-8 flex-wrap">
-        <div ref={contentRef} className="flex flex-col gap-2 max-sm:pl-2">
+        <div
+          className="flex flex-col gap-2 max-sm:pl-2"
+          data-aos="fade-right"
+          data-aos-duration="500"
+        >
           <h2 className="text-[#3F3E3E] text-[24px] font-semibold">
             Get Notified when we launch
           </h2>
@@ -55,7 +47,11 @@ const Subscribe = () => {
             Stay up to date with the latest news, announcements, and articles.
           </p>
         </div>
-        <div ref={formRef} className="flex items-center gap-1 lg:gap-4">
+        <div
+          className="flex items-center gap-1 lg:gap-4"
+          data-aos="fade-left"
+          data-aos-duration="500"
+        >
           <input
             type="email"
             placeholder="Enter your email"

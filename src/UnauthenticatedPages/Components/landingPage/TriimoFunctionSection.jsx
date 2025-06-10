@@ -1,57 +1,40 @@
 import Button from "@/Components/buttons/transparentButton";
 import { images } from "../assets/assets";
-import { useEffect, useRef } from "react";
-import { fadeIn, slideInLeft, slideInRight, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 const TriimoFunctionSection = () => {
-  const sectionRef = useRef(null);
-  const contentRef = useRef(null);
-  const imageRef = useRef(null);
-  const featuresRef = useRef(null);
-  const logosRef = useRef(null);
-
   useEffect(() => {
-    // Animate the section
-    scrollTriggerAnimation(sectionRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
+    // Initialize AOS (Animate On Scroll) library
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once while scrolling down
+      easing: "ease-in-out", // Easing function for the animation
+      offset: 100, // Offset (in pixels) from the original trigger point
+      disable: "mobile", // Disable animations on mobile devices
     });
+    // Cleanup AOS on component unmount
 
-    // Animate the content
-    if (contentRef.current) {
-      slideInLeft(contentRef.current, 0.5);
-    }
-
-    // Animate the image
-    if (imageRef.current) {
-      slideInRight(imageRef.current, 0.7);
-    }
-
-    // Animate the features
-    if (featuresRef.current) {
-      const features = featuresRef.current.children;
-      staggerChildren(featuresRef.current, features, 0.9);
-    }
-
-    // Animate the logos
-    if (logosRef.current) {
-      const logos = logosRef.current.children;
-      staggerChildren(logosRef.current, logos, 1.2);
-    }
+    return () => {
+      AOS.refresh(); // Refresh AOS to ensure it works correctly on re-render
+    };
   }, []);
 
   return (
-    <div ref={sectionRef} className="w-full px-[25px] sm:px-[45px] md:px-[65px] lg:px-[105px] py-[20px] sm:py-[50px] py-[96px] bg-[#410F1D] flex flex-col gap-[42px] mt-[60px]">
-      <div className="flex justify-between w-full items-center max-md:flex-col gap-y-[40px]">
-        <div ref={contentRef} className="flex flex-col gap-[23px] basis-[40%]">
+    <div className="w-full lg:px-[105px] py-[96px] bg-[#410F1D] flex flex-col gap-[42px] mt-[60px]">
+      <div className="flex justify-between w-full items-start max-md:flex-wrap-reverse md:gap-x-[50px] lg:gap-[106px] gap-y-[40px]">
+        <div
+          className="flex flex-col gap-[23px] basis-[40%]"
+          data-aos="fade-right"
+          data-aos-duration="500"
+        >
           <h1 className="leading-[48px] text-[32px] text-white font-semibold">
             Send your first text message in a matter of minutes
           </h1>
           <p className="text-[#F1F1F1] leading-[25px] text-[15px] font-medium">
             Sign up for a free Twilio account and grab one of our seven official
             server-side SDKs to get started. Send your first text message, phone
-            call, or email in minutes and when you're ready to launch your app,
+            call, or email in minutes and when you’re ready to launch your app,
             upgrade to a pay-as-you-go plan.
           </p>
           <div className="flex items-center gap-3">
@@ -65,12 +48,20 @@ const TriimoFunctionSection = () => {
             />
           </div>
         </div>
-        <div ref={imageRef} className="basis-[50%]">
-          <img src={images.functionReview} alt="" className="" />
+        <div
+          className="basis-[50%]"
+          data-aos="fade-left"
+          data-aos-duration="500"
+        >
+          <img src={images.functionReview} alt="" className="w-full" />
         </div>
       </div>
-      <div ref={featuresRef} className="flex justify-between w-full bg-[#310C16] py-[25px] gap-y-3 px-[27px] rounded-[15px] flex-wrap">
-        <div className="flex flex-col gap-[14px] lg:basis-[30%]">
+      <div className="flex justify-between w-full bg-[#310C16] py-[25px] px-[27px] rounded-[15px] flex-wrap">
+        <div
+          className="flex flex-col gap-[14px] lg:basis-[30%]"
+          data-aos="fade-right"
+          data-aos-duration="500"
+        >
           <h2 className="text-white text-[24px] font-semibold">
             Officail SDKs
           </h2>
@@ -79,7 +70,11 @@ const TriimoFunctionSection = () => {
             Java, PHP, Ruby, and Go.
           </p>
         </div>
-        <div className="flex flex-col gap-[14px] lg:basis-[30%]">
+        <div
+          className="flex flex-col gap-[14px] lg:basis-[30%]"
+          data-aos="zoom-in"
+          data-aos-duration="1000"
+        >
           <h2 className="text-white text-[24px] font-semibold">
             Triimo Functions
           </h2>
@@ -89,7 +84,11 @@ const TriimoFunctionSection = () => {
           </p>
         </div>
 
-        <div className="flex flex-col gap-[14px] lg:basis-[30%]">
+        <div
+          className="flex flex-col gap-[14px] lg:basis-[30%]"
+          data-aos="fade-left"
+          data-aos-duration="500"
+        >
           <h2 className="text-white text-[24px] font-semibold">
             99.95% API uptime
           </h2>
@@ -102,16 +101,36 @@ const TriimoFunctionSection = () => {
       <div className="text-center text-[#EAECF0] text-[18px] font-medium">
         Join 4,000+ companies already growing
       </div>
-      <div ref={logosRef} className="flex justify-between w-full items-center gap-x-5 gap-y-2 flex-wrap">
-        <img src={images.coinbase} className="cursor-pointer" />
-        <img src={images.spotify} className="cursor-pointer" />
-        <img src={images.slack} className="cursor-pointer" />
-        <img src={images.dropbox} className="cursor-pointer" />
-        <img src={images.weblfow} className="cursor-pointer" />
-        <img src={images.zoom} className="cursor-pointer" />
+      <div className="flex justify-between w-full items-center gap-5 lg:flex-wrap">
+        <img
+          src={images.coinbase}
+          className="cursor-pointer hover:scale-75 transition-scale duration-75"
+        />
+        <img
+          src={images.spotify}
+          className="cursor-pointer hover:scale-75 transition-scale duration-75"
+        />
+        <img
+          src={images.slack}
+          className="cursor-pointer hover:scale-75 transition-scale duration-75"
+        />
+        <img
+          src={images.dropbox}
+          className="cursor-pointer hover:scale-75 transition-scale duration-75"
+        />
+        <img
+          src={images.weblfow}
+          className="cursor-pointer hover:scale-75 transition-scale duration-75"
+        />
+        <img
+          src={images.zoom}
+          className="cursor-pointer hover:scale-75 transition-scale duration-75"
+        />
       </div>
     </div>
   );
 };
 
 export default TriimoFunctionSection;
+// This code defines a React component for the Triimo Function Section of a landing page.
+// It includes a header, a description, a call to action with buttons, and a list of official SDKs and features.

@@ -1,33 +1,34 @@
 import { images } from "../assets/assets";
-import { useEffect, useRef } from "react";
-import { fadeIn, staggerChildren, scrollTriggerAnimation } from "@/utils/animations";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 const Testimonial = () => {
-  const sectionRef = useRef(null);
-  const testimonialsRef = useRef(null);
-
   useEffect(() => {
-    // Animate the section title
-    scrollTriggerAnimation(sectionRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
+    // Initialize AOS (Animate On Scroll) library
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once while scrolling down
+      easing: "ease-in-out", // Easing function for the animation
+      offset: 100, // Offset (in pixels) from the original trigger point
+      disable: "mobile", // Disable animations on mobile devices
     });
+    // Cleanup AOS on component unmount
 
-    // Animate the testimonials with stagger effect
-    if (testimonialsRef.current) {
-      const testimonials = testimonialsRef.current.children;
-      staggerChildren(testimonialsRef.current, testimonials, 0.5);
-    }
+    return () => {
+      AOS.refresh(); // Refresh AOS to ensure it works correctly on re-render
+    };
   }, []);
-
   return (
-    <div ref={sectionRef} className="px-[20px] md:px-[65px] lg:px-[105px] py-[60px] flex flex-col gap-[42px] bg-[#383268]">
+    <div className="px-[20px] md:px-[65px] lg:px-[105px] py-[60px] flex flex-col gap-[42px] bg-[#383268]">
       <h2 className="text-[26px] md:text-[32px] text-white font-semibold text-center">
         What Our Customers Say
       </h2>
-      <div ref={testimonialsRef} className="flex flex-wrap w-full justify-center gap-5">
-        <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
+      <div className="flex flex-wrap w-full justify-center gap-5">
+        <div
+          className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500"
+          data-aos="fade-up"
+          data-aos-duration="500"
+        >
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
             We've been using Untitled to kick start every new project and can't
             imagine working without it.
@@ -47,7 +48,12 @@ const Testimonial = () => {
             <img src={images.testimoialLogo} />
           </div>
         </div>
-        <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
+        <div
+          className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500"
+          data-aos="fade-up"
+          data-aos-duration="500"
+          data-aos-delay="30"
+        >
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
             We've been using Untitled to kick start every new project and can't
             imagine working without it.
@@ -67,7 +73,12 @@ const Testimonial = () => {
             <img src={images.testimoialLogo} />
           </div>
         </div>
-        <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
+        <div
+          className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500"
+          data-aos="fade-up"
+          data-aos-duration="500"
+          data-aos-delay="60"
+        >
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
             We've been using Untitled to kick start every new project and can't
             imagine working without it.
@@ -87,7 +98,12 @@ const Testimonial = () => {
             <img src={images.testimoialLogo} />
           </div>
         </div>
-        <div className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500">
+        <div
+          className="flex flex-col justify-between rounded-[15px] bg-[#6969694D] gap-[69px] px-7 pb-[17px] w-full basis-full md:basis-[48%] hover:scale-[1.03] transition-all duration-500"
+          data-aos="fade-up"
+          data-aos-duration="500"
+          data-aos-delay="100"
+        >
           <p className="text-white text-[20px] font-normal mt-[36px] max-w-[90%]">
             We've been using Untitled to kick start every new project and can't
             imagine working without it.

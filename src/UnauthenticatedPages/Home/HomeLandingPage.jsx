@@ -20,7 +20,7 @@ const HomeLandingPage = () => {
   }, []);
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="">
       <HeroSection />
       <CompanyLogos />
       <UseCasesSection />
