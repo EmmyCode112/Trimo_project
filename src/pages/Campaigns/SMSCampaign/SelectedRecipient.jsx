@@ -36,7 +36,7 @@ const SelectedRecipient = ({ openForm }) => {
   return (
     <div>
       <div className="pb-[20px] flex flex-col gap-3">
-        <div className="flex justify-between items-center gap-3">
+        <div className="flex justify-between items-center gap-3 flex-wrap">
           <div>
             <h2 className="text-[20px] text-[#1A1A1A] font-medium">
               Who do you want to send it to?

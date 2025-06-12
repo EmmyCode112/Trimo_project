@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
 import ResetOtp from "./ResetOtp";
-
+import api from "@/services/api";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +11,7 @@ const PasswordReset = () => {
   const [showOtpPopUp, setShowOtpPopUp] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
 
+  const [loading, setLoading] = useState(false); // To prevent multiple submissions
   // Validate email format
   const validateEmail = (email) => {
     const emailRegex =
@@ -19,19 +20,58 @@ const PasswordReset = () => {
   };
 
   const isFormFilled = email && validateEmail(email);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate before submitting
+    // 1. **Client-side Validation FIRST**
     if (!validateEmail(email)) {
       setErrors((prev) => ({ ...prev, email: "Invalid email format." }));
+      return; // Stop execution if validation fails
     }
 
-    if (validateEmail(email)) {
-      setErrors({ email: "" }); // Clear errors on successful validation
+    // Clear previous errors only after successful client-side validation
+    setErrors({ email: "" });
+    setLoading(true); // Start loading state only when proceeding to API call
+
+    try {
+      // 2. **API Call**
+      const response = await api.post("/user/forgot-password", { email });
+
+      // Assuming `api` is an Axios instance or similar that provides `status` and `data`
+      // If it's a `fetch` wrapper, you might need `response.ok` and `await response.json()`
+      if (response.status === 200) {
+        // Or response.status >= 200 && response.status < 300 for general success
+        setShowOtpPopUp(true); // Show OTP popup
+        console.log("Password reset request sent successfully.");
+      } else {
+        // Handle non-200 but successful response (e.g., 400, 404, 500 from backend)
+        // Assuming 'response.data' contains error message if 'api' is Axios
+        const errorMessage =
+          response.data?.message ||
+          "Failed to send reset request. Please try again.";
+        setErrors((prev) => ({
+          ...prev,
+          email: errorMessage,
+        }));
+        console.error(
+          "Failed to send password reset request:",
+          response.data || response
+        );
+      }
+    } catch (error) {
+      // 3. **Error Handling (Network errors, or non-2xx if `api` throws)**
+      console.error("Error requesting password reset:", error);
+      // Check if error has a response from server (e.g., Axios error.response)
+      const errorMessage =
+        error.response?.data?.msg ||
+        "Error, please check your internet and try again.";
+      setErrors((prev) => ({
+        ...prev,
+        email: errorMessage,
+      }));
+    } finally {
+      setLoading(false);
     }
-    setShowOtpPopUp(true)
   };
 
   const navigate = useNavigate();
@@ -93,9 +133,9 @@ const PasswordReset = () => {
               </label>
 
               <Button
-                label="Continue"
+                label={loading ? "Sending..." : "Continue"}
                 onClick={handleSubmit}
-                disabled={!isFormFilled}
+                disabled={!isFormFilled || loading}
                 className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] `}
               />
             </form>

@@ -2,15 +2,14 @@ import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import api from "@/services/api";
 const NewPassword = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false); // To prevent multiple submissions
+  // State to hold error messages
   const [errors, setErrors] = useState({ password: "", confirmPassword: "" });
-
-  // Validate password
-  const validatePassword = (password) => password.length >= 8;
 
   // Check if the form is filled and passwords match
   const isFormFilled =
@@ -19,32 +18,114 @@ const NewPassword = () => {
     validatePassword(password) &&
     password === confirmPassword;
 
-  const handleSubmit = (e) => {
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(
+      password
+    );
+
+    // Return an object with validation results and specific error messages
+    return {
+      isValid:
+        password.length >= minLength &&
+        hasUppercase &&
+        hasLowercase &&
+        hasNumber &&
+        hasSpecialChar,
+      errors: {
+        minLength: password.length < minLength,
+        hasUppercase: !hasUppercase,
+        hasLowercase: !hasLowercase,
+        hasNumber: !hasNumber,
+        hasSpecialChar: !hasSpecialChar,
+      },
+    };
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Clear previous errors
     setErrors({ password: "", confirmPassword: "" });
 
-    // Perform validations
-    if (!validatePassword(password)) {
+    let isValidForm = true; // Flag to track overall form validity
+
+    const passwordValidationResult = validatePassword(password);
+
+    if (!passwordValidationResult.isValid) {
+      isValidForm = false;
+      let passwordErrorMessage = "Password must:";
+      if (passwordValidationResult.errors.minLength) {
+        passwordErrorMessage += " be at least 8 characters long,";
+      }
+      if (passwordValidationResult.errors.hasUppercase) {
+        passwordErrorMessage += " include an uppercase letter,";
+      }
+      if (passwordValidationResult.errors.hasLowercase) {
+        passwordErrorMessage += " include a lowercase letter,";
+      }
+      if (passwordValidationResult.errors.hasNumber) {
+        passwordErrorMessage += " include a number,";
+      }
+      if (passwordValidationResult.errors.hasSpecialChar) {
+        passwordErrorMessage += " include a special character,";
+      }
+      // Remove trailing comma and add a period
+      passwordErrorMessage = passwordErrorMessage.replace(/,$/, ".");
+
       setErrors((prev) => ({
         ...prev,
-        password: "Password must be at least 8 characters long.",
+        password: passwordErrorMessage,
       }));
-      return;
     }
 
     if (password !== confirmPassword) {
+      isValidForm = false;
       setErrors((prev) => ({
         ...prev,
         confirmPassword: "Passwords do not match.",
       }));
-      return;
     }
 
-    // Successful validation
-    console.log("Password successfully set:", password);
-    navigate("/sign-in"); // Navigate to the sign-in page
+    if (!isValidForm) {
+      return; // Stop here if client-side validation fails
+    }
+
+    setLoading(true); // Start loading state only when proceeding to API call
+
+    try {
+      // 2. **API Call**
+      const response = await api.post("/user/set-password", {
+        password,
+        confirmPassword, // Still sending this for consistency, but backend may only need 'password'
+      });
+
+      if (response.status === 200) {
+        navigate("/sign-in"); // Navigate to the sign-in page
+        console.log("Password successfully set.");
+        // Consider a success toast/notification here as well
+      } else {
+        const errorMessage =
+          response.data?.message || "Failed to set password. Please try again.";
+        setErrors((prev) => ({
+          ...prev,
+          password: errorMessage,
+        }));
+        console.error("Failed to set password:", response.data || response);
+      }
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        password:
+          error.response?.data?.message || "An unexpected error occurred.",
+      }));
+      console.error("API call error:", error);
+    } finally {
+      setLoading(false); // Stop loading state after API call
+    }
   };
 
   return (
@@ -96,7 +177,7 @@ const NewPassword = () => {
         {/* Submit Button */}
         <Button
           label="Done"
-          onClick={()=>navigate("/sign-in")}
+          onClick={() => navigate("/sign-in")}
           disabled={!isFormFilled} // Enable only when form is valid
           className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]`}
         />

@@ -2,7 +2,8 @@ import { images } from "../../Components/assets/assets";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const WhatsrunsSection = () => {
@@ -18,15 +19,15 @@ const WhatsrunsSection = () => {
     // Animate the title with typing effect
     if (titleRef.current) {
       const text = titleRef.current.textContent;
-      titleRef.current.textContent = '';
-      const words = text.split(' ');
-      
+      titleRef.current.textContent = "";
+      const words = text.split(" ");
+
       words.forEach((word, index) => {
-        const span = document.createElement('span');
-        span.textContent = word + ' ';
-        span.style.opacity = '0';
+        const span = document.createElement("span");
+        span.textContent = word + " ";
+        span.style.opacity = "0";
         titleRef.current.appendChild(span);
-        
+
         animations.push(
           gsap.to(span, {
             opacity: 1,
@@ -108,7 +109,7 @@ const WhatsrunsSection = () => {
 
     // Cleanup function
     return () => {
-      animations.forEach(anim => {
+      animations.forEach((anim) => {
         if (anim && anim.kill) {
           anim.kill();
         }
@@ -116,23 +117,55 @@ const WhatsrunsSection = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Initialize AOS (Animate On Scroll) library
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once while scrolling down
+      easing: "ease-in-out", // Easing function for the animation
+      offset: 100, // Offset (in pixels) from the original trigger point
+      disable: "mobile", // Disable animations on mobile devices
+    });
+    // Cleanup AOS on component unmount
+
+    return () => {
+      AOS.refresh(); // Refresh AOS to ensure it works correctly on re-render
+    };
+  }, []);
+
   return (
-    <div ref={sectionRef} className="bg-[#383268] lg:px-[105px] px-6 md:px-16 py-[48px] gap-10 flex flex-col w-full justify-center items-center">
+    <div
+      ref={sectionRef}
+      className="bg-[#383268] lg:px-[105px] px-6 md:px-16 py-[48px] gap-10 flex flex-col w-full justify-center items-center"
+    >
       <div className="flex flex-col gap-y-[14px] text-center">
         <h1 ref={titleRef} className="text-[32px] font-semibold text-white">
           What runs the pack...
         </h1>
-        <p ref={subtitleRef} className="text-[#F1F1F1] font-medium text-[18px] lg:max-w-[65%] mx-auto">
+        <p
+          ref={subtitleRef}
+          className="text-[#F1F1F1] font-medium text-[18px] lg:max-w-[65%] mx-auto"
+        >
           Over the years, we have created a culture that guides how we operate
           and how we accomplish our objectives
         </p>
       </div>
       <div>
-        <img ref={imageRef} src={images.aboutImage} alt="about us" className="w-full" draggable="false" />
+        <img
+          ref={imageRef}
+          src={images.aboutImage}
+          alt="about us"
+          className="w-full"
+          draggable="false"
+        />
       </div>
 
       <div className="w-full flex justify-between items-start gap-[22px] flex-wrap lg:flex-nowrap">
-        <div ref={el => cardsRef.current[0] = el} className="flex flex-col gap-5 basis-auto lg:basis-[33%]">
+        <div
+          data-aos="fade-up"
+          data-aos-duration="500"
+          className="flex flex-col gap-5 basis-auto lg:basis-[33%]"
+        >
           <h2 className="text-white text-[24px] font-semibold">Our Mission</h2>
           <p className="text-[#F1F1F1] text-[16px] font-medium">
             Our mission is to simplify and unify global communication for
@@ -140,7 +173,12 @@ const WhatsrunsSection = () => {
             efficient workflows.
           </p>
         </div>
-        <div ref={el => cardsRef.current[1] = el} className="flex flex-col gap-5 basis-auto lg:basis-[33%]">
+        <div
+          data-aos="fade-up"
+          data-aos-duration="500"
+          data-aos-delay="50"
+          className="flex flex-col gap-5 basis-auto lg:basis-[33%]"
+        >
           <h2 className="text-white text-[24px] font-semibold">Our Vision</h2>
           <p className="text-[#F1F1F1] text-[16px] font-medium">
             We envision a future where Triimo is the leading platform that
@@ -148,7 +186,12 @@ const WhatsrunsSection = () => {
             people and opportunities.
           </p>
         </div>
-        <div ref={el => cardsRef.current[2] = el} className="flex flex-col gap-5 basis-auto lg:basis-[33%]">
+        <div
+          data-aos="fade-up"
+          data-aos-duration="500"
+          data-aos-delay="100"
+          className="flex flex-col gap-5 basis-auto lg:basis-[33%]"
+        >
           <h2 className="text-white text-[24px] font-semibold">Our Journey</h2>
           <p className="text-[#F1F1F1] text-[16px] font-medium">
             Triimo began with a simple idea: to make communication effortless

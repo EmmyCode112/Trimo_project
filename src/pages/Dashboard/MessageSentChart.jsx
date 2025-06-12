@@ -171,7 +171,7 @@ const MessagesSentChart = () => {
       <div className="mt-[20px] pt-[12px] w-full">
         <Bar data={data} options={options} className="w-full" />
       </div>
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-4 max-sm:flex-col gap-4">
         <div className="flex space-x-2">
           {filters.map((filter) => (
             <button

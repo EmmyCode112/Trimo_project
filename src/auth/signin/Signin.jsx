@@ -4,27 +4,27 @@ import { loginSuccess } from "../../redux/slice/authSlice";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie"; // Only if you plan to use it
 import "./Signin.css";
 
 const Signin = () => {
+  const BASE_URL =
+    import.meta.env.VITE_BASE_URL || "https://triimo.coderigi.co/api/v1";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  }); // Added general error
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // To prevent multiple submissions
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleLogin = () => {
-    const userData = { email }; // You can modify this as needed
-    Cookies.set("authToken", "dummyAuthToken", { expires: 7 });
-    dispatch(loginSuccess(userData));
-    navigate("/dashboard/overview");
   };
 
   const validateEmail = (email) => {
@@ -37,26 +37,65 @@ const Signin = () => {
     return password.length >= 8;
   };
 
-  const isFormFilled =
-    email && password && validateEmail(email) && validatePassword(password);
+  // No longer needed as handleSubmit will handle full validation
+  // const isFormFilled = email && password && validateEmail(email) && validatePassword(password);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({ email: "", password: "", general: "" }); // Clear previous errors
+    setLoading(true); // Start loading state
+
+    let formIsValid = true;
+    const newErrors = { email: "", password: "", general: "" };
 
     if (!validateEmail(email)) {
-      setErrors((prev) => ({ ...prev, email: "Invalid email format." }));
+      newErrors.email = "Invalid email format.";
+      formIsValid = false;
     }
 
     if (!validatePassword(password)) {
-      setErrors((prev) => ({
-        ...prev,
-        password: "Password must be at least 8 characters long.",
-      }));
+      newErrors.password = "Password must be at least 8 characters long.";
+      formIsValid = false;
     }
 
-    if (validateEmail(email) && validatePassword(password)) {
-      setErrors({ email: "", password: "" });
-      handleLogin();
+    if (!formIsValid) {
+      setErrors(newErrors);
+      setLoading(false); // End loading state if validation fails
+      return;
+    }
+
+    // If form is valid, proceed with API call
+    try {
+      const response = await fetch(`${BASE_URL}/user/login`, {
+        // Added '/' before user/login
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, password: password }),
+      });
+
+      const data = await response.json(); // Always parse the response
+
+      if (response.ok) {
+        // Assuming your API returns an accessToken in data
+        localStorage.setItem("accessToken", data.accessToken); // Store the actual token
+        const userData = {
+          email: data.email /* any other user data from response */,
+        };
+        dispatch(loginSuccess(userData));
+        console.log("Login successful:", response);
+        navigate("/dashboard/overview"); // Redirect to home page
+      } else {
+        // Handle API errors (e.g., incorrect credentials)
+        newErrors.general =
+          data.message || "Login failed. Please check your credentials.";
+        setErrors(newErrors);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      newErrors.general = "Network error. Please try again later.";
+      setErrors(newErrors);
+    } finally {
+      setLoading(false); // Always stop loading state
     }
   };
 
@@ -69,7 +108,7 @@ const Signin = () => {
           className="object-center object-contain h-[560px] absolute bottom-[5%] right-0"
         />
       </div>
-      <div className="flex w-full flex-col max-sm:flex-col-reverse">
+      <div className="flex w-full flex-col max-sm:flex-col-reverse overflow-y-auto">
         <div className="sm:self-end max-sm:mt-[40px] signInAccount self-center flex gap-[10px] pt-[25px] items-center ">
           <p className="font-[500] text-[16px] leading-[24px] text-[#767676]">
             I don’t have an account
@@ -81,7 +120,7 @@ const Signin = () => {
           />
         </div>
 
-        <div className="w-full h-full flex items-center justify-center max-sm:mt-[-30px]">
+        <div className="w-full h-full flex items-center justify-center max-sm:mt-[-30px] ">
           <div className="w-[43%] mx-auto right-container">
             <div className="flex flex-col gap-8px mb-[12px] max-sm:mb-[16px]">
               <h4 className="font-[600] text-[28px] tracking-[2px]">
@@ -119,14 +158,7 @@ const Signin = () => {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      if (!validateEmail(e.target.value)) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          email: "Invalid email format.",
-                        }));
-                      } else {
-                        setErrors((prev) => ({ ...prev, email: "" }));
-                      }
+                      setErrors((prev) => ({ ...prev, email: "" })); // Clear email error on change
                     }}
                   />
                 </div>
@@ -149,15 +181,7 @@ const Signin = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      if (!validatePassword(e.target.value)) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          password:
-                            "Password must be at least 8 characters long.",
-                        }));
-                      } else {
-                        setErrors((prev) => ({ ...prev, password: "" }));
-                      }
+                      setErrors((prev) => ({ ...prev, password: "" })); // Clear password error on change
                     }}
                   />
                   <img
@@ -176,12 +200,19 @@ const Signin = () => {
 
               <div>
                 <Button
-                  label="Sign in"
-                  onClick={handleSubmit}
-                  disabled={!isFormFilled}
-                  className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] `}
+                  label={loading ? "Signing in..." : "Sign in"}
+                  onClick={handleSubmit} // This will trigger onSubmit of the form
+                  disabled={loading} // Disable button while loading or if form is invalid (handled by onSubmit now)
+                  className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
+              {errors.general && (
+                <p className="text-[#CB2315] text-sm font-normal text-center mt-2">
+                  {errors.general}
+                </p>
+              )}
             </form>
 
             <div className="flex text-[14px] gap-[6px] items-center flex-wrap justify-center">

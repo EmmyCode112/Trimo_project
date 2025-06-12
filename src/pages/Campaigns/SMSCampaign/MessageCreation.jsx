@@ -8,6 +8,7 @@ import ScheduleCampaign from "../../../Components/emmyCampaignSetup/ScheduleCamp
 import CreationRecipientModal from "../../../Components/emmyCampaignSetup/CreationRecipientModal";
 import { useNavigate } from "react-router-dom";
 import Toast from "@/Components/Alerts/Toast";
+import SmallScreenPreviewPanel from "./SmallScreenPreviewPanel";
 
 const MessageCreation = () => {
   useEffect(() => {
@@ -20,6 +21,7 @@ const MessageCreation = () => {
   const [schedule, setSchedule] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [openSmallScreenPreview, setOpenSmallScreenPreview] = useState(false);
   const navigate = useNavigate();
   const [toast, setToast] = useState({
     show: false,
@@ -58,15 +60,19 @@ const MessageCreation = () => {
         </div>
       </div>
       <div className="flex items-start gap-[45px]">
-        <div className="flex flex-col gap-y-[25px] md:w-2/3">
+        <div className="flex flex-col gap-y-[25px] lg:w-2/3 w-full">
           <div>
-            <MessageEditor customer={recipients} setMessage={setMessage} />
+            <MessageEditor
+              customer={recipients}
+              setMessage={setMessage}
+              onOpenPreview={() => setOpenSmallScreenPreview(true)}
+            />
           </div>
           <div>
             <SelectedRecipient openForm={() => setOpenFormModal(true)} />
           </div>
         </div>
-        <div className="md:w-1/3">
+        <div className="lg:w-1/3 max-lg:hidden">
           <MessagePreview customer={recipients[0]} message={message} />
         </div>
       </div>
@@ -97,6 +103,15 @@ const MessageCreation = () => {
           title={toast.title}
           message={toast.message}
           onClose={() => setToast({ show: false })}
+        />
+      )}
+
+      {openSmallScreenPreview && (
+        <SmallScreenPreviewPanel
+          isOpen={openSmallScreenPreview}
+          onClose={() => setOpenSmallScreenPreview(false)}
+          message={message}
+          customer={recipients[0]}
         />
       )}
     </div>

@@ -1,18 +1,17 @@
-import axios from 'axios';
-
-const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+import axios from "axios";
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Add request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,7 +26,7 @@ api.interceptors.request.use(
 export const authAPI = {
   register: async (userData) => {
     try {
-      const response = await api.post('/user/register', userData);
+      const response = await api.post("/user/register", userData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -36,7 +35,7 @@ export const authAPI = {
 
   verifyOTP: async (otp) => {
     try {
-      const response = await api.post('/user/verify-otp', { otp });
+      const response = await api.post("/user/verify-otp", { otp });
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -45,12 +44,12 @@ export const authAPI = {
 
   completeProfile: async (profileData) => {
     try {
-      const response = await api.post('/user/complete-profile', profileData);
+      const response = await api.post("/user/complete-profile", profileData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
     }
-  }
+  },
 };
 
-export default api; 
+export default api;

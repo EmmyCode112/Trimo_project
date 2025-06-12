@@ -8,7 +8,12 @@ import Button from "@/Components/buttons/transparentButton";
 import CreateGroupModal from "./CreateGroupModal";
 import FolderDetailModal from "./FolderDetailModal";
 
-const AvailableGroupModal = ({ openAvailableGroups, onClose, toast, setToast}) => {
+const AvailableGroupModal = ({
+  openAvailableGroups,
+  onClose,
+  toast,
+  setToast,
+}) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
@@ -137,7 +142,7 @@ const AvailableGroupModal = ({ openAvailableGroups, onClose, toast, setToast}) =
                 Send messages to your regular contacts in a single click.
               </p>
 
-              <p onClick={() => console.log("groups list", groups)}>clicked</p>
+              {/* <p onClick={() => console.log("groups list", groups)}>clicked</p> */}
             </div>
             {groups.length === 0 ? (
               <p className="text-[#767676] text-[14px] font-normal">
@@ -202,7 +207,7 @@ const AvailableGroupModal = ({ openAvailableGroups, onClose, toast, setToast}) =
           isOpen={createGroupModal}
           data={groups}
           toast={toast}
-        setToast={setToast}
+          setToast={setToast}
         />
       )}
 

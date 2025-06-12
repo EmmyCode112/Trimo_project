@@ -33,6 +33,8 @@ const Analysis = () => {
   return (
     <div
       ref={sectionRef}
+      data-aos="fade-up"
+      data-aos-duration="500"
       className="py-[96px] flex flex-col items-center justify-center gap-y-[64px]"
     >
       <div className="flex flex-col items-center gap-y-5">

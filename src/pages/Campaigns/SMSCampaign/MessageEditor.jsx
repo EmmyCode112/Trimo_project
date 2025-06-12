@@ -2,12 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { Icons } from "../../../assets/assets";
 import Button from "@/Components/buttons/transparentButton";
 
-
-const UsersPage = ({ customers, message, setMessage }) => {
+const UsersPage = ({ customers, message, setMessage, onOpenPreview }) => {
   const [linkText, setLinkText] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
   const [showLinkPopup, setShowLinkPopup] = useState(false);
-  
+
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
     italic: false,
@@ -45,7 +44,6 @@ const UsersPage = ({ customers, message, setMessage }) => {
     }
   };
 
-
   const insertAtCursor = (html) => {
     restoreSelection(); // Restore cursor before inserting
     const selection = window.getSelection();
@@ -67,9 +65,8 @@ const UsersPage = ({ customers, message, setMessage }) => {
       selection.addRange(range);
     }
 
-        // Ensure the content updates immediately
-        setMessage(editorRef.current.innerHTML);
-
+    // Ensure the content updates immediately
+    setMessage(editorRef.current.innerHTML);
   };
 
   const handleInsertLink = () => {
@@ -83,14 +80,13 @@ const UsersPage = ({ customers, message, setMessage }) => {
     }
   };
 
-  const linkRef = useRef()
+  const linkRef = useRef();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (linkRef.current && !linkRef.current.contains(event.target)) {
         setShowLinkPopup(false);
       }
-      
     };
     if (showLinkPopup) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -120,7 +116,16 @@ const UsersPage = ({ customers, message, setMessage }) => {
 
   return (
     <div className="flex flex-col">
-      <p className="mb-[6px]">Compose message</p>
+      <div className="flex items-center justify-between mb-[10px]">
+        <p className="mb-[6px]">Compose message</p>
+
+        <p
+          className=" lg:hidden cursor-pointer ml-auto"
+          onClick={onOpenPreview}
+        >
+          Preview Here
+        </p>
+      </div>
       <div className="full rounded-[8px] border border-[#D0D5DD] py-[10px] px-[14px]">
         <div
           placeholder="Type your message here"
@@ -170,7 +175,7 @@ const UsersPage = ({ customers, message, setMessage }) => {
 
           <div className="relative" ref={linkRef}>
             <button
-              onClick={handleShowLinkPopup} 
+              onClick={handleShowLinkPopup}
               className={`${
                 showLinkPopup ? " border border-[#383268]" : "bg-[#FAFAFA]"
               } p-1`}
@@ -206,7 +211,6 @@ const UsersPage = ({ customers, message, setMessage }) => {
                   onClick={handleInsertLink}
                   disabled={!linkText || !linkUrl}
                   className=" px-3 py-2 rounded-[8px] mt-2 text-[13px] bg-[#383268] text-white"
-                
                   label="Attach"
                 />
               </div>

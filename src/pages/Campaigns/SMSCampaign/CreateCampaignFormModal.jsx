@@ -132,7 +132,7 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
         ref={modalRef}
         className={`fixed bg-white overflow-y-scroll hide-scrollBar ${
           isMobile
-            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
+            ? "inset-x-0 bottom-0 rounded-t-[40px] p-3 h-[75%]"
             : "top-4 bottom-4 right-3 w-[517px] rounded-[30px] p-[22px]"
         }`}
         onTouchStart={handleDragStart}
@@ -194,7 +194,7 @@ const CreateCampaignFormModal = ({ onClose, onOpen }) => {
                 {showCalendar && (
                   <div
                     ref={calendarRef}
-                    className="calendar-container absolute top-[-580%] z-10 bg-white left-[10%] p-[24px] shadow-lg rounded-[8px]"
+                    className="calendar-container absolute md:top-[-580%] z-10 bg-white md:left-[10%] p-[24px] shadow-lg rounded-[8px] top-[-750%] left-[0%] "
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex flex-col gap-4">

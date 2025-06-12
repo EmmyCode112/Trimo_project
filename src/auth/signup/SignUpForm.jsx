@@ -3,7 +3,7 @@ import { Icons } from "@/assets/assets";
 import PhoneNumberInput from "@/Components/PhoneNumberInput";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from "@/context/AuthContext";
 
 const SignUpForm = ({ setShowOtpPopUp }) => {
   const { register } = useAuth();
@@ -138,17 +138,17 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
           country_code: "+234", // Default to Nigeria for now
           phone_number: workPhone,
           password: password,
-          confirm_password: confirmPassword
+          confirm_password: confirmPassword,
         };
 
-        console.log('Submitting registration data:', userData);
+        console.log("Submitting registration data:", userData);
         const response = await register(userData);
-        console.log('Registration successful:', response);
-        
+        console.log("Registration successful:", response);
+
         // Show OTP form if registration was successful
         setShowOtpPopUp(true);
       } catch (error) {
-        console.error('Registration failed:', error);
+        console.error("Registration failed:", error);
         // Handle API validation errors
         if (error.err_msg) {
           setErrors(error.err_msg);

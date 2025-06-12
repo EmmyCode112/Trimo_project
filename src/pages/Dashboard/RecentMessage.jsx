@@ -107,7 +107,7 @@ export default function RecentMessage() {
           />
         </LineChart>
       </ResponsiveContainer>
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-4 max-sm:flex-col gap-4">
         <div className="flex space-x-2">
           {filters.map((filter) => (
             <button

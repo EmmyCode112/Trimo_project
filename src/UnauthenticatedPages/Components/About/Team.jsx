@@ -3,7 +3,11 @@ import { images } from "../../Components/assets/assets";
 const Team = () => {
   return (
     <div className="py-[42px] flex flex-col gap-[52px] px-6 md:px-16 lg:px-[105px]">
-      <div className="flex flex-col items-center justify-center lg:max-w-[60%] mx-auto text-center gap-[14px]">
+      <div
+        data-aos="fade-up"
+        data-aos-duration="500"
+        className="flex flex-col items-center justify-center lg:max-w-[60%] mx-auto text-center gap-[14px]"
+      >
         <h2 className="text-[#1A1A1A] text-[32px] font-semibold">
           Meet Our Team
         </h2>
@@ -14,7 +18,11 @@ const Team = () => {
       </div>
       <div className="flex flex-col gap-y-[64px]">
         <div className="flex justify-between items-center gap-8 flex-wrap ">
-          <div className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]">
+          <div
+            data-aos="fade-right"
+            data-aos-duration="500"
+            className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]"
+          >
             <div className="w-full">
               <img
                 src={images.Team1}
@@ -54,7 +62,12 @@ const Team = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]">
+          <div
+            data-aos="fade-left"
+            data-aos-duration="500"
+            data-aos-delay="100"
+            className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]"
+          >
             <div className="w-full">
               <img
                 src={images.Team2}
@@ -97,7 +110,11 @@ const Team = () => {
 
         <div className="flex justify-between items-center gap-8 flex-wrap ">
           {" "}
-          <div className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]">
+          <div
+            data-aos="fade-right"
+            data-aos-duration="500"
+            className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]"
+          >
             <div className="w-full">
               <img
                 src={images.Team3}
@@ -137,7 +154,12 @@ const Team = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]">
+          <div
+            data-aos="fade-left"
+            data-aos-duration="500"
+            data-aos-delay="100"
+            className="flex items-start gap-[26px] max-sm:flex-col border-t border-[#EAECF0] pt-6 lg:basis-[45%]"
+          >
             <div className="w-full">
               <img
                 src={images.Team4}
