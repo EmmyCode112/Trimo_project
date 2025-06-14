@@ -24,6 +24,11 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.register(userData);
       console.log('Registration response:', response);
       
+      // Check for error messages in the response
+      if (response.err_msg) {
+        throw { err_msg: response.err_msg };
+      }
+      
       if (response.accessToken) {
         Cookies.set('authToken', response.accessToken);
         Cookies.set('userData', JSON.stringify(userData));
@@ -40,6 +45,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.verifyOTP(otp);
       console.log('OTP verification response:', response);
+      
+      // Check for error messages in the response
+      if (response.err_msg) {
+        throw { err_msg: response.err_msg };
+      }
+      
       return response;
     } catch (error) {
       console.error('OTP verification error:', error);
@@ -51,6 +62,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.completeProfile(profileData);
       console.log('Profile completion response:', response);
+      
+      // Check for error messages in the response
+      if (response.err_msg) {
+        throw { err_msg: response.err_msg };
+      }
       
       // Update user data with profile information
       if (response.msg === "") {

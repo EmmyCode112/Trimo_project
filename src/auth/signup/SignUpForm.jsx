@@ -130,13 +130,19 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
+        // Clean phone number - remove +234 or 234 and ensure it starts with 0
+        let cleanPhoneNumber = workPhone.replace(/^\+234/, '').replace(/^234/, '').replace(/\s+/g, '');
+        if (!cleanPhoneNumber.startsWith('0')) {
+          cleanPhoneNumber = '0' + cleanPhoneNumber;
+        }
+        
         // Prepare user data for registration
         const userData = {
           firstname: firstName,
           lastname: lastName,
           email: email,
           country_code: "+234", // Default to Nigeria for now
-          phone_number: workPhone,
+          phone_number: cleanPhoneNumber,
           password: password,
           confirm_password: confirmPassword,
         };
@@ -151,7 +157,12 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
         console.error("Registration failed:", error);
         // Handle API validation errors
         if (error.err_msg) {
-          setErrors(error.err_msg);
+          // Convert array of error messages to a single string for each field
+          const formattedErrors = {};
+          Object.entries(error.err_msg).forEach(([field, messages]) => {
+            formattedErrors[field] = Array.isArray(messages) ? messages[0] : messages;
+          });
+          setErrors(formattedErrors);
         } else {
           setErrors({ submit: "Registration failed. Please try again." });
         }
@@ -297,7 +308,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
             }}
           />
           <img
-            src={Icons.eyeOpen}
+            src={showPassword ? Icons.eyeOpen : Icons.eyeClose}
             alt="Toggle Password Visibility"
             className="signin-icons cursor-pointer"
             onClick={handleTogglePassword}
@@ -335,7 +346,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
             }}
           />
           <img
-            src={Icons.eyeOpen}
+            src={showConfirmPassword ? Icons.eyeOpen : Icons.eyeClose}
             alt="Toggle Password Visibility"
             className="signin-icons cursor-pointer"
             onClick={handleToggleConfirmPassword}
