@@ -38,7 +38,7 @@ const Footer = () => {
         </div>
         <div>
           <p className="mb-4 text-[14px] text-[#A3A3A3] font-semibold">
-            Rosources
+            Product
           </p>
           <ul className="flex flex-col gap-3">
             <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
@@ -85,7 +85,7 @@ const Footer = () => {
         </div>
         <div>
           <p className=" text-[14px] text-[#A3A3A3] font-semibold">
-            Legal
+            Support
             <ul className="flex flex-col gap-3 mt-4">
               <Link>
                 <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">

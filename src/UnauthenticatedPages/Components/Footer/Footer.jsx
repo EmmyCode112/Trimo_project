@@ -1,7 +1,7 @@
 import { Icons } from "@/assets/assets";
 import { images } from "../assets/assets";
 import { Link } from "react-router-dom";
-
+import logo from "../assets/images/triimo-footer-logo.png";
 const Footer = () => {
   return (
     <div className="flex flex-col w-full pt-[64px] px-[40px] md:px-[65px] lg:px-[140px] pb-[48px] bg-[#F9FAFB] mt-[48px] gap-[64px]">
@@ -9,9 +9,9 @@ const Footer = () => {
         <div className="flex flex-col gap-8 lg:mr-[16px] basis-auto lg:basis-[30%]">
           <a href="/">
             <img
-              src={Icons.triimoWebsiteLogo}
+              src={logo}
               alt="logo"
-              className="w-[80px] cursor-pointer"
+              className="w-[80px] h-[45px] object-cover hover:scale-110 duration-150 transition-all cursor-pointer"
             />
           </a>
           <p className="text-[#667085] text-[15px] font-normal">
@@ -27,40 +27,32 @@ const Footer = () => {
             </p>
             <ul className="flex flex-col gap-3">
               <Link to="/features/sms">
-              <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                SMS Messaging
-              </li></Link>
+                <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
+                  SMS Messaging
+                </li>
+              </Link>
               <Link to="/features/email">
                 <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                Email Messaging
-              </li>
+                  Email Messaging
+                </li>
               </Link>
               <Link to="/features/whatsapp">
-              <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                WhatsApp
-              </li>
+                <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
+                  WhatsApp
+                </li>
               </Link>
             </ul>
           </div>
           <div>
             <p className="mb-4 text-[14px] text-[#A3A3A3] font-semibold">
-              Rosources
+              Product
             </p>
             <ul className="flex flex-col gap-3">
               <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                Support
+                Pricing
               </li>
               <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                Developers
-              </li>
-              <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                GitHub
-              </li>
-              <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                Slack
-              </li>
-              <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
-                PostMan
+                API Docs
               </li>
               <Link to="/community">
                 <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
@@ -71,33 +63,25 @@ const Footer = () => {
           </div>
           <div>
             <p className="text-[14px] text-[#A3A3A3] font-semibold">
-              Campany
+              Company
               <ul className="flex flex-col gap-3 mt-4">
                 <Link to="/about-us">
                   <li className="text-[#919191] font-medium text-[16px] hover:underline hover:text-[#1A1A1A] cursor-pointer">
-                    Abouts Us
+                    About Us
                   </li>
                 </Link>
-                <Link to="/contact-us">
-                  <li className="text-[#919191] font-medium text-[16px] hover:underline hover:text-[#1A1A1A] cursor-pointer">
-                    Contact Us
-                  </li>
-                </Link>
-                <li className="text-[#919191] font-medium text-[16px] hover:underline hover:text-[#1A1A1A] cursor-pointer">
-                  Careers
-                </li>
-              </ul>
-            </p>
-          </div>
-          <div>
-            <p className=" text-[14px] text-[#A3A3A3] font-semibold">
-              Legal
-              <ul className="flex flex-col gap-3 mt-4">
                 <Link to="/terms-condition">
                   <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
                     Terms of Services
                   </li>
                 </Link>
+              </ul>
+            </p>
+          </div>
+          <div>
+            <p className=" text-[14px] text-[#A3A3A3] font-semibold">
+              Support
+              <ul className="flex flex-col gap-3 mt-4">
                 <Link to="/privacy-policy">
                   <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
                     Privacy Policy
@@ -112,6 +96,11 @@ const Footer = () => {
                 <Link to="/code-of-conduct">
                   <li className="text-[#919191] font-medium text-[16px] cursor-pointer hover:underline hover:text-[#1A1A1A]">
                     Code of Conduct
+                  </li>
+                </Link>
+                <Link to="/contact-us">
+                  <li className="text-[#919191] font-medium text-[16px] hover:underline hover:text-[#1A1A1A] cursor-pointer">
+                    Contact Us
                   </li>
                 </Link>
               </ul>

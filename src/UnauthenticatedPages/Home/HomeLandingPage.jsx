@@ -22,12 +22,12 @@ const HomeLandingPage = () => {
   return (
     <div className="">
       <HeroSection />
-      <CompanyLogos />
-      <UseCasesSection />
+      {/* <CompanyLogos /> */}
       <FeatureSection />
-      <TriimoFunctionSection />
+      {/* <TriimoFunctionSection /> */}
       <StepByStepSection />
-      <Analysis />
+      <UseCasesSection />
+      {/* <Analysis /> */}
       <Testimonial />
       <FaqSection />
       <Subscribe />
