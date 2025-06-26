@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SideBarIcons, Icons } from "../../assets/assets";
 import CampaignModal from "../CampaignModal";
 import { useModal } from "@/redux/UseCampaignModal";
-
+import { createPortal } from "react-dom";
 import { useGroups } from "@/redux/GroupProvider/UseGroup";
 import { useContacts } from "@/redux/ContactProvider/UseContact";
 import { useNotification } from "@/redux/NotificationProvider/UseNotification";
@@ -12,7 +12,9 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const { groups } = useGroups();
   const { contacts } = useContacts();
   const { notifications } = useNotification();
-
+  const subnavTriggerRef = useRef(null);
+  const [subnavPosition, setSubnavPosition] = useState({ top: 0, left: 263 });
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   // Define the sub-navigation items for each main nav item that has them
   const subNavItems = {
     campaigns: [
@@ -136,7 +138,14 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      const sidebar = sidebarRef.current;
+      const subnav = document.querySelector(".subnav-portal");
+
+      if (
+        sidebar &&
+        !sidebar.contains(event.target) &&
+        !(subnav && subnav.contains(event.target))
+      ) {
         setActiveDropdown(null);
         setIsExpanded(false);
       }
@@ -148,11 +157,17 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
     };
   }, []);
 
-  const handleNavClick = (link) => {
+  const handleNavClick = (link, e) => {
     if (link.hasSubNav) {
       const newDropdownState = activeDropdown === link.key ? null : link.key;
       setActiveDropdown(newDropdownState);
       setIsExpanded(!!newDropdownState);
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      setSubnavPosition({
+        top: rect.top,
+        left: rect.right,
+      });
     } else if (link.route) {
       setActiveLink(link.route);
       localStorage.setItem("activeRoute", link.route);
@@ -168,7 +183,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
     navigate(route);
     setActiveDropdown(null);
     setIsExpanded(false);
-    toggleSidebar();
+
+    if (isMobile) {
+      // If on mobile, close the sidebar after navigating
+      toggleSidebar();
+    }
   };
 
   const user = {
@@ -182,83 +201,94 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
     return name ? name.charAt(0).toUpperCase() : "?";
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div
       ref={sidebarRef}
-      className={`bg-[#383268] h-full hide-scrollbar overflow-y-scroll flex flex-col justify-between transition-all duration-300 ease-in-out group relative
+      className={`bg-[#383268] h-full hide-scrollbar overflow-y-scroll  flex flex-col justify-between transition-all duration-300 ease-in-out group relative
         ${isExpanded ? "w-[263px]" : "w-[82px] hover:w-[263px]"}`}
     >
-      <div className="w-full h-full flex flex-col gap-y-3">
-        <div className="w-full flex items-center">
-          <img
-            src={SideBarIcons.TriimoIcon}
-            alt="Logo"
-            className={`w-[24px] transition-all duration-300 ${
-              isExpanded
-                ? "w-full"
-                : "group-hover:w-full hidden group-hover:block"
-            }`}
-          />
-          <img
-            src={SideBarIcons.HeaderIcon}
-            alt="Logo"
-            className={`w-full mt-3 transition-all duration-300 ${
-              isExpanded ? "hidden" : "block group-hover:hidden"
-            }`}
-          />
-        </div>
+      <div className="w-full flex items-center">
+        <img
+          src={SideBarIcons.TriimoIcon}
+          alt="Logo"
+          className={`w-[24px] transition-all duration-300 ${
+            isExpanded
+              ? "w-full"
+              : "group-hover:w-full hidden group-hover:block"
+          }`}
+        />
+        <img
+          src={SideBarIcons.HeaderIcon}
+          alt="Logo"
+          className={`w-full mt-3 transition-all duration-300 ${
+            isExpanded ? "hidden" : "block group-hover:hidden"
+          }`}
+        />
+      </div>
 
-        <ul className="flex flex-col gap-3 px-3 w-full h-full">
-          {links.map((link, index) => (
-            <li key={index} className="relative">
-              <div
-                onClick={() => handleNavClick(link)}
-                className={`flex items-center py-2 px-3 cursor-pointer rounded-[10px] justify-between text-[#EBEBF0] font-medium w-[50px] ${
-                  isExpanded ? "w-auto" : "group-hover:w-auto"
-                }
+      <ul className="flex flex-col gap-3 px-3 w-full h-full z-10 mt-2">
+        {links.map((link, index) => (
+          <li key={index} className="relative z-10">
+            <div
+              onClick={(e) => handleNavClick(link, e)}
+              ref={subnavTriggerRef}
+              className={`flex items-center py-2 px-3 cursor-pointer z-10 rounded-[10px] justify-between text-[#EBEBF0] font-medium w-[50px] ${
+                isExpanded ? "w-auto" : "group-hover:w-auto"
+              }
                   hover:bg-[#e9e9e92f] ${
                     activeLink === link.route || activeDropdown === link.key
                       ? "bg-[#e9e9e92f]"
                       : ""
                   } ${link.label === "Settings" ? "mt-auto" : ""}`}
-              >
-                <div className="flex gap-3 items-center min-w-[24px]">
+            >
+              <div className="flex gap-3 items-center min-w-[24px]">
+                <img
+                  src={link.Icon}
+                  alt={link.label}
+                  className="w-[24px] h-[24px]"
+                />
+                <span
+                  className={`transition-opacity duration-300 whitespace-nowrap font-['General Sans'] ${
+                    isExpanded
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100"
+                  }`}
+                >
+                  {link.label}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {link.count && (
+                  <span className="bg-[#F4F4F5] text-[#383268] text-xs px-2 py-0.5 rounded-full">
+                    {link.count}
+                  </span>
+                )}
+                {link.hasSubNav && (
                   <img
-                    src={link.Icon}
-                    alt={link.label}
-                    className="w-[24px] h-[24px]"
-                  />
-                  <span
-                    className={`transition-opacity duration-300 whitespace-nowrap font-['General Sans'] ${
+                    src={Icons.arrowRight}
+                    alt=""
+                    className={`w-[20px] h-[20px] transition-all duration-300 transform ${
                       isExpanded
                         ? "opacity-100"
                         : "opacity-0 group-hover:opacity-100"
-                    }`}
-                  >
-                    {link.label}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {link.count && (
-                    <span className="bg-[#F4F4F5] text-[#383268] text-xs px-2 py-0.5 rounded-full">
-                      {link.count}
-                    </span>
-                  )}
-                  {link.hasSubNav && (
-                    <img
-                      src={Icons.arrowRight}
-                      alt=""
-                      className={`w-[20px] h-[20px] transition-all duration-300 transform ${
-                        isExpanded
-                          ? "opacity-100"
-                          : "opacity-0 group-hover:opacity-100"
-                      } ${activeDropdown === link.key ? "rotate-90" : ""}`}
-                    />
-                  )}
-                </div>
+                    } ${activeDropdown === link.key ? "rotate-90" : ""}`}
+                  />
+                )}
               </div>
-              {link.hasSubNav && activeDropdown === link.key && (
-                <div className="max-md:my-3 md:absolute md:left-[263px] md:top-0 bg-white md:shadow-lg rounded-lg w-full md:w-[280px] py-4 z-50">
+            </div>
+            {link.hasSubNav &&
+              activeDropdown === link.key &&
+              (isMobile ? (
+                // Mobile: Render inside the sidebar just below the nav item
+                <div className="my-3 block bg-white rounded-lg w-full py-4">
                   <h3 className="px-4 mb-2 font-['General Sans'] font-medium text-[16px] leading-[24px]">
                     {link.label}
                   </h3>
@@ -275,11 +305,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                           }
                         }}
                         className={`mx-3 px-3 py-2 rounded-[6px] flex items-center justify-between font-['General Sans'] text-[14px] transition-colors
-                          ${
-                            activeLink === subItem.route
-                              ? "bg-[#383268] text-white"
-                              : "hover:bg-[#383268] hover:text-white"
-                          }`}
+              ${
+                activeLink === subItem.route
+                  ? "bg-[#383268] text-white"
+                  : "hover:bg-[#383268] hover:text-white"
+              }`}
                       >
                         <span>{subItem.label}</span>
                         {subItem.count && (
@@ -297,11 +327,64 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                     ))}
                   </div>
                 </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+              ) : (
+                // Desktop: Use portal with fixed position
+                createPortal(
+                  <div
+                    className="fixed z-50 bg-white w-[280px] shadow-lg rounded-lg py-4 subnav-portal"
+                    style={{
+                      top: `${subnavPosition.top}px`,
+                      left: `${subnavPosition.left}px`,
+                    }}
+                  >
+                    <h3 className="px-4 mb-2 font-['General Sans'] font-medium text-[16px] leading-[24px]">
+                      {link.label}
+                    </h3>
+                    <div className="flex flex-col gap-1">
+                      {subNavItems[link.key].map((subItem, subIndex) => (
+                        <button
+                          key={subIndex}
+                          onClick={() => {
+                            if (subItem.route === "/campaigns/new") {
+                              handleCreateCampaign("Start Campaign");
+                              setActiveDropdown(null);
+                              // Collapse sidebar only on mobile
+                              if (isMobile) {
+                                toggleSidebar();
+                              }
+                            } else {
+                              handleSubNavClick(subItem.route);
+                            }
+                          }}
+                          className={`mx-3 px-3 py-2 rounded-[6px] flex items-center justify-between font-['General Sans'] text-[14px] transition-colors
+                ${
+                  activeLink === subItem.route
+                    ? "bg-[#383268] text-white"
+                    : "hover:bg-[#383268] hover:text-white"
+                }`}
+                        >
+                          <span>{subItem.label}</span>
+                          {subItem.count && (
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-xs ${
+                                activeLink === subItem.route
+                                  ? "bg-white text-[#383268]"
+                                  : "bg-[#F4F4F5] text-[#383268]"
+                              }`}
+                            >
+                              {subItem.count}
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>,
+                  document.body
+                )
+              ))}
+          </li>
+        ))}
+      </ul>
 
       <div className="flex justify-between items-center px-4 group-hover:px-7 text-[#EBEBF0] font-medium py-[20px] border-t border-t-[#e9e9e92f] transition-all duration-300 mt-3">
         <div className="flex gap-3 items-center">
