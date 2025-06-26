@@ -8,8 +8,10 @@ import { useNavigate } from "react-router-dom";
 import "./Signin.css";
 
 const Signin = () => {
+  // Base URL for API requests
   const BASE_URL =
     import.meta.env.VITE_BASE_URL || "https://triimo.coderigi.co/api/v1";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({
@@ -74,7 +76,7 @@ const Signin = () => {
       });
 
       const data = await response.json(); // Always parse the response
-
+      console.log("response", response);
       if (response.ok) {
         // Assuming your API returns an accessToken in data
         localStorage.setItem("accessToken", data.accessToken); // Store the actual token

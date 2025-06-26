@@ -60,7 +60,7 @@ const FeatureSection = () => {
     },
   ];
   return (
-    <div className="mt-[60px] flex flex-col gap-y-[42px] px-[65px]">
+    <div className="mt-[60px] flex flex-col gap-y-[42px] px-[20px] md:px-[65px]">
       <div className="flex flex-col gap-[14px]">
         <p className="bg-[#EBEBF099] rounded-full py-2 px-[10px] text-[#484848] text-[14px] font-normal w-[143px] mx-auto flex justify-center">
           Features Section
@@ -85,7 +85,7 @@ const FeatureSection = () => {
               <img
                 src={featuredContent}
                 alt="chart"
-                className="max-md:hidden absolute top-[-50%] right-0"
+                className="max-lg:hidden absolute top-[-50%] right-0"
               />
               <img src={featuredChart} alt="chart" className="w-full" />
             </div>
@@ -144,7 +144,7 @@ const FeatureSection = () => {
             </div>
           </div>
         </div>
-        <div className="border border-[#F1F1F1] bg-white rounded-[15px] pl-7 pr-7 pt-7 md:pr-[55px]">
+        <div className="border border-[#F1F1F1] bg-white rounded-[15px] pl-7 pr-7 py-7 md:pr-[55px]">
           <div>
             <h2 className="text-[1.5rem] text-[#3F3E3E] font-semibold">
               Unified Messaging

@@ -8,7 +8,7 @@ import { useGroups } from "@/redux/GroupProvider/UseGroup";
 import { useContacts } from "@/redux/ContactProvider/UseContact";
 import { useNotification } from "@/redux/NotificationProvider/UseNotification";
 
-const Sidebar = ({ isSidebarOpen }) => {
+const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const { groups } = useGroups();
   const { contacts } = useContacts();
   const { notifications } = useNotification();
@@ -168,11 +168,12 @@ const Sidebar = ({ isSidebarOpen }) => {
     navigate(route);
     setActiveDropdown(null);
     setIsExpanded(false);
+    toggleSidebar();
   };
 
   const user = {
     id: 1,
-    name: "CodeRigi",
+    name: "EmmyCode",
     avatar: null,
     role: "Admin",
   };
@@ -184,7 +185,7 @@ const Sidebar = ({ isSidebarOpen }) => {
   return (
     <div
       ref={sidebarRef}
-      className={`bg-[#383268] h-full flex flex-col justify-between transition-all duration-300 ease-in-out group relative
+      className={`bg-[#383268] h-full hide-scrollbar overflow-y-scroll flex flex-col justify-between transition-all duration-300 ease-in-out group relative
         ${isExpanded ? "w-[263px]" : "w-[82px] hover:w-[263px]"}`}
     >
       <div className="w-full h-full flex flex-col gap-y-3">
@@ -257,7 +258,7 @@ const Sidebar = ({ isSidebarOpen }) => {
                 </div>
               </div>
               {link.hasSubNav && activeDropdown === link.key && (
-                <div className="absolute left-[263px] top-0 bg-white shadow-lg rounded-lg w-[280px] py-4 z-50">
+                <div className="max-md:my-3 md:absolute md:left-[263px] md:top-0 bg-white md:shadow-lg rounded-lg w-full md:w-[280px] py-4 z-50">
                   <h3 className="px-4 mb-2 font-['General Sans'] font-medium text-[16px] leading-[24px]">
                     {link.label}
                   </h3>
@@ -268,6 +269,7 @@ const Sidebar = ({ isSidebarOpen }) => {
                         onClick={() => {
                           if (subItem.route === "/campaigns/new") {
                             handleCreateCampaign("Start Campaign");
+                            toggleSidebar();
                           } else {
                             handleSubNavClick(subItem.route);
                           }
