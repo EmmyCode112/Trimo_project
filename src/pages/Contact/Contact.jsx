@@ -12,7 +12,7 @@ import ImportContact from "./ImportContact";
 import { useNavigate } from "react-router-dom";
 import { useGroups } from "../../redux/GroupProvider/UseGroup";
 import { useContacts } from "@/redux/ContactProvider/UseContact";
-
+import Toast from "@/Components/Alerts/Toast";
 const Contact = () => {
   const { contacts, setContacts } = useContacts();
 
@@ -32,7 +32,7 @@ const Contact = () => {
   const dropdownRef = useRef(null);
   const actionDropdownRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [toast, setToast] = useState({});
   const handleCloseModal = () => {
     setIsOpenModal(false);
     setSelectedRow(null);
@@ -108,38 +108,79 @@ const Contact = () => {
   };
 
   const moveContactsToGroup = (groupId) => {
-    // Find the group name based on the ID
     const group = groups.find((g) => g.id === groupId);
-    const groupName = group ? group.name : "N/A"; // Use "N/A" if group not found
+    const groupName = group ? group.name : "N/A";
 
-    setContacts((prevContacts) =>
-      prevContacts.map((contact) =>
-        selectedRows.includes(contact.id)
-          ? { ...contact, group: groupName }
-          : contact
-      )
-    );
+    let hasDuplicate = false;
+    let hasValidMove = false;
 
-    // Update the group with the selected contacts
+    const updatedContacts = contacts.map((contact) => {
+      if (!selectedRows.includes(contact.id)) return contact;
+
+      // Check if this contact already exists in the group with same info
+      const duplicate = group.contacts.find(
+        (c) =>
+          c.email === contact.email &&
+          c.firstname === contact.firstname &&
+          c.lastname === contact.lastname
+      );
+
+      if (duplicate) {
+        hasDuplicate = true;
+        return contact; // Skip moving
+      } else {
+        hasValidMove = true;
+        return { ...contact, group: groupName };
+      }
+    });
+
+    setContacts(updatedContacts);
+
+    // Only add non-duplicate contacts to the group
+    const newContactsToAdd = contacts.filter((contact) => {
+      return (
+        selectedRows.includes(contact.id) &&
+        !group.contacts.some(
+          (c) =>
+            c.email === contact.email &&
+            c.firstname === contact.firstname &&
+            c.lastname === contact.lastname
+        )
+      );
+    });
+
     setGroups((prevGroups) =>
       prevGroups.map((g) =>
         g.id === groupId
           ? {
               ...g,
-              contacts: [
-                ...g.contacts,
-                ...contacts.filter((contact) =>
-                  selectedRows.includes(contact.id)
-                ),
-              ],
+              contacts: [...g.contacts, ...newContactsToAdd],
             }
           : g
       )
     );
 
-    setSelectedRows([]); // Clear selection
-
-    // Delay closing the modal by 4 seconds
+    // Show toast
+    if (hasValidMove) {
+      setSelectedRows([]);
+      setToast({
+        title: "Success",
+        message: "Contacts moved to group successfully.",
+        type: "success",
+      });
+    } else if (hasDuplicate) {
+      setToast({
+        title: "Warning",
+        message: "Some contacts already exist in this group.",
+        type: "warning",
+      });
+    } else {
+      setToast({
+        title: "Error",
+        message: "No contacts were moved.",
+        type: "error",
+      });
+    }
   };
 
   // Function to filter contacts based on search query
@@ -152,24 +193,31 @@ const Contact = () => {
   });
 
   // Function to handle clicks outside both dropdowns
-  const handleClickOutside = (event) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target) &&
-      actionDropdownRef.current &&
-      !actionDropdownRef.current.contains(event.target)
-    ) {
-      setOpenDropdownRow(null);
-      setActionDropdown(false);
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        actionDropdownRef.current &&
+        !actionDropdownRef.current.contains(event.target)
+      ) {
+        setOpenDropdownRow(null);
+        setActionDropdown(false);
+      }
+    };
+    console.log("dropdownRef", dropdownRef);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [dropdownRef]);
+
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   const columns = React.useMemo(
     () => [
@@ -254,7 +302,7 @@ const Contact = () => {
         ),
       },
     ],
-    [openDropdownRow, selectedRows]
+    [openDropdownRow, selectedRows, dropdownRef]
   );
 
   return (
@@ -338,6 +386,15 @@ const Contact = () => {
           </div>
         </div>
       </div>
+
+      {toast.title && (
+        <Toast
+          title={toast.title}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({})}
+        />
+      )}
 
       <ContactsTable
         columns={columns}

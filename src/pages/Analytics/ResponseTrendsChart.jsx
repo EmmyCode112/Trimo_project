@@ -100,24 +100,24 @@ const ResponseTrendsChart = () => {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex justify-between items-center">
-        <div className="flex items-center mt-4 gap-2">
+      <div className="flex justify-between items-center max-sm:flex-col max-sm:justify-center gap-3">
+        <div className="flex items-center mt-4 gap-2  max-sm:flex-wrap max-sm:justify-center">
           <Button
             label="12 months"
-            className="px-4 py-2 text-sm rounded-[8px]"
+            className="px-[16px] py-[10px] border border-[#D0D5DD] text-[14px] text-[#767676]"
           />
           <Button
             label="30 days"
-            className="px-4 py-2 text-sm rounded-[8px] hover:bg-[#eeeff0] "
+            className="px-[16px] py-[10px] border border-[#D0D5DD] text-[14px] text-[#767676] "
           />
 
           <Button
             label="7 days"
-            className="px-4 py-2 text-sm rounded-[8px] hover:bg-[#eeeff0] "
+            className="px-[16px] py-[10px] border border-[#D0D5DD] text-[14px] text-[#767676] "
           />
           <Button
             label="+ Custom"
-            className="px-4 py-2 text-sm rounded-[8px] hover:bg-[#eeeff0] "
+            className="px-[16px] py-[10px] border border-[#D0D5DD] text-[14px] text-[#767676] "
             onClick={() => setShowCalendar(true)}
           />
         </div>

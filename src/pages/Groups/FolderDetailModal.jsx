@@ -181,6 +181,14 @@ const FolderDetailModal = ({
     );
   });
 
+  const toggleSelectContact = (id) => {
+    setSelectedContacts((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((contactId) => contactId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
   const columns = useMemo(
     () => [
       {

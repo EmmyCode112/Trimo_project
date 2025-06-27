@@ -32,16 +32,16 @@ const AvailableGroupModal = ({
         onClose();
       }
     };
-  
+
     if (openAvailableGroups) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [openAvailableGroups, onClose]);
-  
+
   // Handle dragging down on mobile to close
   const handleDragStart = (e) => {
     if (!isMobile) return;
@@ -69,7 +69,6 @@ const AvailableGroupModal = ({
   };
 
   const { groups, setGroups } = useGroups();
-
 
   if (!openAvailableGroups) return null;
 
@@ -127,10 +126,11 @@ const AvailableGroupModal = ({
 
             <div className="flex flex-col gap-1 mb-6">
               <h2 className="text-[#1A1A1A] text-[20px] font-medium">
-                Select a Contact Group
+                Click to Move Contacts
               </h2>
               <p className="text-[#767676] text-[14px] font-normal">
-                Send messages to your regular contacts in a single click.
+                Click on a group icon to move the selected contacts into that
+                group.
               </p>
             </div>
             {groups.length === 0 ? (

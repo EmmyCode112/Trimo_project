@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { cn } from '@/lib/utils';
+import React from "react";
+import PropTypes from "prop-types";
+import { cn } from "@/lib/utils";
 
 const Button = ({
   label,
@@ -13,7 +13,9 @@ const Button = ({
   return (
     <button
       type={type}
-      className={cn(`px-[19px] py-[10px] border border-[#D0D5DD] text-[16px] font-[500] rounded-[52px] transition disabled:bg-[#EBEBF0] disabled:text-[#383268] disabled:cursor-not-allowed ${className}`)}
+      className={cn(
+        `px-[19px] py-[10px] border border-[#D0D5DD] text-[16px] font-[500] rounded-[52px] transition disabled:bg-[#EBEBF0] disabled:text-[#383268] disabled:cursor-not-allowed ${className}`
+      )}
       onClick={onClick}
       disabled={disabled}
     >

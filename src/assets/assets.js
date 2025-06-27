@@ -73,7 +73,7 @@ import linkIcon from "./Icons/link-04.png";
 import pasteIinkIcon from "./Icons/link-2.png";
 import veriableIcon from "./Icons/3rd-bracket.png";
 import errorIcon from "./Icons/errorIcon.png";
-import toastSuccessIcon from "./Icons/errorIcon.png";
+import toastSuccessIcon from "./Icons/successIcon.png";
 import ErrorWarning from "./Icons/warning-1.png";
 import successWarning from "./Icons/tick-square.png";
 import dashboardPreview from "./Icons/Body.png";

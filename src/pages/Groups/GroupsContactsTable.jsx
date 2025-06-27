@@ -61,6 +61,34 @@ const GroupsContactsTable = ({
     );
   }
 
+  // If there's no data, display a message or an alternative component
+  if (data.length === 0) {
+    return (
+      <div className="w-full h-auto min-h-auto lg:h-[500px] rounded-[15px] pb-[60px] pt-[23px] border-[5px] border-[#EAECF0]">
+        <div className="flex flex-col gap-[20px] w-full lg:h-full ">
+          <div className="flex items-center gap-2 border-b border-b-[#EAECF0] pb-[23px] px-[20px]">
+            <h2 className="text-[18px] font-meidium text-[#3F3E3E]">Contact</h2>
+            <p className="bg-[#F5E9EC] py-[2px] px-3 rounded-[18px] text-[#9A2444] text-sm font-medium ">
+              {data.length} Contacts
+            </p>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-6 text-center px-[20px] h-full w-full">
+            <img src={Icons.emptyUsers} alt="empty state" />
+            <div>
+              <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
+                No users found
+              </h2>
+              <p className="text-[#767676] text-[14px] font-normal w-full md:max-w-[80%] lg:max-w-[63%] mx-auto">
+                Use the search bar or filters to find specific users or ensure
+                your spellings are correct.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-auto rounded-[15px] pb-[60px] pt-[23px] px-[20px] flex flex-col gap-[20px] shadow-md border border-[#EAECF0] ">
       <div className="flex justify-between items-center">
