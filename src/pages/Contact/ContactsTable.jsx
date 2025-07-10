@@ -48,7 +48,7 @@ const ContactsTable = ({
               No Available Contacts
             </h2>
             <p className="text-[#767676] text-[14px] font-normal">
-              No campaigns found. Start your first campaign
+              No contact found. add new Contact.
             </p>
           </div>
           <Button

@@ -3,6 +3,7 @@ import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "@/services/api";
+import Toast from "@/Components/Alerts/Toast";
 const NewPassword = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
@@ -10,7 +11,19 @@ const NewPassword = () => {
   const [loading, setLoading] = useState(false); // To prevent multiple submissions
   // State to hold error messages
   const [errors, setErrors] = useState({ password: "", confirmPassword: "" });
-
+  const [toast, setToast] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "",
+  });
+  const showToast = (type, title, message) => {
+    console.log("Toast triggered:", { type, title, message });
+    setToast({ show: true, type, title, message });
+    setTimeout(() => {
+      setToast({ show: false, type: "", title: "", message: "" });
+    }, 5000);
+  };
   // Check if the form is filled and passwords match
   const isFormFilled =
     password.length > 0 &&
@@ -98,14 +111,19 @@ const NewPassword = () => {
 
     try {
       // 2. **API Call**
-      const response = await api.post("/user/set-password", {
+      const response = await api.post("/user/reset-password", {
         password,
-        confirmPassword, // Still sending this for consistency, but backend may only need 'password'
+        confirm_password: confirmPassword, // Still sending this for consistency, but backend may only need 'password'
       });
 
       if (response.status === 200) {
         navigate("/sign-in"); // Navigate to the sign-in page
         console.log("Password successfully set.");
+        showToast(
+          "success",
+          " Password Set",
+          ` Your password has been successfully set. Please sign in with your new password.`
+        );
         // Consider a success toast/notification here as well
       } else {
         const errorMessage =
@@ -115,8 +133,14 @@ const NewPassword = () => {
           password: errorMessage,
         }));
         console.error("Failed to set password:", response.data || response);
+        showToast("error", "Error", errorMessage);
       }
     } catch (error) {
+      showToast(
+        "error",
+        "Error",
+        error.response?.data?.message || "An unexpected error occurred."
+      );
       setErrors((prev) => ({
         ...prev,
         password:

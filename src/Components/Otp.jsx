@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-const OTPInput = ({ length = 6, onSubmit, error, setError }) => {
+const OTPInput = ({ length = 6, onSubmit, error, setError, disabled }) => {
   const [otp, setOtp] = useState(new Array(length).fill(""));
   const [mask, setMask] = useState(new Array(length).fill(false));
   //   const [error, setError] = useState("");
@@ -86,6 +86,7 @@ const OTPInput = ({ length = 6, onSubmit, error, setError }) => {
             type={mask[index] ? "password" : "text"}
             inputMode="numeric"
             maxLength={1}
+            disabled={disabled}
             value={digit}
             ref={(el) => (inputsRef.current[index] = el)}
             onChange={(e) => handleChange(e.target.value, index)}

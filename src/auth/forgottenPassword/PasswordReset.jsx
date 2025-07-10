@@ -4,19 +4,32 @@ import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
 import ResetOtp from "./ResetOtp";
 import api from "@/services/api";
+import Toast from "@/Components/Alerts/Toast";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({ email: "" });
   const [showOtpPopUp, setShowOtpPopUp] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
-
+  const [toast, setToast] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "",
+  });
   const [loading, setLoading] = useState(false); // To prevent multiple submissions
   // Validate email format
   const validateEmail = (email) => {
     const emailRegex =
       /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
+  };
+  const showToast = (type, title, message) => {
+    console.log("Toast triggered:", { type, title, message });
+    setToast({ show: true, type, title, message });
+    setTimeout(() => {
+      setToast({ show: false, type: "", title: "", message: "" });
+    }, 5000);
   };
 
   const isFormFilled = email && validateEmail(email);
@@ -39,10 +52,16 @@ const PasswordReset = () => {
 
       // Assuming `api` is an Axios instance or similar that provides `status` and `data`
       // If it's a `fetch` wrapper, you might need `response.ok` and `await response.json()`
+      console.log("Response from API:", response);
       if (response.status === 200) {
         // Or response.status >= 200 && response.status < 300 for general success
         setShowOtpPopUp(true); // Show OTP popup
-        console.log("Password reset request sent successfully.");
+        // console.log("Password reset request sent successfully.");
+        showToast(
+          "success",
+          "OTP Sent",
+          ` An OTP has been sent to ${email}. Please check your inbox.`
+        );
       } else {
         // Handle non-200 but successful response (e.g., 400, 404, 500 from backend)
         // Assuming 'response.data' contains error message if 'api' is Axios
@@ -53,6 +72,14 @@ const PasswordReset = () => {
           ...prev,
           email: errorMessage,
         }));
+        // showToast(
+        //   "error",
+        //   "Error",
+        //   `${
+        //     response.data?.message ||
+        //     "Failed to send reset request. Please try again."
+        //   }`
+        // );
         console.error(
           "Failed to send password reset request:",
           response.data || response
@@ -61,9 +88,14 @@ const PasswordReset = () => {
     } catch (error) {
       // 3. **Error Handling (Network errors, or non-2xx if `api` throws)**
       console.error("Error requesting password reset:", error);
+      // showToast(
+      //   "error",
+      //   "Error",
+      //   error.message || "An unexpected error occurred. Please try again."
+      // );
       // Check if error has a response from server (e.g., Axios error.response)
       const errorMessage =
-        error.response?.data?.msg ||
+        error.response?.data?.err_msg.email[0] ||
         "Error, please check your internet and try again.";
       setErrors((prev) => ({
         ...prev,
@@ -150,6 +182,15 @@ const PasswordReset = () => {
         </div>
       ) : (
         <ResetOtp isClosedOtp={setShowOtpPopUp} />
+      )}
+
+      {toast.show && (
+        <Toast
+          title={toast.title}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ show: false })}
+        />
       )}
     </div>
   );

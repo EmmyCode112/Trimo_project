@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Icons } from "../../../assets/assets";
-import Button from "../../../Components/buttons/transparentButton";
+import { Icons } from "@/assets/assets";
+import Button from "@/Components/buttons/transparentButton";
 
 const DeleteModal = ({ isOpenDeleteModal, onClose, onDelete }) => {
   const modalRef = useRef(null);
@@ -51,10 +51,10 @@ const DeleteModal = ({ isOpenDeleteModal, onClose, onDelete }) => {
     dragRef.current = null;
   };
 
- const handleDelete = ()=> {
+  const handleDelete = () => {
     onDelete();
     onClose();
-  }
+  };
   if (!isOpenDeleteModal) return null;
 
   return (

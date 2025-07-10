@@ -9,6 +9,7 @@ import { ContactProvider } from "./redux/ContactProvider/UseContact";
 import { NotificationProvider } from "./redux/NotificationProvider/UseNotification";
 import { CampaignModalProvider } from "./redux/UseCampaignModal";
 import { RecipientsProvider } from "./redux/UseRecipient";
+import { AuthProvider } from "./context/AuthContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -18,9 +19,12 @@ root.render(
         <ContactProvider>
           <NotificationProvider>
             <RecipientsProvider>
-              {" "}
-              {/* Wrap the app with RecipientsProvider */}
-              <App />
+              <AuthProvider>
+                {" "}
+                {/* Wrap the app with AuthProvider */}{" "}
+                {/* Wrap the app with RecipientsProvider */}
+                <App />
+              </AuthProvider>
             </RecipientsProvider>
           </NotificationProvider>
         </ContactProvider>

@@ -131,11 +131,14 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     if (Object.keys(newErrors).length === 0) {
       try {
         // Clean phone number - remove +234 or 234 and ensure it starts with 0
-        let cleanPhoneNumber = workPhone.replace(/^\+234/, '').replace(/^234/, '').replace(/\s+/g, '');
-        if (!cleanPhoneNumber.startsWith('0')) {
-          cleanPhoneNumber = '0' + cleanPhoneNumber;
+        let cleanPhoneNumber = workPhone
+          .replace(/^\+234/, "")
+          .replace(/^234/, "")
+          .replace(/\s+/g, "");
+        if (!cleanPhoneNumber.startsWith("0")) {
+          cleanPhoneNumber = "0" + cleanPhoneNumber;
         }
-        
+
         // Prepare user data for registration
         const userData = {
           firstname: firstName,
@@ -160,7 +163,9 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
           // Convert array of error messages to a single string for each field
           const formattedErrors = {};
           Object.entries(error.err_msg).forEach(([field, messages]) => {
-            formattedErrors[field] = Array.isArray(messages) ? messages[0] : messages;
+            formattedErrors[field] = Array.isArray(messages)
+              ? messages[0]
+              : messages;
           });
           setErrors(formattedErrors);
         } else {
