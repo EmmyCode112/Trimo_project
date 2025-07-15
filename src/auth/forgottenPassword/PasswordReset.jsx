@@ -143,6 +143,7 @@ const PasswordReset = () => {
                   <input
                     type="email"
                     className="w-full outline-none border-none"
+                    placeholder="example@gmail.com"
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);

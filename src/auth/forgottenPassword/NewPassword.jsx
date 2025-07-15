@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "@/services/api";
 import Toast from "@/Components/Alerts/Toast";
+
 const NewPassword = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false); // To prevent multiple submissions
-  // State to hold error messages
+  const [passwordType, setPasswordType] = useState("password");
+  const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ password: "", confirmPassword: "" });
   const [toast, setToast] = useState({
     show: false,
@@ -17,6 +19,7 @@ const NewPassword = () => {
     message: "",
     type: "",
   });
+
   const showToast = (type, title, message) => {
     console.log("Toast triggered:", { type, title, message });
     setToast({ show: true, type, title, message });
@@ -24,12 +27,6 @@ const NewPassword = () => {
       setToast({ show: false, type: "", title: "", message: "" });
     }, 5000);
   };
-  // Check if the form is filled and passwords match
-  const isFormFilled =
-    password.length > 0 &&
-    confirmPassword.length > 0 &&
-    validatePassword(password) &&
-    password === confirmPassword;
 
   const validatePassword = (password) => {
     const minLength = 8;
@@ -40,7 +37,6 @@ const NewPassword = () => {
       password
     );
 
-    // Return an object with validation results and specific error messages
     return {
       isValid:
         password.length >= minLength &&
@@ -58,13 +54,18 @@ const NewPassword = () => {
     };
   };
 
+  const isFormFilled =
+    password.length > 0 &&
+    confirmPassword.length > 0 &&
+    validatePassword(password).isValid &&
+    password === confirmPassword;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
     setErrors({ password: "", confirmPassword: "" });
 
-    let isValidForm = true; // Flag to track overall form validity
+    let isValidForm = true;
 
     const passwordValidationResult = validatePassword(password);
 
@@ -86,7 +87,6 @@ const NewPassword = () => {
       if (passwordValidationResult.errors.hasSpecialChar) {
         passwordErrorMessage += " include a special character,";
       }
-      // Remove trailing comma and add a period
       passwordErrorMessage = passwordErrorMessage.replace(/,$/, ".");
 
       setErrors((prev) => ({
@@ -104,27 +104,25 @@ const NewPassword = () => {
     }
 
     if (!isValidForm) {
-      return; // Stop here if client-side validation fails
+      return;
     }
 
-    setLoading(true); // Start loading state only when proceeding to API call
+    setLoading(true);
 
     try {
-      // 2. **API Call**
       const response = await api.post("/user/reset-password", {
         password,
-        confirm_password: confirmPassword, // Still sending this for consistency, but backend may only need 'password'
+        confirm_password: confirmPassword,
       });
 
       if (response.status === 200) {
-        navigate("/sign-in"); // Navigate to the sign-in page
+        navigate("/sign-in");
         console.log("Password successfully set.");
         showToast(
           "success",
-          " Password Set",
-          ` Your password has been successfully set. Please sign in with your new password.`
+          "Password Set",
+          "Your password has been successfully set. Please sign in with your new password."
         );
-        // Consider a success toast/notification here as well
       } else {
         const errorMessage =
           response.data?.message || "Failed to set password. Please try again.";
@@ -139,16 +137,25 @@ const NewPassword = () => {
       showToast(
         "error",
         "Error",
-        error.response?.data?.message || "An unexpected error occurred."
+        error.response?.data?.err_msg.password[0] ||
+          "An unexpected error occurred."
       );
       setErrors((prev) => ({
         ...prev,
         password:
-          error.response?.data?.message || "An unexpected error occurred.",
+          error.response?.data?.err_msg.password[0] ||
+          "An unexpected error occurred.",
       }));
       console.error("API call error:", error);
     } finally {
-      setLoading(false); // Stop loading state after API call
+      setLoading(false);
+    }
+  };
+
+  // Prevent form submission on Enter key unless the form is valid
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !isFormFilled) {
+      e.preventDefault();
     }
   };
 
@@ -169,9 +176,19 @@ const NewPassword = () => {
             <img src={Icons.key} alt="" className="signin-icons" />
             <input
               className="w-full outline-none border-none"
-              type="password"
+              type={passwordType}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <img
+              onClick={() =>
+                setPasswordType(
+                  passwordType === "password" ? "text" : "password"
+                )
+              }
+              src={Icons.eyeOpen}
+              alt=""
             />
           </div>
           {errors.password && (
@@ -188,9 +205,19 @@ const NewPassword = () => {
             <img src={Icons.key} alt="" className="signin-icons" />
             <input
               className="w-full outline-none border-none"
-              type="password"
+              type={confirmPasswordType}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <img
+              onClick={() =>
+                setConfirmPasswordType(
+                  confirmPasswordType === "password" ? "text" : "password"
+                )
+              }
+              src={Icons.eyeOpen}
+              alt=""
             />
           </div>
           {errors.confirmPassword && (
@@ -201,11 +228,14 @@ const NewPassword = () => {
         {/* Submit Button */}
         <Button
           label="Done"
-          onClick={() => navigate("/sign-in")}
-          disabled={!isFormFilled} // Enable only when form is valid
+          type="submit" // Explicitly set type to submit
+          disabled={!isFormFilled || loading} // Disable if form is invalid or loading
           className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]`}
         />
       </form>
+      {toast.show && (
+        <Toast type={toast.type} title={toast.title} message={toast.message} />
+      )}
     </div>
   );
 };

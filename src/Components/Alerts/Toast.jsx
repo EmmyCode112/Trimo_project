@@ -53,7 +53,10 @@ const Toast = ({ title, message, type, onClose }) => {
         </span>
       </div>
 
-      <button onClick={onClose} className="ml-3 text-white font-bold">
+      <button
+        onClick={onClose ? onClose : ""}
+        className="ml-3 text-white font-bold"
+      >
         <img
           src={
             type === "error"
