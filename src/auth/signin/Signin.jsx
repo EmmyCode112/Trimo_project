@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/slice/authSlice";
 import { Icons } from "../../assets/assets";
@@ -77,6 +77,15 @@ const Signin = () => {
 
       const data = await response.json(); // Always parse the response
       console.log("response", response);
+      if (data.err_msg === "Verify to activate account!") {
+        // Store pending OTP state in localStorage
+        localStorage.setItem("pendingOtp", "true");
+        localStorage.setItem("pendingOtpEmail", email);
+        // Redirect to OTP verification screen (SignUpForm will handle popup)
+        navigate("/signup");
+        setLoading(false);
+        return;
+      }
       if (response.ok) {
         // Assuming your API returns an accessToken in data
         localStorage.setItem("accessToken", data.accessToken); // Store the actual token

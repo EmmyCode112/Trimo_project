@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/Components/buttons/transparentButton";
 import { Icons } from "@/assets/assets";
 import { useNavigate } from "react-router-dom";
 import OTPInput from "@/Components/Otp";
 import { useAuth } from "@/context/AuthContext";
+import PropTypes from "prop-types";
 
 const SignupOTP = ({ isClosedOtp }) => {
   const [successfulOtp, setSuccessfulOtp] = useState(false);
-  const [otp, setOtp] = useState("");
   const [countdown, setCountdown] = useState(60); // Start at 60 seconds
   const [otpRequested, setOtpRequested] = useState(false);
   const [error, setError] = useState("");
@@ -25,26 +25,29 @@ const SignupOTP = ({ isClosedOtp }) => {
   }, [otpRequested, countdown]);
 
   const generateOtp = () => {
-    const newOtp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit random OTP
-    setOtp(newOtp);
-    console.log("Generated OTP:", newOtp); // For debugging, remove in production
+    // OTP generation logic can be added here if needed
     setCountdown(60); // Reset countdown
     setOtpRequested(true);
+    setError(""); // Clear any previous error
   };
 
   const handleOtpSubmit = async (submittedOtp) => {
+    if (!otpRequested) {
+      setError("Please request an OTP first.");
+      return;
+    }
     try {
-      console.log('Submitting OTP:', submittedOtp);
+      setError(""); // Clear error before request
       const response = await verifyOTP(submittedOtp);
-      console.log('OTP verification response:', response);
-      
-      if (response.msg === "") {
+      if (response.status === 'success') {
         setSuccessfulOtp(true);
+        // Clear pending OTP state from localStorage
+        localStorage.removeItem('pendingOtp');
+        localStorage.removeItem('pendingOtpEmail');
       } else {
         setError("Invalid OTP. Please try again.");
       }
     } catch (error) {
-      console.error('OTP verification failed:', error);
       setError(error.msg || "Failed to verify OTP. Please try again.");
     }
   };
@@ -64,8 +67,8 @@ const SignupOTP = ({ isClosedOtp }) => {
               Account Verification
             </h4>
             <p className="text-[#767676] font-[500]">
-              We've sent a verification code to your phone and a link to your
-              email. Let's secure your account!
+              We&apos;ve sent a verification code to your phone and a link to your
+              email. Let&apos;s secure your account!
             </p>
           </div>
           <div>
@@ -73,8 +76,9 @@ const SignupOTP = ({ isClosedOtp }) => {
             <OTPInput
               length={6}
               onSubmit={handleOtpSubmit}
-              error={error}
+              error={otpRequested ? error : ""}
               setError={setError}
+              disabled={!otpRequested}
             />
             <div className="flex items-center gap-3 mt-3">
               {otpRequested ? (
@@ -125,6 +129,10 @@ const SignupOTP = ({ isClosedOtp }) => {
       )}
     </div>
   );
+};
+
+SignupOTP.propTypes = {
+  isClosedOtp: PropTypes.func.isRequired,
 };
 
 export default SignupOTP;
