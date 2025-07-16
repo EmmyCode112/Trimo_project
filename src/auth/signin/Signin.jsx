@@ -80,6 +80,7 @@ const Signin = () => {
       if (response.ok) {
         // Assuming your API returns an accessToken in data
         localStorage.setItem("accessToken", data.accessToken); // Store the actual token
+        console.log("access token", data.accessToken);
         const userData = {
           email: data.email /* any other user data from response */,
         };
