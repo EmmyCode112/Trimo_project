@@ -2,8 +2,10 @@ import Button from "@/Components/buttons/transparentButton";
 import { Icons } from "@/assets/assets";
 import PhoneNumberInput from "@/Components/PhoneNumberInput";
 import { Link } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import PropTypes from "prop-types";
+import { toast } from "sonner";
 
 const SignUpForm = ({ setShowOtpPopUp }) => {
   const { register } = useAuth();
@@ -14,7 +16,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
   const [lastName, setLastName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsChecked, setTermsChecked] = useState(false);
-  const [countryCode, setCountryCode] = useState("ng");
+  // const [countryCode, setCountryCode] = useState("ng"); // Not used
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -32,6 +34,17 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     hasSpecialChar: false,
     hasMinLength: false,
   });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if there is a pending OTP in localStorage
+    const pendingOtp = localStorage.getItem("pendingOtp");
+    const pendingEmail = localStorage.getItem("pendingOtpEmail");
+    if (pendingOtp && pendingEmail) {
+      setEmail(pendingEmail);
+      setShowOtpPopUp(true);
+    }
+  }, [setShowOtpPopUp]);
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -102,6 +115,17 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    // Prevent duplicate registration if pending OTP exists for this email
+    const pendingOtp = localStorage.getItem("pendingOtp");
+    const pendingEmail = localStorage.getItem("pendingOtpEmail");
+    if (pendingOtp && pendingEmail === email) {
+      toast.error("You have a pending verification for this email. Please complete OTP verification.");
+      setShowOtpPopUp(true);
+      setLoading(false);
+      return;
+    }
 
     const newErrors = {};
 
@@ -156,6 +180,10 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
 
         // Show OTP form if registration was successful
         setShowOtpPopUp(true);
+        // Store pending OTP state in localStorage
+        localStorage.setItem("pendingOtp", "true");
+        localStorage.setItem("pendingOtpEmail", email);
+        setLoading(false);
       } catch (error) {
         console.error("Registration failed:", error);
         // Handle API validation errors
@@ -168,10 +196,15 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
               : messages;
           });
           setErrors(formattedErrors);
+          toast.error("Registration failed: " + Object.values(formattedErrors).join(", "));
         } else {
           setErrors({ submit: "Registration failed. Please try again." });
+          toast.error("Registration failed. Please try again.");
         }
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -429,11 +462,20 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
       <Button
         type="submit"
         label="Verify your Info"
-        disabled={!isFormFilled}
-        className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-lg w-full py-3 px-6`}
-      />
+        disabled={!isFormFilled || loading}
+        className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-lg w-full py-3 px-6 flex items-center justify-center`}
+      >
+        {loading ? (
+          <span className="loader mr-2"></span>
+        ) : null}
+        Verify your Info
+      </Button>
     </form>
   );
+};
+
+SignUpForm.propTypes = {
+  setShowOtpPopUp: PropTypes.func.isRequired,
 };
 
 export default SignUpForm;

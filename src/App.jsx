@@ -62,6 +62,7 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess, logout } from "@/redux/slice/authSlice";
+import { Toaster } from 'sonner';
 
 // AuthenticatedLayout component definition (remains mostly the same)
 const AuthenticatedLayout = ({
@@ -177,6 +178,7 @@ const App = () => {
     // If AuthProvider is for something else, keep it. Otherwise, you might remove it.
     // <AuthProvider>
     <Router>
+      <Toaster position="top-right" richColors />
       <ScrollToTop />
       <Routes>
         {/* PublicOnlyRoute: These pages are only accessible when NOT logged in */}
