@@ -186,6 +186,25 @@
   scrollbar-width: none;
 }
 
+.spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .scrollbar::-webkit-scrollbar {
   width: 10px;
   @apply rounded-full;
@@ -229,7 +248,7 @@
 
 .sidebar-link-text {
   white-space: nowrap;
-  opacity: 0; 
+  opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
 
@@ -271,7 +290,13 @@
 
 .gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(91deg, #CB1E33 0.63%, #9A2444 32.82%, #692B56 69.69%, #383268 98.95%);
+  background-image: linear-gradient(
+    91deg,
+    #cb1e33 0.63%,
+    #9a2444 32.82%,
+    #692b56 69.69%,
+    #383268 98.95%
+  );
 }
 
 .safari-mockup {
@@ -327,6 +352,10 @@
   vertical-align: middle;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

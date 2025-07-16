@@ -121,7 +121,9 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     const pendingOtp = localStorage.getItem("pendingOtp");
     const pendingEmail = localStorage.getItem("pendingOtpEmail");
     if (pendingOtp && pendingEmail === email) {
-      toast.error("You have a pending verification for this email. Please complete OTP verification.");
+      toast.error(
+        "You have a pending verification for this email. Please complete OTP verification."
+      );
       setShowOtpPopUp(true);
       setLoading(false);
       return;
@@ -196,7 +198,9 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
               : messages;
           });
           setErrors(formattedErrors);
-          toast.error("Registration failed: " + Object.values(formattedErrors).join(", "));
+          toast.error(
+            "Registration failed: " + Object.values(formattedErrors).join(", ")
+          );
         } else {
           setErrors({ submit: "Registration failed. Please try again." });
           toast.error("Registration failed. Please try again.");
@@ -465,10 +469,8 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
         disabled={!isFormFilled || loading}
         className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-lg w-full py-3 px-6 flex items-center justify-center`}
       >
-        {loading ? (
-          <span className="loader mr-2"></span>
-        ) : null}
-        Verify your Info
+        {loading ? <span className="loader mr-2"></span> : null}
+        {/* Verify your Info */}
       </Button>
     </form>
   );

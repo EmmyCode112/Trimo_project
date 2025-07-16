@@ -9,6 +9,7 @@ const Button = ({
   className,
   disabled = false,
   icon,
+  loader,
 }) => {
   return (
     <button
@@ -19,6 +20,7 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
     >
+      {loader && <>{loader}</>}
       {icon && <img src={icon} className="mr-2" />} {/* Optional icon */}
       {label}
     </button>

@@ -6,6 +6,7 @@ import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
 // import Cookies from "js-cookie"; // Only if you plan to use it
 import "./Signin.css";
+// import "@/App.css";
 
 const Signin = () => {
   // Base URL for API requests
@@ -213,10 +214,15 @@ const Signin = () => {
               <div>
                 <Button
                   label={loading ? "Signing in..." : "Sign in"}
-                  onClick={handleSubmit} // This will trigger onSubmit of the form
-                  disabled={loading} // Disable button while loading or if form is invalid (handled by onSubmit now)
+                  loader={
+                    loading ? <span className="spinner mr-2 "></span> : ""
+                  }
+                  onClick={loading ? " " : handleSubmit} // This will trigger onSubmit of the form
+                  // disabled={loading}
                   className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] ${
-                    loading ? "opacity-50 cursor-not-allowed" : ""
+                    loading
+                      ? "opacity-[0.9] cursor-not-allowed bg-[#383268]"
+                      : ""
                   }`}
                 />
               </div>
