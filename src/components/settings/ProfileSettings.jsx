@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Edit } from "lucide-react";
 import Button from "@/Components/buttons/transparentButton";
 import api from "@/services/api"; // Your Axios instance
-import Toast from "../Alerts/Toast";
+
 const ProfileSettings = ({ onEditClick }) => {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const fileInputRef = useRef(null);
@@ -131,11 +131,11 @@ const ProfileSettings = ({ onEditClick }) => {
           "Please try again."
         } `
       );
-      // alert(
-      //   `Failed to upload profile image: ${
-      //     error.response?.data?.err_msg?.image_name?.[0] || "Please try again."
-      //   }`
-      // );
+      alert(
+        `Failed to upload profile image: ${
+          error.response?.data?.err_msg?.image_name?.[0] || "Please try again."
+        }`
+      );
     }
   };
 
@@ -279,12 +279,7 @@ const ProfileSettings = ({ onEditClick }) => {
       </div>
 
       {toast.show && (
-        <Toast
-          type={toast.type}
-          title={toast.title}
-          message={toast.message}
-          onClose={() => toast.show === false}
-        />
+        <Toast type={toast.type} title={toast.title} message={toast.message} />
       )}
     </div>
   );
