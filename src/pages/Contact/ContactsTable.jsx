@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTable, usePagination } from "react-table";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-
+import { useContacts } from "@/redux/ContactProvider/UseContact";
+import { IoMdRefresh } from "react-icons/io";
 const ContactsTable = ({
   columns,
   data,
@@ -30,6 +31,68 @@ const ContactsTable = ({
     },
     usePagination
   );
+
+  const { loading, error, RetryToFetchContact, refetching } = useContacts();
+
+  if (refetching) {
+    return (
+      <div className="w-full h-auto min-h-auto lg:h-[500px] rounded-[15px] pb-[60px] pt-[23px] border-[5px] border-[#EAECF0] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-6 text-center px-[20px]">
+          <div className="data-load-spinner"></div>
+          <div className="flex flex-col items-center gap-2 text-center ">
+            <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
+              Retrying to Fetch Contacts...
+            </h2>
+            <p className="text-[#767676] text-[14px] font-normal">
+              Please wait while we try again.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-auto min-h-auto lg:h-[500px] rounded-[15px] pb-[60px] pt-[23px] border-[5px] border-[#EAECF0] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-6 text-center px-[20px]">
+          <img src={Icons.emptyState} alt="empty state" />
+          <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
+            Error Fetching Contacts
+          </h2>
+          <p className="text-[#767676] text-[14px] font-normal">{error}</p>
+          <Button
+            label={
+              <p className="flex items-center gap-1">
+                <IoMdRefresh className="text-[20px]" />
+                Retry
+              </p>
+            }
+            className="bg-[#383268] text-white rounded-[8px] py-2 px-[18px] hover:bg-[#41397c] max-sm:py-1 max-sm:px-[12px]"
+            onClick={() => RetryToFetchContact()}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="w-full h-auto min-h-auto lg:h-[500px] rounded-[15px] pb-[60px] pt-[23px] border-[5px] border-[#EAECF0] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-6 text-center px-[20px]">
+          <div className="data-load-spinner"></div>
+          <div className="flex flex-col items-center gap-2 text-center ">
+            <h2 className="text-xl font-medium text-[#3F3E3E] mb-1">
+              Loading Contacts...
+            </h2>
+            <p className="text-[#767676] text-[14px] font-normal">
+              Please wait while we fetch your contacts.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // If there's no data, display a message or an alternative component
   if (contacts.length === 0) {

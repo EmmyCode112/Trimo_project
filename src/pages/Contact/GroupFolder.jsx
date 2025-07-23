@@ -1,10 +1,16 @@
 import { Icons } from "../../assets/assets";
 
-const GroupFolder = ({ groupName, moveContactsToGroup, folder }) => {
+const GroupFolder = ({ groupName, moveContactsToGroup, folder, onClose }) => {
+  const handleClickGroup = (id) => {
+    moveContactsToGroup(id);
+    onClose();
+  };
   return (
     <div
       className="flex flex-col folder-con cursor-pointer"
-      onClick={() => moveContactsToGroup(folder.id)}
+      onClick={() => {
+        handleClickGroup(folder.id);
+      }}
     >
       <div className=" folder-img-con w-full h-auto">
         <img

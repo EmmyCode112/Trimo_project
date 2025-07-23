@@ -4,7 +4,7 @@ import { Icons } from "@/assets/assets"; // Assuming you have an Icons object
 const Toast = ({ title, message, type, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose(); // Hide after 1 second
+      onClose();
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -12,7 +12,7 @@ const Toast = ({ title, message, type, onClose }) => {
 
   return (
     <div
-      className={`fixed z-[999] top-5 right-5  gap-3 p-4 rounded-lg shadow-lg text-white flex items-start md:w-[400px] w-[90%] border ${
+      className={`fixed z-[1001] top-5 right-5  gap-3 p-4 rounded-lg shadow-lg text-white flex items-start md:w-[400px] w-[90%] border ${
         type === "error"
           ? "bg-[#FAE9EB] border-[#D54B5C]"
           : type === "warning"

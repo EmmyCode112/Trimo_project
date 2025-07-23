@@ -1,61 +1,168 @@
-import { createContext, useContext, useState } from "react";
-
+import { createContext, useContext, useState, useEffect } from "react";
+import api from "@/services/api"; // Adjust the import path as necessary
 const contactContext = createContext();
 
 export const ContactProvider = ({ children }) => {
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      firstName: "Timothy",
-      lastName: "Eke",
-      email: "andrew@triimo.com",
-      phone: "+234 792 241 5655",
-      group: "N/A",
-    },
-    {
-      id: 2,
-      firstName: "Naomi",
-      lastName: "Aganaba",
-      email: "tanoribeau@gmail.com",
-      phone: "+234 704 442 5317",
-      group: "N/A",
-    },
-    {
-      id: 3,
-      firstName: "Sarah",
-      lastName: "Okano",
-      email: "penelope@gmail.com",
-      phone: "+234 709 657 6467",
-      group: "N/A",
-    },
-    {
-      id: 4,
-      firstName: "Daniel",
-      lastName: "Ojo",
-      email: "owenorton@gmail.com",
-      phone: "+234 806 310 3944",
-      group: "N/A",
-    },
-    {
-      id: 5,
-      firstName: "Rebecca",
-      lastName: "Nwachukwu",
-      email: "akwabtom@gmail.com",
-      phone: "+234 703 501 4280",
-      group: "N/A",
-    },
-    {
-      id: 6,
-      firstName: "Margaret",
-      lastName: "Alanira",
-      email: "abujifinast@icloud.com",
-      phone: "+234 813 201 1725",
-      group: "N/A",
-    },
-  ]);
+  const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [createContactError, setCreateContactError] = useState(null);
+  const [createContactErrorMessage, setCreateContactErrorMessage] =
+    useState("");
+  const [createContactLoading, setCreateContactLoading] = useState(false);
+  const [refetching, setRefetching] = useState(false);
+  const baseUrl =
+    import.meta.env.VITE_BASE_URL ||
+    "https://triimo.unifiedpublisher.com/api/v1";
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`${baseUrl}/user/contacts`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch contacts");
+        // }
+        const data = await response.data;
+        setContacts(data?.data?.data || []);
+        setError(null); // Clear any previous errors
+        console.log("Contacts fetched successfully:", response);
+        console.log("data.data.data:", data.data.data);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        setError(error.message || "Failed to fetch contacts");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContacts();
+  }, []);
+
+  const RetryToFetchContact = async () => {
+    try {
+      setRefetching(true);
+      setError(null); // Clear any previous errors
+      const response = await api.get(`${baseUrl}/user/contacts`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      // if (!response.ok) {
+      //   throw new Error("Failed to fetch contacts");
+      // }
+      const data = await response.data;
+      setContacts(data?.data?.data || []);
+      setError(null); // Clear any previous errors
+      console.log("Contacts fetched successfully:", response);
+      console.log("data.data.data:", data.data.data);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+      setError(error.message || "Failed to fetch contacts");
+    } finally {
+      setRefetching(false);
+    }
+  };
+
+  // const createContact = async (contactData) => {
+  //   try {
+  //     setCreateContactLoading(true);
+  //     setCreateContactErrorMessage("");
+  //     const response = await api.post(
+  //       `${baseUrl}/user/contacts/create`,
+  //       contactData,
+  //       {
+  //         headers: {
+  //           Accept: "application/json",
+  //         },
+  //       }
+  //     );
+  //     // if (!response.ok) {
+  //     //   throw new Error("Failed to create contact");
+  //     // }
+  //     // const data = await response.data;
+  //     console.log("response", response);
+  //     // setContacts((prevContacts) => [...prevContacts, data?.data]);
+  //     // console.log("Contact created successfully:", data);
+  //     setCreateContactErrorMessage("");
+  //   } catch (error) {
+  //     console.error("Error creating contact:", error);
+  //     setCreateContactError(error.message || "Failed to create contact");
+  //     const phoneNumberError = error.response?.data?.err_msg?.phone_number;
+  //     const emailError = error.response?.data?.err_msg?.email;
+  //     setCreateContactErrorMessage(
+  //       emailError
+  //         ? emailError[0]
+  //         : phoneNumberError
+  //         ? phoneNumberError[0]
+  //         : "An unexpected error occurred. please check you internet and try again."
+  //     );
+  //   } finally {
+  //     setCreateContactLoading(false);
+  //   }
+  // };
+
+  // deleteContact
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const deleteContact = async (contactId) => {
+    try {
+      setDeleteLoading(true);
+      setDeleteError("");
+      const response = await api.post(
+        `${baseUrl}/user/contacts/delete/${contactId}`,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        // setContacts((prevContacts) =>
+        //   prevContacts.filter((contact) => contact.id !== contactId)
+        // );
+        console.log("Contact deleted successfully:", response);
+        return true; // ✅ success
+      } else {
+        throw new Error("Failed to delete contact");
+      }
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+      setDeleteError(error.message || "Failed to delete contact");
+      return false; // ❌ failed
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   return (
-    <contactContext.Provider value={{ contacts, setContacts }}>
+    <contactContext.Provider
+      value={{
+        contacts,
+        setContacts,
+        loading,
+        error,
+        RetryToFetchContact,
+        refetching,
+        // createContact,
+        setCreateContactLoading,
+        createContactLoading,
+        createContactError,
+        setCreateContactError,
+        setCreateContactErrorMessage,
+        createContactErrorMessage,
+        deleteContact,
+        deleteLoading,
+        setDeleteLoading,
+
+        deleteError,
+      }}
+    >
       {children}
     </contactContext.Provider>
   );

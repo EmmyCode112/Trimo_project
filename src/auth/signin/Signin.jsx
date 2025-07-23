@@ -10,8 +10,7 @@ import "./Signin.css";
 
 const Signin = () => {
   // Base URL for API requests
-  const BASE_URL =
-    import.meta.env.VITE_BASE_URL || "https://triimo.coderigi.co/api/v1";
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,18 +69,21 @@ const Signin = () => {
     // If form is valid, proceed with API call
     try {
       const response = await fetch(`${BASE_URL}/user/login`, {
-        // Added '/' before user/login
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email, password: password }),
       });
 
-      const data = await response.json(); // Always parse the response
+      let data = {};
+      try {
+        const text = await response.text();
+        data = text ? JSON.parse(text) : {};
+      } catch (parseError) {
+        console.error("Failed to parse response JSON:", parseError);
+      }
+
       console.log("response", response);
       if (data.err_msg === "Verify to activate account!") {
-        // Store pending OTP state in localStorage
-        localStorage.setItem("pendingOtp", "true");
-        localStorage.setItem("pendingOtpEmail", email);
         // Redirect to OTP verification screen (SignUpForm will handle popup)
         navigate("/signup");
         setLoading(false);
@@ -100,7 +102,7 @@ const Signin = () => {
       } else {
         // Handle API errors (e.g., incorrect credentials)
         newErrors.general =
-          data.message || "Login failed. Please check your credentials.";
+          data.message || "Login failed. Please Try again later.";
         setErrors(newErrors);
       }
     } catch (error) {

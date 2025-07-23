@@ -13,8 +13,22 @@ import { useNavigate } from "react-router-dom";
 import { useGroups } from "../../redux/GroupProvider/UseGroup";
 import { useContacts } from "@/redux/ContactProvider/UseContact";
 import Toast from "@/Components/Alerts/Toast";
+import api from "@/services/api";
 const Contact = () => {
-  const { contacts, setContacts } = useContacts();
+  const baseUrl =
+    import.meta.env.VITE_BASE_URL ||
+    "https://triimo.unifiedpublisher.com/api/v1";
+  const {
+    contacts,
+    setContacts,
+    setCreateContactError,
+    // createContact,
+    setCreateContactErrorMessage,
+    RetryToFetchContact,
+    setCreateContactLoading,
+    deleteContact,
+    setDeleteLoading,
+  } = useContacts();
 
   const navigate = useNavigate();
   const [openDropdownRow, setOpenDropdownRow] = useState(null);
@@ -44,13 +58,52 @@ const Contact = () => {
     setOpenDropdownRow(null);
   };
 
-  const updateContact = (updatedContact) => {
-    setContacts((prevContacts) =>
-      prevContacts.map((contact) =>
-        contact.id === updatedContact.id ? updatedContact : contact
-      )
-    );
-    handleCloseModal();
+  // update user
+  const updateContact = async (userData) => {
+    try {
+      setCreateContactLoading(true);
+      setCreateContactErrorMessage("");
+      const response = await api.post(
+        `${baseUrl}/user/contacts/update/${userData.id}`,
+        userData,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      // console.log("response", response);
+      if (response.status === 200 || response.status === 201) {
+        console.log("user updated successfully.");
+        await RetryToFetchContact();
+        handleCloseModal();
+      } else {
+        throw new Error("Failed to edit user");
+      }
+      console.log("response", response);
+
+      setToast({
+        title: "Updated",
+        message: "Contact updated successfully.",
+        type: "success",
+      });
+      setCreateContactErrorMessage("");
+    } catch (error) {
+      console.error("Error editing user:", error);
+      setCreateContactError(error.message || "Failed to edit user");
+      const phoneNumberError = error.response?.data?.err_msg?.phone_number;
+      const emailError = error.response?.data?.err_msg?.email;
+      setCreateContactErrorMessage(
+        emailError
+          ? emailError[0]
+          : phoneNumberError
+          ? phoneNumberError[0]
+          : "An unexpected error occurred. please check you internet and try again."
+      );
+    } finally {
+      setCreateContactLoading(false);
+    }
   };
 
   // delete contact
@@ -60,22 +113,38 @@ const Contact = () => {
     setOpenDropdownRow(null);
   };
 
-  const deleteContact = (contactId) => {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== contactId)
-    );
-    console.log(contactId);
-    setIsOpenDeleteModal(false);
+  const handleDeleteContact = async (contactId) => {
+    const success = await deleteContact(contactId);
+
+    if (success) {
+      setToast({
+        title: "Deleted",
+        message: "Contact deleted successfully.",
+        type: "success",
+      });
+      await RetryToFetchContact(); // Refresh contacts list after deletion
+      setIsOpenDeleteModal(false); // ✅ Only close if deletion worked
+    } else {
+      setToast({
+        title: "Error",
+        message: "Failed to delete contact. Please try again.",
+        type: "error",
+      });
+      // ❌ Don't close modal — give user a chance to retry
+    }
   };
 
-  // create contact
-  const addNewContact = (newContact) => {
-    setContacts((prevContacts) => [
-      ...prevContacts,
-      { ...newContact, id: prevContacts.length + 1 }, // Ensure unique ID
-    ]);
-    setOpenCreateFormModal(false);
-  };
+  // bulk delete
+  // const deleteSelectedRows = () => {
+  //   console.log("Selected rows:", selectedRows);
+  //   setContacts((prev) =>
+  //     prev.filter((contact) => !selectedRows.includes(contact.id))
+  //   );
+
+  //   setSelectedRows([]);
+  //   setOpenDeleteMultipleModal(false);
+  //   console.log(contacts);
+  // };
 
   // Toggle single row selection
   const toggleRowSelection = (id) => {
@@ -87,15 +156,111 @@ const Contact = () => {
     );
   };
 
-  const deleteSelectedRows = () => {
-    console.log("Selected rows:", selectedRows);
-    setContacts((prev) =>
-      prev.filter((contact) => !selectedRows.includes(contact.id))
-    );
+  const multipleDelete = async () => {
+    try {
+      setDeleteLoading(true);
+      setCreateContactErrorMessage("");
+      if (!selectedRows || selectedRows.length === 0) {
+        throw new Error("No contacts selected for deletion.");
+      }
+      const response = await api.post(
+        `${baseUrl}/user/contacts/delete-multiple`,
+        { contact_id: selectedRows }, // Verify this key matches API expectation
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log("response", response);
+      if (response.status === 200 || response.status === 201) {
+        console.log("Contacts deleted successfully:", response);
+        setSelectedRows([]);
+        await RetryToFetchContact();
+        setOpenDeleteMultipleModal(false);
+        setToast({
+          title: "Deleted",
+          message: "Contacts deleted successfully.",
+          type: "success",
+        });
+      } else {
+        throw new Error("Failed to delete contacts");
+      }
+    } catch (error) {
+      console.error("Error deleting contacts:", error.response?.data || error);
+      setCreateContactError(error.message || "Failed to delete contacts");
+      setToast({
+        title: "Error",
+        message: `Failed to delete contacts.Please try again.`,
+        type: "error",
+      });
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
-    setSelectedRows([]);
-    setOpenDeleteMultipleModal(false);
-    console.log(contacts);
+  // create contact
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastName: "",
+    lastname: "",
+    phone_number: "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setCreateContactLoading(true);
+    setCreateContactError(null);
+    setCreateContactErrorMessage("");
+
+    try {
+      const response = await api.post(
+        `${baseUrl}/user/contacts/create`,
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      // Refresh contacts list after successful creation
+      await RetryToFetchContact();
+
+      // Clear form
+      setFormData({
+        firstname: "",
+        lastname: "",
+        email: "",
+        phone_number: "",
+      });
+
+      setToast({
+        title: "Created",
+        message: `Contact created successfully.`,
+        type: "success",
+      });
+
+      setOpenCreateFormModal(false);
+    } catch (error) {
+      console.error("Error creating contact:", error);
+      setCreateContactError(error.message || "Failed to create contact");
+
+      const phoneNumberError = error.response?.data?.err_msg?.phone_number;
+      const emailError = error.response?.data?.err_msg?.email;
+      const err_msg = error.response?.data?.msg;
+
+      setCreateContactErrorMessage(
+        emailError
+          ? emailError[0]
+          : phoneNumberError
+          ? phoneNumberError[0]
+          : err_msg ||
+            "An unexpected error occurred. Please check your internet and try again."
+      );
+    } finally {
+      setCreateContactLoading(false);
+    }
   };
 
   const openDeleteMultipleModel = () => {
@@ -185,7 +350,7 @@ const Contact = () => {
 
   // Function to filter contacts based on search query
   const filteredContacts = contacts.filter((contact) => {
-    const fullName = `${contact.firstName} ${contact.lastName}`.toLowerCase();
+    const fullName = `${contact.firstname} ${contact.lastname}`.toLowerCase();
     return (
       fullName.includes(searchQuery.toLowerCase()) ||
       contact.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -212,12 +377,10 @@ const Contact = () => {
     };
   }, [dropdownRef]);
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  const getGroupName = (contactId) => {
+    const contact = contacts.find((contact) => contact.id === contactId);
+    return contact?.group || "N/A";
+  };
 
   const columns = React.useMemo(
     () => [
@@ -242,11 +405,11 @@ const Contact = () => {
       },
       {
         Header: "First Name",
-        accessor: "firstName",
+        accessor: "firstname",
       },
       {
         Header: "Last Name",
-        accessor: "lastName",
+        accessor: "lastname",
       },
       {
         Header: "Email Address",
@@ -254,11 +417,11 @@ const Contact = () => {
       },
       {
         Header: "Phone Number",
-        accessor: "phone",
+        accessor: "phone_number",
       },
       {
         Header: "Associated Group",
-        accessor: "group",
+        Cell: ({ row }) => getGroupName(row.original.id),
       },
       {
         Header: "",
@@ -416,7 +579,7 @@ const Contact = () => {
           isOpenDeleteModal={isOpenDeleteModal}
           onClose={() => setIsOpenDeleteModal(false)}
           contact={selectedRow}
-          onDelete={deleteContact}
+          onDelete={handleDeleteContact}
         />
       )}
 
@@ -434,13 +597,15 @@ const Contact = () => {
           onClose={() => setOpenDeleteMultipleModal(false)}
           openDeleteModal={openDeleteMultipleModal}
           selectedContacts={selectedRows}
-          onDelete={deleteSelectedRows}
+          onDelete={multipleDelete}
         />
       )}
 
       {openCreateFormModal && (
         <CreateFormModal
-          onSubmit={addNewContact}
+          onSubmit={handleSubmit}
+          setFormData={setFormData}
+          formData={formData}
           contacts={contacts}
           isOpenModal={openCreateFormModal}
           onClose={() => setOpenCreateFormModal(false)}
