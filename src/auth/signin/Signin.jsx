@@ -1,15 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react"; // Changed import to React
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/slice/authSlice";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 import { useNavigate } from "react-router-dom";
-// import Cookies from "js-cookie"; // Only if you plan to use it
 import "./Signin.css";
-// import "@/App.css";
+// import "@/App.css"; // Commented out or remove if not needed
 
 const Signin = () => {
-  // Base URL for API requests
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const [email, setEmail] = useState("");
@@ -18,9 +16,9 @@ const Signin = () => {
     email: "",
     password: "",
     general: "",
-  }); // Added general error
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // To prevent multiple submissions
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,13 +37,10 @@ const Signin = () => {
     return password.length >= 8;
   };
 
-  // No longer needed as handleSubmit will handle full validation
-  // const isFormFilled = email && password && validateEmail(email) && validatePassword(password);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({ email: "", password: "", general: "" }); // Clear previous errors
-    setLoading(true); // Start loading state
+    setErrors({ email: "", password: "", general: "" });
+    setLoading(true);
 
     let formIsValid = true;
     const newErrors = { email: "", password: "", general: "" };
@@ -62,17 +57,29 @@ const Signin = () => {
 
     if (!formIsValid) {
       setErrors(newErrors);
-      setLoading(false); // End loading state if validation fails
+      setLoading(false);
       return;
     }
 
-    // If form is valid, proceed with API call
     try {
+      // ----------------------------------------------------
+      // FIX STARTS HERE
+      // Instead of URLSearchParams, create a plain JavaScript object
+      // and stringify it to JSON.
+      const requestBody = {
+        email: email,
+        password: password,
+      };
+
       const response = await fetch(`${BASE_URL}/user/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, password: password }),
+        headers: {
+          "Content-Type": "application/json", // This header is correct
+        },
+        body: JSON.stringify(requestBody), // <--- Send JSON string
       });
+      // FIX ENDS HERE
+      // ----------------------------------------------------
 
       let data = {};
       try {
@@ -80,27 +87,33 @@ const Signin = () => {
         data = text ? JSON.parse(text) : {};
       } catch (parseError) {
         console.error("Failed to parse response JSON:", parseError);
+        // Handle cases where response is not valid JSON, e.g., HTML 404 page
+        if (!response.ok) {
+          newErrors.general = `Server error (${
+            response.status
+          }): ${"An unexpected error occurred."}`;
+          setErrors(newErrors);
+          setLoading(false);
+          return;
+        }
       }
 
       console.log("response", response);
       if (data.err_msg === "Verify to activate account!") {
-        // Redirect to OTP verification screen (SignUpForm will handle popup)
         navigate("/signup");
         setLoading(false);
         return;
       }
-      if (response.ok) {
-        // Assuming your API returns an accessToken in data
-        localStorage.setItem("accessToken", data.accessToken); // Store the actual token
+      if (response.status === 200 || response.status === 201) {
+        localStorage.setItem("accessToken", data.accessToken);
         console.log("access token", data.accessToken);
         const userData = {
           email: data.email /* any other user data from response */,
         };
         dispatch(loginSuccess(userData));
         console.log("Login successful:", response);
-        navigate("/dashboard/overview"); // Redirect to home page
+        navigate("/dashboard/overview");
       } else {
-        // Handle API errors (e.g., incorrect credentials)
         newErrors.general =
           data.message || "Login failed. Please Try again later.";
         setErrors(newErrors);
@@ -110,7 +123,7 @@ const Signin = () => {
       newErrors.general = "Network error. Please try again later.";
       setErrors(newErrors);
     } finally {
-      setLoading(false); // Always stop loading state
+      setLoading(false);
     }
   };
 
@@ -173,7 +186,7 @@ const Signin = () => {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      setErrors((prev) => ({ ...prev, email: "" })); // Clear email error on change
+                      setErrors((prev) => ({ ...prev, email: "" }));
                     }}
                   />
                 </div>
@@ -196,7 +209,7 @@ const Signin = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      setErrors((prev) => ({ ...prev, password: "" })); // Clear password error on change
+                      setErrors((prev) => ({ ...prev, password: "" }));
                     }}
                   />
                   <img
@@ -219,8 +232,7 @@ const Signin = () => {
                   loader={
                     loading ? <span className="spinner mr-2 "></span> : ""
                   }
-                  onClick={loading ? " " : handleSubmit} // This will trigger onSubmit of the form
-                  // disabled={loading}
+                  onClick={loading ? " " : handleSubmit}
                   className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] ${
                     loading
                       ? "opacity-[0.9] cursor-not-allowed bg-[#383268]"

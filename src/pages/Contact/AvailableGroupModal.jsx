@@ -147,6 +147,7 @@ const AvailableGroupModal = ({
                       groupId={items.id}
                       groupName={items.name}
                       moveContactsToGroup={moveContactsToGroup}
+                      onClose={onClose}
                     />
                   </div>
                 ))}

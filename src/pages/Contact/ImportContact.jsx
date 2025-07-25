@@ -4,7 +4,7 @@ import { Icons } from "../../assets/assets";
 import Papa from "papaparse";
 import Button from "../../Components/buttons/transparentButton";
 import UploadProgress from "../../Components/ProgressBar/UploadProgress";
-
+import { useContacts } from "../../redux/ContactProvider/UseContact";
 const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -18,6 +18,12 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
   const [statusText, setStatusText] = useState("");
   const [uploadError, setUploadError] = useState(null);
 
+  const {
+    importContact,
+    createContactLoading,
+    createContactErrorMessage,
+    RetryToFetchContact,
+  } = useContacts();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -64,70 +70,104 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
 
     setIsLoading(true);
     setProgress(0);
-    setStatusText("Uploading in progress...");
+    setStatusText("Parsing file...");
     setUploadedFile(file);
     setUploadError(null); // Reset error on new upload attempt
 
     try {
       Papa.parse(file, {
-        complete: (result) => {
+        complete: async (result) => {
+          // Mark complete as async since we'll await importContact
           const rawData = result.data;
-          let duplicateFound = false;
+          let duplicateFoundInClientSide = false;
 
-          const newContacts = rawData
-            .slice(1)
-            .map((row, index) => {
+          // Process raw data from CSV, skipping header row (index 0)
+          const contactsToImport = rawData
+            .slice(1) // Skip the header row
+            .map((row) => {
+              // Ensure row has enough columns before accessing
+              if (row.length < 4) {
+                console.warn("Skipping row due to insufficient columns:", row);
+                return null; // Skip invalid rows
+              }
               const contact = {
-                id:
-                  (contacts.length ? contacts[contacts.length - 1].id : 0) +
-                  index +
-                  1,
                 firstName: row[0]?.trim() || "",
                 lastName: row[1]?.trim() || "",
                 phone: row[2]?.trim() || "",
                 email: row[3]?.trim() || "",
-                group: "N/A",
+                group: "N/A", // Default group
               };
 
+              // Client-side check for duplicates (optional, backend should also validate)
               const isDuplicate = contacts.some(
                 (c) =>
                   c.email === contact.email ||
                   c.phone === contact.phone ||
                   (c.firstName === contact.firstName &&
-                    c.lastName === contact.lastName)
+                    c.lastName === contact.lastName &&
+                    contact.firstName !== "" &&
+                    contact.lastName !== "") // Only consider name duplicates if names are actually provided
               );
 
               if (isDuplicate) {
-                duplicateFound = true;
-                return null;
+                duplicateFoundInClientSide = true;
+                return null; // Exclude client-side duplicates from the list to send to API
               }
               return contact;
             })
-            .filter(Boolean);
+            .filter(Boolean); // Remove null entries (skipped rows or client-side duplicates)
 
-          if (duplicateFound) {
-            alert("Duplicated contact");
+          if (duplicateFoundInClientSide) {
+            // Set a message for duplicates found before API call
+            console.log(
+              "Some contacts were skipped due to client-side duplication."
+            );
           }
 
-          setParsedContacts(newContacts);
-          setImportedCount(newContacts.length);
+          // If there are contacts to import after client-side filtering
+          if (contactsToImport.length > 0) {
+            setStatusText("Uploading contacts to server...");
+            try {
+              // Call the importContact API function
+              await importContact(contactsToImport);
+              setImportedCount(contactsToImport.length); // Assuming all sent were successfully imported if no error
+              setProgress(100);
+              setStatusText("Import completed successfully!");
+              setUploadError(null); // Clear any previous API errors
+            } catch (apiErr) {
+              console.error("API Import Error:", apiErr);
+              setUploadError(
+                createContactErrorMessage ||
+                  "Failed to import contacts via API."
+              );
+              setProgress(0);
+              setStatusText("Import failed.");
+            }
+          } else {
+            setStatusText(
+              "No valid contacts to import after parsing or all were duplicates."
+            );
+            setImportedCount(0);
+            setProgress(100);
+          }
+
           setIsLoading(false);
-          setProgress(100);
-          setStatusText("Uploading completed");
         },
         error: (error) => {
           console.error("Parsing error:", error);
-          setUploadError("Failed to parse file. Please try again.");
+          setUploadError(
+            "Failed to parse file. Please ensure it's a valid CSV."
+          );
           setIsLoading(false);
           setProgress(0);
           setStatusText("Upload failed");
         },
-        header: false,
+        header: false, // Assuming no header in your CSV based on your row[0], row[1] indexing
         skipEmptyLines: true,
       });
     } catch (err) {
-      console.error("Upload error:", err);
-      setUploadError("An error occurred during upload.");
+      console.error("General error during file processing:", err);
+      setUploadError("An unexpected error occurred during file processing.");
       setIsLoading(false);
       setProgress(0);
       setStatusText("Upload failed");
@@ -289,8 +329,8 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
                       </p>
                       <div>
                         <p className="text-[12px] text-[#5E5E5E] font-normal">
-                          File: {uploadedFile.name} {" "} | {" "}
-                          {(uploadedFile.size / 1024).toFixed(2)} KB . {" "}
+                          File: {uploadedFile.name} |{" "}
+                          {(uploadedFile.size / 1024).toFixed(2)} KB .{" "}
                           {new Date(uploadedFile.lastModified)
                             .toLocaleDateString("en-US", {
                               day: "numeric",
@@ -302,7 +342,12 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
                       </div>
                     </div>
                   </div>
-                  <img src={Icons.trashIcon } alt="delete" onClick={handleDeleteFile} className="cursor-pointer" />
+                  <img
+                    src={Icons.trashIcon}
+                    alt="delete"
+                    onClick={handleDeleteFile}
+                    className="cursor-pointer"
+                  />
                 </div>
               ) : null}
             </div>
@@ -327,4 +372,4 @@ const ImportContact = ({ isOpen, onClose, contacts, setContacts }) => {
   );
 };
 
-export default ImportContact; 
+export default ImportContact;

@@ -134,17 +134,6 @@ const Contact = () => {
     }
   };
 
-  // bulk delete
-  // const deleteSelectedRows = () => {
-  //   console.log("Selected rows:", selectedRows);
-  //   setContacts((prev) =>
-  //     prev.filter((contact) => !selectedRows.includes(contact.id))
-  //   );
-
-  //   setSelectedRows([]);
-  //   setOpenDeleteMultipleModal(false);
-  //   console.log(contacts);
-  // };
 
   // Toggle single row selection
   const toggleRowSelection = (id) => {
@@ -176,6 +165,9 @@ const Contact = () => {
       if (response.status === 200 || response.status === 201) {
         console.log("Contacts deleted successfully:", response);
         setSelectedRows([]);
+        setContacts((prevContacts) =>
+          prevContacts.filter((contact) => !selectedRows.includes(contact.id))
+        );
         await RetryToFetchContact();
         setOpenDeleteMultipleModal(false);
         setToast({

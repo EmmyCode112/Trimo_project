@@ -38,7 +38,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
 
   useEffect(() => {
     // Check if there is a pending OTP in localStorage
-    const pendingOtp = localStorage.getItem("pendingOtp");
+    const pendingOtp = localStorage.getItem("pendingOtpRequest");
     const pendingEmail = localStorage.getItem("pendingOtpEmail");
     if (pendingOtp && pendingEmail) {
       setEmail(pendingEmail);
@@ -118,7 +118,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
     setLoading(true);
 
     // Prevent duplicate registration if pending OTP exists for this email
-    const pendingOtp = localStorage.getItem("pendingOtp");
+    const pendingOtp = localStorage.getItem("pendingOtpRequest");
     const pendingEmail = localStorage.getItem("pendingOtpEmail");
     if (pendingOtp && pendingEmail === email) {
       toast.error(
@@ -183,7 +183,7 @@ const SignUpForm = ({ setShowOtpPopUp }) => {
         // Show OTP form if registration was successful
         setShowOtpPopUp(true);
         // Store pending OTP state in localStorage
-        localStorage.setItem("pendingOtp", "true");
+        localStorage.setItem("pendingOtpRequest", "true");
         localStorage.setItem("pendingOtpEmail", email);
         setLoading(false);
       } catch (error) {
