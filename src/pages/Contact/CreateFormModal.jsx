@@ -2,12 +2,38 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
+import { useContacts } from "@/redux/ContactProvider/UseContact";
 
-const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
-  const [error, setError] = useState(false);
+const CreateFormModal = ({
+  isOpenModal,
+  onClose,
+  onSubmit,
+  contacts,
+  setFormData,
+  formData,
+}) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
+  const {
+    createContactLoading,
+    createContactError,
+    createContactErrorMessage,
+    setCreateContactErrorMessage,
+  } = useContacts();
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpenModal) {
+      setFormData({
+        firstname: "",
+        lastname: "",
+        email: "",
+        phone_number: "",
+      });
+      setCreateContactErrorMessage("");
+    }
+  }, [isOpenModal, setFormData]);
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -54,49 +80,27 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
 
   if (!isOpenModal) return null;
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    group: "N/A", // Default group
-  });
-
-  // Check if any field is empty
   const isFormIncomplete =
-    !formData.firstName ||
-    !formData.lastName ||
+    !formData.firstname ||
+    !formData.lastname ||
     !formData.email ||
-    !formData.phone;
+    !formData.phone_number;
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const duplicate = contacts.some(
-      (contact) =>
-        contact.email === formData.email || contact.phone === formData.phone
-    );
-
-    if (duplicate) {
-      setError(true);
-      return;
-    }
-
-    onSubmit(formData);
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px] ">
+    <div className="fixed inset-0 z-50 bg-[#C7C7C74D] backdrop-blur-[8.1px]">
       <div
         ref={modalRef}
         className={`fixed bg-white overflow-y-scroll hide-scrollBar ${
           isMobile
             ? "inset-x-0 bottom-0 rounded-t-[40px] p-3"
-            : "top-4 bottom-4 right-3 w-[517px] rounded-[30px] p-[22px] "
+            : "top-4 bottom-4 right-3 w-[517px] rounded-[30px] p-[22px]"
         }`}
         onTouchStart={handleDragStart}
         onMouseDown={handleDragStart}
@@ -134,14 +138,9 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
                     />
                     <input
                       type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          firstName: e.target.value,
-                        }))
-                      }
+                      name="firstname"
+                      value={formData.firstname}
+                      onChange={handleChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
                   </div>
@@ -158,14 +157,9 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
                     />
                     <input
                       type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          lastName: e.target.value,
-                        }))
-                      }
+                      name="lastname"
+                      value={formData.lastname}
+                      onChange={handleChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
                   </div>
@@ -184,12 +178,7 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
                       type="email"
                       name="email"
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
+                      onChange={handleChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
                   </div>
@@ -206,43 +195,24 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
                     />
                     <input
                       type="text"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
-                      }
+                      name="phone_number"
+                      value={formData.phone_number}
+                      onChange={handleChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
                   </div>
                 </label>
               </div>
               <div>
-                {error && (
-                  <div className="flex bg-[#FBF1E6] items-start border border-[#E29133] gap-3 p-4 rounded-[8px]">
-                    <img src={Icons.errorWarningIcon} alt="error" />
-                    <div>
-                      <p className="text-[#DB7500] text-[14px] font-medium">
-                        Duplicate Entry
-                      </p>
-                      <p className="text-[#C76A00] text-[14px] font-normal">
-                        This contact is already in your list. Avoid duplicates
-                        to streamline delivery.
-                      </p>
-                    </div>
-                    <img
-                      src={Icons.closeXIcon}
-                      alt=""
-                      className="cursor-pointer"
-                      onClick={() => setError(true)}
-                    />
-                  </div>
+                {createContactErrorMessage && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {createContactErrorMessage}
+                  </p>
                 )}
               </div>
             </form>
           </div>
+
           <div className="self-end align-end flex items-center gap-3">
             <Button
               label="Cancel"
@@ -250,8 +220,18 @@ const CreateFormModal = ({ isOpenModal, onClose, onSubmit, contacts }) => {
               className="rounded-[8px] border border-[#C1BFDO] hover:bg-[#eeeff0]"
             />
             <Button
-              label="Add Contact"
-              onClick={handleSubmit}
+              label={
+                <p>
+                  {createContactLoading ? (
+                    <div className="flex items-center gap-2 opacity-[.7]">
+                      <div className="spinner"></div>Adding...
+                    </div>
+                  ) : (
+                    "Add Contact"
+                  )}
+                </p>
+              }
+              onClick={onSubmit}
               disabled={isFormIncomplete}
               className={`rounded-[8px] border border-[#C1BFDO] bg-[#383268] hover:bg-[#41397c] text-white`}
             />

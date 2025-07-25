@@ -2,17 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-
+import { useContacts } from "@/redux/ContactProvider/UseContact";
 const DeleteMultipleModal = ({
   openDeleteModal,
   onClose,
   onDelete,
-  selectedContacts
+  selectedContacts,
 }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
-
+  const { deleteLoading } = useContacts();
   // Close modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,8 +60,7 @@ const DeleteMultipleModal = ({
 
   const handleDelete = () => {
     onDelete();
-    console.log("selected contacts", selectedContacts)
-    onClose();
+    console.log("selected contacts", selectedContacts);
   };
 
   return (
@@ -100,11 +99,14 @@ const DeleteMultipleModal = ({
             />
             <div>
               <h2 className="mb-1 text-[#1A1A1A] text-[20px] font-medium">
-                {`Delete ${selectedContacts.length} ${selectedContacts.length > 1 ? "Contacts" : "Contact" }`}
+                {`Delete ${selectedContacts.length} ${
+                  selectedContacts.length > 1 ? "Contacts" : "Contact"
+                }`}
               </h2>
               <p className="text-[#767676] font-normal text-[15px] w-[80%] max-sm:w-full">
-                Are you sure you want to delete this {`${selectedContacts.length > 1 ? "Contacts" : "Contact" }`}? This action cannot
-                be undone.
+                Are you sure you want to delete this{" "}
+                {`${selectedContacts.length > 1 ? "Contacts" : "Contact"}`}?
+                This action cannot be undone.
               </p>
             </div>
           </div>
@@ -117,7 +119,15 @@ const DeleteMultipleModal = ({
 
             <Button
               onClick={handleDelete}
-              label="Delete Contact"
+              label={
+                deleteLoading ? (
+                  <div className="flex items-center gap-2 opacity-[.7]">
+                    <div className="spinner" /> Deleting...
+                  </div>
+                ) : (
+                  "Delete"
+                )
+              }
               className="rounded-[8px] border bg-[#CB1E33] text-white"
             />
           </div>

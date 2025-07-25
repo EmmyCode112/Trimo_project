@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-
+import { useContacts } from "@/redux/ContactProvider/UseContact";
 const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
+
+  const { createContactLoading, createContactErrorMessage } = useContacts();
   // Close modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -54,19 +56,19 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
 
   // Form state
   const [formValues, setFormValues] = useState({
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
-    phone: "",
+    phone_number: "",
   });
 
   useEffect(() => {
     if (rowData) {
       setFormValues({
-        firstName: rowData.firstName || "",
-        lastName: rowData.lastName || "",
+        firstname: rowData.firstname || "",
+        lastname: rowData.lastname || "",
         email: rowData.email || "",
-        phone: rowData.phone || "",
+        phone_number: rowData.phone_number || "",
       });
     }
   }, [rowData]);
@@ -74,35 +76,14 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
   useEffect(() => {
     if (!rowData) return;
 
-    const hasFormChanged = Object.keys(formValues).some(
-      (key) => formValues[key].trim() !== (rowData[key] || "").trim()
-    );
+    const hasFormChanged =
+      formValues.firstname.trim() !== (rowData.firstname || "").trim() ||
+      formValues.lastname.trim() !== (rowData.lastname || "").trim() ||
+      formValues.email.trim() !== (rowData.email || "").trim() ||
+      formValues.phone_number.trim() !== (rowData.phone_number || "").trim();
 
     setHasChanges(hasFormChanged);
     setIsSaveDisabled(!hasFormChanged);
-  }, [formValues, rowData]);
-
-  // Check if Save button should be enabled
-  useEffect(() => {
-    const { firstName, lastName, email, phone } = formValues;
-    const isFormValid =
-      firstName.trim() &&
-      lastName.trim() &&
-      email.trim() &&
-      phone.trim() &&
-      validateEmail(email) &&
-      validateWorkPhone(phone);
-
-    // Compare current form values with the original rowData
-    const hasFormChanged =
-      rowData &&
-      (firstName !== rowData.firstName ||
-        lastName !== rowData.lastName ||
-        email !== rowData.email ||
-        phone !== rowData.phone);
-
-    setHasChanges(hasFormChanged);
-    setIsSaveDisabled(!isFormValid || !hasFormChanged);
   }, [formValues, rowData]);
 
   // Handle form input change
@@ -127,7 +108,6 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
   const handleSave = () => {
     const updatedContact = { ...rowData, ...formValues };
     onSave(updatedContact);
-    onClose();
   };
 
   if (!isOpenEditModal) return null;
@@ -179,8 +159,8 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
                     />
                     <input
                       type="text"
-                      name="firstName"
-                      value={formValues.firstName}
+                      name="firstname"
+                      value={formValues.firstname}
                       onChange={handleInputChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
@@ -198,8 +178,8 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
                     />
                     <input
                       type="text"
-                      name="lastName"
-                      value={formValues.lastName}
+                      name="lastname"
+                      value={formValues.lastname}
                       onChange={handleInputChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
@@ -236,14 +216,21 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
                     />
                     <input
                       type="text"
-                      name="phone"
-                      value={formValues.phone}
+                      name="phone_number"
+                      value={formValues.phone_number}
                       onChange={handleInputChange}
                       className="w-full outline-none border-none text-[#667085] text-[16px] font-[400]"
                     />
                   </div>
                 </label>
               </div>
+              <p>
+                {createContactErrorMessage && (
+                  <span className="text-red-500">
+                    {createContactErrorMessage}
+                  </span>
+                )}
+              </p>
             </form>
           </div>
           <div className="self-end align-end flex items-center gap-3 justify-self-end ">
@@ -253,7 +240,16 @@ const EditContactModal = ({ isOpenEditModal, onClose, rowData, onSave }) => {
               className="rounded-[8px] border border-[#C1BFDO] hover:bg-[#eeeff0]"
             />
             <Button
-              label="Save"
+              label={
+                createContactLoading ? (
+                  <div className="flex items-center gap-2 opacity-[.7]">
+                    <div className="spinner" />
+                    Updating...
+                  </div>
+                ) : (
+                  "Save"
+                )
+              }
               onClick={handleSave}
               disabled={isSaveDisabled}
               className={`rounded-[8px] border border-[#C1BFDO] bg-[#383268] hover:bg-[#41397c] text-white`}

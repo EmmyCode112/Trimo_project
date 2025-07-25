@@ -3,10 +3,13 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
 
+import { useContacts } from "@/redux/ContactProvider/UseContact";
 const DeleteModal = ({ isOpenDeleteModal, onClose, contact, onDelete }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
+
+  const { deleteLoading, deleteError } = useContacts();
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -106,7 +109,15 @@ const DeleteModal = ({ isOpenDeleteModal, onClose, contact, onDelete }) => {
 
             <Button
               onClick={() => onDelete(contact.id)}
-              label="Delete Contact"
+              label={
+                deleteLoading ? (
+                  <div className="flex items-center gap-2 opacity-[.7]">
+                    <div className="spinner" /> Deleting...
+                  </div>
+                ) : (
+                  "Delete"
+                )
+              }
               className="rounded-[8px] border bg-[#CB1E33] text-white"
             />
           </div>

@@ -16,7 +16,7 @@ const SetUp = () => {
   const [successfulSetup, setSuccessfulSetup] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const { completeProfile } = useAuth();
 
@@ -26,7 +26,7 @@ const SetUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     // Clear error when user types
     if (errors[e.target.name]) {
-      setErrors(prev => ({ ...prev, [e.target.name]: "" }));
+      setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
     }
   };
 
@@ -46,22 +46,24 @@ const SetUp = () => {
           number_of_employees: selectedEmployees,
           country_code: "+234", // Default to Nigeria for now
           what_to_achieve: [], // These will be filled in subsequent steps
-          best_describes: [] // These will be filled in subsequent steps
+          best_describes: [], // These will be filled in subsequent steps
         };
 
-        console.log('Submitting profile data:', profileData);
+        console.log("Submitting profile data:", profileData);
         const response = await completeProfile(profileData);
-        console.log('Profile completion response:', response);
+        console.log("Profile completion response:", response);
 
         if (response.msg === "") {
           setCurrentStep((prevStep) => prevStep + 1);
         }
       } catch (error) {
-        console.error('Profile completion failed:', error);
+        console.error("Profile completion failed:", error);
         if (error.err_msg) {
           setErrors(error.err_msg);
         } else {
-          setErrors({ submit: "Failed to complete profile. Please try again." });
+          setErrors({
+            submit: "Failed to complete profile. Please try again.",
+          });
         }
       } finally {
         setLoading(false);
@@ -77,7 +79,12 @@ const SetUp = () => {
             <h4 className="font-[600] text-[28px] tracking-[-2px]">
               Setup Triimo to work for your business
             </h4>
-            <form onSubmit={(e) => { e.preventDefault(); handleProceed(); }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleProceed();
+              }}
+            >
               {/* Company Name */}
               <label className="flex flex-col gap-[6px]">
                 <p className="text-[14px] font-[500] text-[#1A1A1A]">
@@ -100,7 +107,7 @@ const SetUp = () => {
               </label>
 
               {/* Work Phone */}
-              <label className="flex flex-col gap-[6px]">
+              <label className="flex flex-col gap-[6px] mt-2">
                 <p className="text-[14px] font-[500] text-[#1A1A1A]">
                   Work Phone
                 </p>
@@ -116,7 +123,9 @@ const SetUp = () => {
                   />
                 </div>
                 {errors.work_phone_number && (
-                  <p className="text-red-500 text-sm">{errors.work_phone_number}</p>
+                  <p className="text-red-500 text-sm">
+                    {errors.work_phone_number}
+                  </p>
                 )}
               </label>
 
@@ -154,7 +163,9 @@ const SetUp = () => {
                   ))}
                 </div>
                 {errors.number_of_employees && (
-                  <p className="text-red-500 text-sm">{errors.number_of_employees}</p>
+                  <p className="text-red-500 text-sm">
+                    {errors.number_of_employees}
+                  </p>
                 )}
               </fieldset>
 
@@ -169,7 +180,9 @@ const SetUp = () => {
                 label={loading ? "Processing..." : "Proceed"}
                 disabled={!isFormValid || loading}
                 className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] ${
-                  isFormValid && !loading ? "opacity-100" : "opacity-50 cursor-not-allowed"
+                  isFormValid && !loading
+                    ? "opacity-100"
+                    : "opacity-50 cursor-not-allowed"
                 }`}
               />
             </form>
@@ -180,13 +193,13 @@ const SetUp = () => {
       case 3:
         return (
           <div>
-            <CaseEighty handleProceed={handleProceed}/>
+            <CaseEighty handleProceed={handleProceed} />
           </div>
         );
       case 4:
         return (
           <div>
-            <CaseHundred setSuccessfulSetup={setSuccessfulSetup}/>
+            <CaseHundred setSuccessfulSetup={setSuccessfulSetup} />
           </div>
         );
       default:
@@ -196,44 +209,53 @@ const SetUp = () => {
 
   return (
     <>
-    {
-      successfulSetup ? <><PopUp/></> : 
-      <div className="flex h-[100vh] overflow-hidden w-[100vw] pr-[65px] max-lg:px-5 max-sm:py-5">
-      <div className="h-[100vh] w-[504px] signin-right-con flex flex-col justify-end relative items-end max-lg:hidden">
-        <img
-          src={Icons.trimoDashboard}
-          alt="Trimo Dashboard"
-          className="object-center object-contain h-[560px] absolute bottom-[5%] right-0"
-        />
-      </div>
-
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="w-[45%] mx-auto auth-right-container">
-          <div className="flex items-center">
-            <div className="relative w-[424px] h-2 bg-[#EAECF0] rounded-full progress-bar">
-              <div
-                className="absolute top-0 left-0 h-2 rounded-full bg-[#383268]"
-                style={{
-                  width:
-                    currentStep === 1
-                      ? "30%"
-                      : currentStep === 2
-                      ? "60%"
-                      : currentStep === 3
-                      ? "90%"
-                      : "100%",
-                }}
-              />
-            </div>
-            <p className="text-[#344054] text-[14px] font-medium">
-              {currentStep === 1 ? "30%" : currentStep === 2 ? "60%" : currentStep === 3 ? "90%" : "100%"}
-            </p>
+      {successfulSetup ? (
+        <>
+          <PopUp />
+        </>
+      ) : (
+        <div className="flex h-[100vh] overflow-hidden w-[100vw] pr-[65px] max-lg:px-5 max-sm:py-5">
+          <div className="h-[100vh] w-[504px] signin-right-con flex flex-col justify-end relative items-end max-lg:hidden">
+            <img
+              src={Icons.trimoDashboard}
+              alt="Trimo Dashboard"
+              className="object-center object-contain h-[560px] absolute bottom-[5%] right-0"
+            />
           </div>
-          {renderStep()}
+
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="w-[45%] mx-auto auth-right-container">
+              <div className="flex items-center">
+                <div className="relative w-[424px] h-2 bg-[#EAECF0] rounded-full progress-bar">
+                  <div
+                    className="absolute top-0 left-0 h-2 rounded-full bg-[#383268]"
+                    style={{
+                      width:
+                        currentStep === 1
+                          ? "30%"
+                          : currentStep === 2
+                          ? "60%"
+                          : currentStep === 3
+                          ? "90%"
+                          : "100%",
+                    }}
+                  />
+                </div>
+                <p className="text-[#344054] text-[14px] font-medium">
+                  {currentStep === 1
+                    ? "30%"
+                    : currentStep === 2
+                    ? "60%"
+                    : currentStep === 3
+                    ? "90%"
+                    : "100%"}
+                </p>
+              </div>
+              {renderStep()}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    }
+      )}
     </>
   );
 };
