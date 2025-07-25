@@ -29,6 +29,11 @@ export const AuthProvider = ({ children }) => {
         throw { err_msg: response.err_msg };
       }
 
+      // Store accessToken in localStorage if present
+      if (response.accessToken) {
+        localStorage.setItem("accessToken", response.accessToken);
+      }
+
       if (response.accessToken) {
         Cookies.set("authToken", response.accessToken);
         Cookies.set("userData", JSON.stringify(userData));
