@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Button from "../../Components/buttons/transparentButton";
+import PropTypes from "prop-types";
 
-const CaseEighty = ({ handleProceed }) => {
-  const [selectedGoals, setSelectedGoals] = useState([]);
+const CaseEighty = ({ handleProceed, initialData }) => {
+  const [selectedGoals, setSelectedGoals] = useState(initialData?.whatToAchieve || []);
   const [otherDescription, setOtherDescription] = useState("");
 
   // Handle goal selection (Allow Multiple)
@@ -35,6 +36,15 @@ const CaseEighty = ({ handleProceed }) => {
     selectedGoals.length > 0 &&
     (!selectedGoals.includes("Others") || otherDescription.trim() !== "");
 
+  const handleProceedClick = () => {
+    let finalGoals = [...selectedGoals];
+    if (selectedGoals.includes("Others") && otherDescription.trim()) {
+      finalGoals = finalGoals.filter(goal => goal !== "Others");
+      finalGoals.push(otherDescription);
+    }
+    handleProceed({ whatToAchieve: finalGoals });
+  };
+
   // List of goal options
   const goals = [
     "Onboard / Retain Customers",
@@ -53,7 +63,7 @@ const CaseEighty = ({ handleProceed }) => {
           Your Goals and Experience
         </h4>
         <p className="text-[#767676] font-medium text-[16px]">
-          Let’s get you up and running quickly
+          Let's get you up and running quickly
         </p>
       </div>
 
@@ -107,12 +117,17 @@ const CaseEighty = ({ handleProceed }) => {
       {/* Proceed Button */}
       <Button
         label="Proceed"
-        onClick={handleProceed}
+        onClick={handleProceedClick}
         disabled={!isProceedEnabled}
         className="bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]"
       />
     </div>
   );
+};
+
+CaseEighty.propTypes = {
+  handleProceed: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
 };
 
 export default CaseEighty;

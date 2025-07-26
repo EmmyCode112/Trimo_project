@@ -107,8 +107,12 @@ const Signin = () => {
       if (response.status === 200 || response.status === 201) {
         localStorage.setItem("accessToken", data.accessToken);
         console.log("access token", data.accessToken);
+        // Store complete user details in localStorage
+        localStorage.setItem("userDetails", JSON.stringify(data.userDetails));
+        
         const userData = {
-          email: data.email /* any other user data from response */,
+          ...data.userDetails, // Store all user details
+          accessToken: data.accessToken
         };
         dispatch(loginSuccess(userData));
         console.log("Login successful:", response);

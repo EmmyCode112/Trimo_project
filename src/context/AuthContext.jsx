@@ -12,12 +12,39 @@ export const AuthProvider = ({ children }) => {
     // Check for existing auth token on mount
     const token = Cookies.get("authToken");
     const userData = Cookies.get("userData");
+    const storedUserDetails = localStorage.getItem("userDetails");
 
-    if (token && userData) {
-      setUser(JSON.parse(userData));
+    if (token && (userData || storedUserDetails)) {
+      const userInfo = storedUserDetails ? JSON.parse(storedUserDetails) : JSON.parse(userData);
+      setUser(userInfo);
     }
     setLoading(false);
   }, []);
+
+  const login = async (email, password) => {
+    try {
+      const response = await authAPI.login({ email, password });
+      console.log("Login response:", response);
+
+      // Check for error messages in the response
+      if (response.err_msg) {
+        throw { err_msg: response.err_msg };
+      }
+
+      // Store accessToken and user details
+      if (response.accessToken) {
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("userDetails", JSON.stringify(response.userDetails));
+        Cookies.set("authToken", response.accessToken);
+        Cookies.set("userData", JSON.stringify(response.userDetails));
+        setUser(response.userDetails);
+      }
+      return response;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
 
   const register = async (userData) => {
     try {
@@ -96,6 +123,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    login,
     register,
     verifyOTP,
     completeProfile,
