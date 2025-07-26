@@ -59,6 +59,10 @@ const Contact = () => {
     setOpenDropdownRow(null);
   };
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
+
   // update user
   const updateContact = async (userData) => {
     try {
