@@ -1,17 +1,29 @@
 import { useState } from "react";
 import Button from "../../Components/buttons/transparentButton";
 import { Icons } from "../../assets/assets";
-import EmptyState from "./EmptyState";
 import GroupsContainer from "./GroupsContainer";
 import CreateGroupModal from "./CreateGroupModal";
 import DeleteGroupModal from "./DeleteGroupModal";
 import FolderDetailModal from "./FolderDetailModal";
 import "./Groups.css";
-
+import Toast from "@/Components/Alerts/Toast";
 import { useGroups } from "../../redux/GroupProvider/UseGroup";
+import { asyncThunkCreator } from "@reduxjs/toolkit";
 
 const Group = () => {
-  const { groups, setGroups } = useGroups();
+  const {
+    groups,
+    setGroups,
+    createGroup,
+    createGroupError,
+    RetryToFetchGroups,
+    error,
+    setCreateGroupError,
+    deleteGroup,
+
+    deleteGroupError,
+    deleteError,
+  } = useGroups();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -20,26 +32,66 @@ const Group = () => {
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [openCreateFormModal, setOpenCreateFormModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [toast, setToast] = useState({
+    isOpen: false,
+    message: "",
+    type: "success",
+  });
+  // This should be in your component where you use useGroups
+  // Assuming setToast is defined in this component
 
-  const handleCreateGroup = (groupName) => {
+  const handleCreateGroup = async (groupName) => {
+    setDuplicateError(false); // Clear any previous duplicate error
+    setCreateGroupError(""); // Clear errors from previous create attempts
+    // Clear `error` state (for name field specific errors) from previous create attempts
+    // This depends on how `error` is managed and if you reset it in the context's `createGroup`
+
     const isDuplicate = groups.some(
       (group) => group.name.toLowerCase() === groupName.toLowerCase()
     );
 
     if (isDuplicate) {
       setDuplicateError(true);
+      setToast({
+        isOpen: true,
+        message: "A group with this name already exists.",
+        type: "error",
+      });
+      return; // Exit if duplicate found
+    }
+
+    // Ensure groupName is valid before attempting API call
+    if (!groupName.trim()) {
+      setToast({
+        isOpen: true,
+        message: "Group name cannot be empty.",
+        type: "error",
+      });
       return;
     }
 
-    if (groupName.trim()) {
-      setGroups([
-        ...groups,
-        { id: groups.length + 1, name: groupName, contacts: [] },
-      ]);
-    }
+    // Await the createGroup call to ensure it completes before retrying fetch
+    await createGroup({ name: groupName, contacts: [] });
 
-    setDuplicateError(false);
-    setIsModalOpen(false);
+    // Now, check the error states from the context after the API call
+    // It's crucial that createGroup updates `createGroupError` and `error` states *before* this check
+    if (createGroupError || error) {
+      // Check both general create error and specific 'name' error
+      setToast({
+        isOpen: true,
+        message: createGroupError || error, // Show the most relevant error
+        type: "error",
+      });
+    } else {
+      // Only refetch and show success if no errors occurred
+      await RetryToFetchGroups(); // Await to ensure contacts are updated before showing success
+      setToast({
+        isOpen: true,
+        message: "Group created successfully",
+        type: "success",
+      });
+      setIsModalOpen(false); // Close modal only on success
+    }
   };
   const toggleSelection = (id) => {
     setSelectedFolders((prev) =>
@@ -49,8 +101,30 @@ const Group = () => {
     );
   };
 
-  const handleDelete = () => {
-    setGroups(groups.filter((group) => !selectedFolders.includes(group.id)));
+  const handleDelete = async () => {
+    if (selectedFolders.length > 0) {
+      await deleteGroup(selectedFolders);
+    }
+
+    if (deleteGroupError || deleteError) {
+      setToast({
+        isOpen: true,
+        message: deleteGroupError
+          ? deleteGroupError
+          : "Failed to delete group" || deleteError,
+        type: "error",
+      });
+    } else if (!deleteGroupError && !deleteError) {
+      setGroups(groups.filter((group) => !selectedFolders.includes(group.id)));
+      await RetryToFetchGroups(); // Ensure groups are updated after deletion
+      setOpenDeleteModal(false);
+      setToast({
+        isOpen: true,
+        message: "Group deleted successfully",
+        type: "success",
+      });
+    }
+
     setSelectedFolders([]);
   };
 
@@ -89,7 +163,6 @@ const Group = () => {
           />
         </div>
       </div>
-
       <div className="flex items-center gap-2 px-[10px] rounded-[8px] border search-group border-[#D0D5DD] w-[351px] h-[47px]">
         <img
           src={Icons.searchIcon}
@@ -105,20 +178,17 @@ const Group = () => {
         />
       </div>
 
-      {groups.length === 0 ? (
-        <EmptyState setIsModalOpen={setIsModalOpen} data={groups} />
-      ) : (
-        <div>
-          <GroupsContainer
-            data={filteredGroups}
-            groups={groups}
-            toggleSelection={toggleSelection}
-            selectedFolders={selectedFolders}
-            setOpenDeleteModal={setOpenDeleteModal}
-            openFolderDetails={openFolderDetails}
-          />
-        </div>
-      )}
+      <div>
+        <GroupsContainer
+          data={filteredGroups}
+          groups={groups}
+          toggleSelection={toggleSelection}
+          selectedFolders={selectedFolders}
+          setOpenDeleteModal={setOpenDeleteModal}
+          openFolderDetails={openFolderDetails}
+          setIsModalOpen={setIsModalOpen}
+        />
+      </div>
 
       {isModalOpen && (
         <CreateGroupModal
@@ -128,7 +198,6 @@ const Group = () => {
           onCreate={handleCreateGroup}
         />
       )}
-
       {openDeleteModal && (
         <DeleteGroupModal
           onDelete={handleDelete}
@@ -138,7 +207,6 @@ const Group = () => {
           selectedFolders={selectedFolders}
         />
       )}
-
       {selectedFolder && (
         <FolderDetailModal
           folder={selectedFolder}
@@ -147,6 +215,14 @@ const Group = () => {
           setOpenCreateFormModal={setOpenCreateFormModal}
           openCreateFormModal={openCreateFormModal}
           setGroups={setGroups}
+        />
+      )}
+      {toast.isOpen && (
+        <Toast
+          type={toast.type}
+          title={toast.type === "error" ? "Error" : "Success"}
+          message={toast.message}
+          onClose={() => setToast({ ...toast, isOpen: false })}
         />
       )}
     </div>

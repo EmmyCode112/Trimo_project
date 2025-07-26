@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
-
+import { useGroups } from "@/redux/GroupProvider/UseGroup";
 const DeleteModal = ({ isOpenDeleteModal, onClose, onDelete }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
-
+  const { deleteGroupLoading } = useGroups();
   // Close modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -106,7 +106,15 @@ const DeleteModal = ({ isOpenDeleteModal, onClose, onDelete }) => {
 
             <Button
               onClick={onDelete}
-              label="Delete Contact"
+              label={
+                deleteGroupLoading ? (
+                  <div className="flex items-center gap-2 opacity-[.7]">
+                    <div className="spinner" /> Deleting...
+                  </div>
+                ) : (
+                  "Delete Contact"
+                )
+              }
               className="rounded-[8px] border bg-[#CB1E33] text-white"
             />
           </div>

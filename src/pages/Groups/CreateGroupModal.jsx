@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
+import { useGroups } from "@/redux/GroupProvider/UseGroup";
 
 const CreateGroupModal = ({ isOpen, onClose, onCreate, data }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
   const [groupName, setGroupName] = useState("");
+  const { createGroupLoading } = useGroups();
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -147,7 +149,15 @@ const CreateGroupModal = ({ isOpen, onClose, onCreate, data }) => {
             onClick={handleCreate}
             className="px-4 py-2 bg-[#383268] text-white rounded"
             disabled={duplicateError || groupName.trim() === ""}
-            label="Create"
+            label={
+              createGroupLoading ? (
+                <div className="flex items-center gap-2 opacity-[.7]">
+                  <div className="spinner" /> Creating...
+                </div>
+              ) : (
+                "Create Group"
+              )
+            }
           />
         </div>
       </div>

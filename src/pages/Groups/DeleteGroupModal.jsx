@@ -2,16 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Icons } from "../../assets/assets";
 import Button from "../../Components/buttons/transparentButton";
+import { useGroups } from "@/redux/GroupProvider/UseGroup";
 
 const DeleteGroupModal = ({
   openDeleteModal,
   onClose,
   onDelete,
-  selectedFolders
+  selectedFolders,
 }) => {
   const modalRef = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
+  const { deleteGroupLoading } = useGroups();
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -60,7 +62,6 @@ const DeleteGroupModal = ({
 
   const handleDelete = () => {
     onDelete();
-    onClose();
   };
 
   return (
@@ -99,11 +100,14 @@ const DeleteGroupModal = ({
             />
             <div>
               <h2 className="mb-1 text-[#1A1A1A] text-[20px] font-medium">
-                {`Delete ${selectedFolders.length} ${selectedFolders.length > 1 ? "Groups" : "Group" }`}
+                {`Delete ${selectedFolders.length} ${
+                  selectedFolders.length > 1 ? "Groups" : "Group"
+                }`}
               </h2>
               <p className="text-[#767676] font-normal text-[15px] w-[80%] max-sm:w-full">
-                Are you sure you want to delete this {`${selectedFolders.length > 1 ? "Groups" : "Group" }`}? This action cannot
-                be undone.
+                Are you sure you want to delete this{" "}
+                {`${selectedFolders.length > 1 ? "Groups" : "Group"}`}? This
+                action cannot be undone.
               </p>
             </div>
           </div>
@@ -116,7 +120,15 @@ const DeleteGroupModal = ({
 
             <Button
               onClick={handleDelete}
-              label="Delete Contact"
+              label={
+                deleteGroupLoading ? (
+                  <div className="flex items-center gap-2 opacity-[.7]">
+                    <div className="spinner" /> Deleting...
+                  </div>
+                ) : (
+                  "Delete Contact"
+                )
+              }
               className="rounded-[8px] border bg-[#CB1E33] text-white"
             />
           </div>

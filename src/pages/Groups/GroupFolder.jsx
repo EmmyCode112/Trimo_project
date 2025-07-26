@@ -34,7 +34,9 @@ const GroupFolder = ({
       </div>
 
       <div className="w-full">
-        <p className="text-[#484848] text-[16px] font-normal">{groupName}</p>
+        <p className="text-[#484848] text-[16px] font-normal capitalize">
+          {groupName}
+        </p>
 
         <div className="flex items-center gap-x-1 mt-1">
           <img src={Icons.contacts2Users} alt="users" />

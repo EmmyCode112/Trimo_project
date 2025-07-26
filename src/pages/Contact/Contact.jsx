@@ -14,6 +14,7 @@ import { useGroups } from "../../redux/GroupProvider/UseGroup";
 import { useContacts } from "@/redux/ContactProvider/UseContact";
 import Toast from "@/Components/Alerts/Toast";
 import api from "@/services/api";
+
 const Contact = () => {
   const baseUrl =
     import.meta.env.VITE_BASE_URL ||
@@ -42,7 +43,7 @@ const Contact = () => {
   const [availableGroup, setAvailableGroup] = useState(false);
   const [actionDropdown, setActionDropdown] = useState(false);
   const [openDeleteMultipleModal, setOpenDeleteMultipleModal] = useState(false);
-  const { groups, setGroups } = useGroups();
+  const { groups, setGroups, handleMoveToGroup, moveError } = useGroups();
   const dropdownRef = useRef(null);
   const actionDropdownRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -133,7 +134,6 @@ const Contact = () => {
       // ❌ Don't close modal — give user a chance to retry
     }
   };
-
 
   // Toggle single row selection
   const toggleRowSelection = (id) => {
@@ -264,79 +264,84 @@ const Contact = () => {
     setAvailableGroup(true);
   };
 
-  const moveContactsToGroup = (groupId) => {
+  // In ImportContact.jsx or wherever moveContactsToGroup is defined
+  const moveContactsToGroup = async (groupId) => {
     const group = groups.find((g) => g.id === groupId);
-    const groupName = group ? group.name : "N/A";
+    if (!group) {
+      setToast({
+        title: "Error",
+        message: "Target group not found.",
+        type: "error",
+      });
+      return;
+    }
 
-    let hasDuplicate = false;
-    let hasValidMove = false;
+    if (selectedRows.length === 0) {
+      setToast({
+        title: "Error",
+        message: "No contacts selected to move.",
+        type: "error",
+      });
+      return;
+    }
 
-    const updatedContacts = contacts.map((contact) => {
-      if (!selectedRows.includes(contact.id)) return contact;
+    // Filter out contacts that are already in the target group (client-side check)
+    const contactsToMoveApi = selectedRows.filter((contactId) => {
+      const contact = contacts.find((c) => c.id === contactId);
+      if (!contact) return false; // Should not happen if selectedRows are valid IDs
 
-      // Check if this contact already exists in the group with same info
-      const duplicate = group.contacts.find(
-        (c) =>
-          c.email === contact.email &&
-          c.firstname === contact.firstname &&
-          c.lastname === contact.lastname
-      );
-
-      if (duplicate) {
-        hasDuplicate = true;
-        return contact; // Skip moving
-      } else {
-        hasValidMove = true;
-        return { ...contact, group: groupName };
-      }
-    });
-
-    setContacts(updatedContacts);
-
-    // Only add non-duplicate contacts to the group
-    const newContactsToAdd = contacts.filter((contact) => {
-      return (
-        selectedRows.includes(contact.id) &&
-        !group.contacts.some(
+      // Ensure group.contacts is an array and safe to iterate
+      const isAlreadyInGroup =
+        Array.isArray(group.contacts) &&
+        group.contacts.some(
           (c) =>
             c.email === contact.email &&
             c.firstname === contact.firstname &&
             c.lastname === contact.lastname
-        )
-      );
+        );
+      return !isAlreadyInGroup;
     });
 
-    setGroups((prevGroups) =>
-      prevGroups.map((g) =>
-        g.id === groupId
-          ? {
-              ...g,
-              contacts: [...g.contacts, ...newContactsToAdd],
-            }
-          : g
-      )
-    );
+    if (contactsToMoveApi.length === 0) {
+      setToast({
+        title: "Info",
+        message: "All selected contacts are already in this group.",
+        type: "info",
+      });
+      return; // Exit if no actual contacts need to be moved
+    }
 
-    // Show toast
-    if (hasValidMove) {
-      setSelectedRows([]);
+    // setStatusText(
+    //   `Moving ${contactsToMoveApi.length} contacts to ${group.name}...`
+    // );
+
+    try {
+      // Await the API call
+      // Pass the actual array of contact IDs that need to be attached
+      await handleMoveToGroup(groupId, contactsToMoveApi); // <--- Corrected API call
+
+      // If handleMoveToGroup completes without throwing an error, it's a success
       setToast({
         title: "Success",
-        message: "Contacts moved to group successfully.",
+        message: `Successfully moved ${contactsToMoveApi.length} contacts to ${group.name}.`,
         type: "success",
       });
-    } else if (hasDuplicate) {
-      setToast({
-        title: "Warning",
-        message: "Some contacts already exist in this group.",
-        type: "warning",
-      });
-    } else {
+
+      // After successful API call, refresh all contacts and groups from the backend
+      // This is crucial for data consistency
+      await RetryToFetchContact(); // Assuming this fetches updated contacts AND groups
+    } catch (err) {
+      // `handleMoveToGroup` already sets `setMoveError`
+      // Use the error message from the context
       setToast({
         title: "Error",
-        message: "No contacts were moved.",
+        message: moveError || "Failed to move contacts.", // Use `moveError` from context
         type: "error",
       });
+      console.error("Error in moveContactsToGroup:", err);
+    } finally {
+      // Reset selected rows after attempt
+      setSelectedRows([]); // Assuming you have a setSelectedRows state setter
     }
   };
 
@@ -371,7 +376,7 @@ const Contact = () => {
 
   const getGroupName = (contactId) => {
     const contact = contacts.find((contact) => contact.id === contactId);
-    return contact?.group || "N/A";
+    return contact?.groups.map((group) => group.name).join(",") || "N/A";
   };
 
   const columns = React.useMemo(
@@ -413,7 +418,9 @@ const Contact = () => {
       },
       {
         Header: "Associated Group",
-        Cell: ({ row }) => getGroupName(row.original.id),
+        Cell: ({ row }) => (
+          <p className="capitalize">{getGroupName(row.original.id)}</p>
+        ),
       },
       {
         Header: "",

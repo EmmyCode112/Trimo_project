@@ -113,6 +113,7 @@ const Signin = () => {
         dispatch(loginSuccess(userData));
         console.log("Login successful:", response);
         navigate("/dashboard/overview");
+        window.location.reload();
       } else {
         newErrors.general =
           data.message || "Login failed. Please Try again later.";

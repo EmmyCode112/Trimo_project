@@ -9,7 +9,8 @@ import DeleteMultipleModal from "./DeleteMultipleModal";
 import DeleteModal from "./DeleteModal";
 import EditContactModal from "./EditContactModal";
 import ImportContact from "./ImportContact";
-
+import { useGroups } from "@/redux/GroupProvider/UseGroup";
+import Toast from "@/Components/Alerts/Toast";
 const FolderDetailModal = ({
   open,
   onClose,
@@ -28,7 +29,12 @@ const FolderDetailModal = ({
   const [editContact, setEditContact] = useState(false);
   const [importContact, setImportContact] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const {
+    deleteContactFromGroup,
+    setDeleteError,
+    setDeleteGroupLoading,
+    deleteError,
+  } = useGroups();
   const modalRef = useRef(null);
   const deleteModalRef = useRef(null); // Ref for DeleteModal
   const createContactModalRef = useRef(null); // Ref for CreateContactModal
@@ -38,7 +44,11 @@ const FolderDetailModal = ({
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef(null);
   const importModalRef = useRef(null);
-
+  const [toast, setToast] = useState({
+    isOpen: false,
+    message: " ",
+    type: "",
+  });
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -116,11 +126,49 @@ const FolderDetailModal = ({
     setEditContact(false);
   };
 
-  const deleteSelectedContacts = () => {
-    setContacts((prev) =>
-      prev.filter((contact) => !selectedContacts.includes(contact.id))
-    );
-    setSelectedContacts([]);
+  const deleteSelectedContacts = async () => {
+    // 1. Get the IDs of the contacts to be detached
+    // selectedRows already holds the IDs, no mapping needed if it's already an array of IDs.
+    const contactIdsToDetach = selectedContacts;
+
+    // 2. Perform initial validation
+    if (!contactIdsToDetach || contactIdsToDetach.length === 0) {
+      setToast({
+        isOpen: true,
+        message: "No contacts selected to detach.",
+        type: "info", // Use 'info' for non-error conditions
+      });
+      return; // Exit the function early
+    }
+
+    setDeleteError(null); // Clear any previous error before attempting
+    setDeleteGroupLoading(true); // Indicate loading for the UI (if this is part of your context)
+
+    try {
+      // 3. Call the API function from your context
+      // Pass the actual group ID and the array of contact IDs to detach
+      await deleteContactFromGroup(folder.id, contactIdsToDetach); // <--- Correct arguments
+
+      // 4. Handle success (if deleteContactFromGroup didn't throw an error)
+      setToast({
+        isOpen: true,
+        message: `Successfully detached ${contactIdsToDetach.length} contact(s).`,
+        type: "success",
+      });
+
+      // 5. Clear selection after successful detachment
+      setSelectedContacts([]);
+    } catch (error) {
+      // 6. Handle error (deleteContactFromGroup should have set deleteError)
+      console.error("Error in deleteSelectedContacts:", error);
+      setToast({
+        isOpen: true,
+        message: deleteError || "Failed to detach contacts, please try again.", // Use deleteError from context
+        type: "error",
+      });
+    } finally {
+      setDeleteGroupLoading(false); // Ensure loading state is reset
+    }
   };
 
   const addNewContact = (newContact) => {
@@ -214,11 +262,11 @@ const FolderDetailModal = ({
       },
       {
         Header: "First Name",
-        accessor: "firstName",
+        accessor: "firstname",
       },
       {
         Header: "Last Name",
-        accessor: "lastName",
+        accessor: "lastname",
       },
       {
         Header: "Email Address",
@@ -226,7 +274,7 @@ const FolderDetailModal = ({
       },
       {
         Header: "Phone Number",
-        accessor: "phone",
+        accessor: "phone_number",
       },
       {
         Header: "Associated Group",
@@ -311,7 +359,7 @@ const FolderDetailModal = ({
           <div className="flex flex-col gap-y-6">
             <div className="flex items-center justify-between max-md:flex-wrap gap-y-4">
               <div>
-                <h2 className="text-[18px] font-medium text-[#1A1A1A]">
+                <h2 className="text-[18px] font-medium text-[#1A1A1A] uppercase">
                   {folder?.name || "No Folder Selected"}
                 </h2>
                 <p className="text-[#767676] text-[14px] font-normal">
@@ -409,6 +457,15 @@ const FolderDetailModal = ({
           rowData={selectedRow}
           onSave={handleSaveContact}
           existingContacts={contacts}
+        />
+      )}
+
+      {toast.isOpen && (
+        <Toast
+          type={toast.type}
+          title={toast.type === "error" ? "Error" : "Success"}
+          message={toast.message}
+          onClose={() => setToast({ ...toast, isOpen: false })}
         />
       )}
     </div>

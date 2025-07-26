@@ -78,7 +78,6 @@ const SignupOTP = ({ isClosedOtp }) => {
               onSubmit={handleOtpSubmit}
               error={otpRequested ? error : ""}
               setError={setError}
-              disabled={!otpRequested}
             />
             <div className="flex items-center gap-3 mt-3">
               {otpRequested ? (
