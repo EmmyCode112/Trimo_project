@@ -235,9 +235,9 @@ const App = () => {
         <Route
           path="/account-setup"
           element={
-            <PublicOnlyRoute>
+            <ProtectedRoute>
               <SetUp />
-            </PublicOnlyRoute>
+            </ProtectedRoute>
           }
         />
 

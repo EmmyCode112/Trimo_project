@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Button from "../../Components/buttons/transparentButton";
+import PropTypes from "prop-types";
 
-const CaseSixty = ({ handleProceed }) => {
-  const [selectedGoal, setSelectedGoal] = useState("");
+const CaseSixty = ({ handleProceed, initialData }) => {
+  const [selectedGoal, setSelectedGoal] = useState(initialData?.bestDescribes || "");
   const [otherDescription, setOtherDescription] = useState("");
 
   // Handle goal selection
@@ -24,6 +25,11 @@ const CaseSixty = ({ handleProceed }) => {
     (selectedGoal !== "Others" ||
       (selectedGoal === "Others" && otherDescription.trim() !== ""));
 
+  const handleProceedClick = () => {
+    const finalGoal = selectedGoal === "Others" ? otherDescription : selectedGoal;
+    handleProceed({ bestDescribes: finalGoal });
+  };
+
   // List of goal options
   const goals = [
     "Marketing",
@@ -44,7 +50,7 @@ const CaseSixty = ({ handleProceed }) => {
           Your Goals and Experience
         </h4>
         <p className="text-[#767676] font-medium text-[16px]">
-          Let’s get you up and running quickly
+          Let's get you up and running quickly
         </p>
       </div>
 
@@ -98,12 +104,17 @@ const CaseSixty = ({ handleProceed }) => {
       {/* Proceed Button */}
       <Button
         label="Proceed"
-        onClick={handleProceed}
+        onClick={handleProceedClick}
         disabled={!isProceedEnabled}
         className={`${"bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]"}`}
       />
     </div>
   );
+};
+
+CaseSixty.propTypes = {
+  handleProceed: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
 };
 
 export default CaseSixty;

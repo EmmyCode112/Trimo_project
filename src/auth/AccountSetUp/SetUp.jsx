@@ -8,6 +8,7 @@ import CaseEighty from "./EightyPercentSetUp";
 import CaseHundred from "./HundredPercentSetUp";
 import PopUp from "./PopUp";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 const SetUp = () => {
   const [selectedEmployees, setSelectedEmployees] = useState("");
@@ -16,6 +17,12 @@ const SetUp = () => {
   const [successfulSetup, setSuccessfulSetup] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [stepData, setStepData] = useState({
+    step1: { companyName: "", workPhone: "", selectedEmployees: "" },
+    step2: { bestDescribes: "" },
+    step3: { whatToAchieve: [] },
+    step4: { connectData: "" }
+  });
 
   const navigate = useNavigate();
   const { completeProfile } = useAuth();
@@ -35,39 +42,61 @@ const SetUp = () => {
     formData.workPhone.trim() &&
     selectedEmployees;
 
+  const handleStepDataUpdate = (step, data) => {
+    setStepData(prev => ({
+      ...prev,
+      [step]: data
+    }));
+  };
+
+  const handleFinalSubmit = async () => {
+    try {
+      setLoading(true);
+      // Prepare complete profile data from all steps
+      const profileData = {
+        company_name: stepData.step1.companyName,
+        work_phone_number: stepData.step1.workPhone,
+        number_of_employees: stepData.step1.selectedEmployees,
+        country_code: "+234", // Default to Nigeria for now
+        what_to_achieve: stepData.step3.whatToAchieve,
+        best_describes: [stepData.step2.bestDescribes], // Convert to array
+      };
+
+      console.log("Submitting complete profile data:", profileData);
+      const response = await completeProfile(profileData);
+      console.log("Profile completion response:", response);
+
+      if (response.msg === "Profile Completed Successfully!") {
+        toast.success("Profile Completed Successfully!");
+        setSuccessfulSetup(true);
+        // Redirect to dashboard after a short delay
+        setTimeout(() => {
+          navigate("/dashboard/overview");
+        }, 4000);
+      }
+    } catch (error) {
+      console.error("Profile completion failed:", error);
+      if (error.err_msg) {
+        setErrors(error.err_msg);
+      } else {
+        setErrors({
+          submit: "Failed to complete profile. Please try again.",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleProceed = async () => {
     if (isFormValid) {
-      try {
-        setLoading(true);
-        // Prepare profile data
-        const profileData = {
-          company_name: formData.companyName,
-          work_phone_number: formData.workPhone,
-          number_of_employees: selectedEmployees,
-          country_code: "+234", // Default to Nigeria for now
-          what_to_achieve: [], // These will be filled in subsequent steps
-          best_describes: [], // These will be filled in subsequent steps
-        };
-
-        console.log("Submitting profile data:", profileData);
-        const response = await completeProfile(profileData);
-        console.log("Profile completion response:", response);
-
-        if (response.msg === "") {
-          setCurrentStep((prevStep) => prevStep + 1);
-        }
-      } catch (error) {
-        console.error("Profile completion failed:", error);
-        if (error.err_msg) {
-          setErrors(error.err_msg);
-        } else {
-          setErrors({
-            submit: "Failed to complete profile. Please try again.",
-          });
-        }
-      } finally {
-        setLoading(false);
-      }
+      // Store step 1 data and proceed to next step
+      handleStepDataUpdate('step1', {
+        companyName: formData.companyName,
+        workPhone: formData.workPhone,
+        selectedEmployees: selectedEmployees
+      });
+      setCurrentStep((prevStep) => prevStep + 1);
     }
   };
 
@@ -177,7 +206,7 @@ const SetUp = () => {
               {/* Proceed Button */}
               <Button
                 type="submit"
-                label={loading ? "Processing..." : "Proceed"}
+                label="Proceed"
                 disabled={!isFormValid || loading}
                 className={`bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px] ${
                   isFormValid && !loading
@@ -189,17 +218,36 @@ const SetUp = () => {
           </div>
         );
       case 2:
-        return <CaseSixty handleProceed={handleProceed} />;
+        return <CaseSixty 
+          handleProceed={(data) => {
+            handleStepDataUpdate('step2', data);
+            setCurrentStep((prevStep) => prevStep + 1);
+          }}
+          initialData={stepData.step2}
+        />;
       case 3:
         return (
           <div>
-            <CaseEighty handleProceed={handleProceed} />
+            <CaseEighty 
+              handleProceed={(data) => {
+                handleStepDataUpdate('step3', data);
+                setCurrentStep((prevStep) => prevStep + 1);
+              }}
+              initialData={stepData.step3}
+            />
           </div>
         );
       case 4:
         return (
           <div>
-            <CaseHundred setSuccessfulSetup={setSuccessfulSetup} />
+            <CaseHundred 
+              setSuccessfulSetup={setSuccessfulSetup}
+              handleProceed={(data) => {
+                handleStepDataUpdate('step4', data);
+                handleFinalSubmit();
+              }}
+              initialData={stepData.step4}
+            />
           </div>
         );
       default:

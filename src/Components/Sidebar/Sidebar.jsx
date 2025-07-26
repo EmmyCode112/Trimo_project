@@ -1,20 +1,23 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SideBarIcons, Icons } from "../../assets/assets";
-import CampaignModal from "../CampaignModal";
 import { useModal } from "@/redux/UseCampaignModal";
 import { createPortal } from "react-dom";
 import { useGroups } from "@/redux/GroupProvider/UseGroup";
 import { useContacts } from "@/redux/ContactProvider/UseContact";
 import { useNotification } from "@/redux/NotificationProvider/UseNotification";
+import PropTypes from "prop-types";
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const { groups } = useGroups();
   const { contacts } = useContacts();
   const { notifications } = useNotification();
+  const userDetailsString = localStorage.getItem("userDetails");
+  const user = userDetailsString ? JSON.parse(userDetailsString) : null;
   const subnavTriggerRef = useRef(null);
   const [subnavPosition, setSubnavPosition] = useState({ top: 0, left: 263 });
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  console.log("user", user);
   // Define the sub-navigation items for each main nav item that has them
   const subNavItems = {
     campaigns: [
@@ -190,15 +193,26 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
     }
   };
 
-  const user = {
-    id: 1,
-    name: "EmmyCode",
-    avatar: null,
-    role: "Admin",
-  };
-
   const getUserInitial = (name) => {
     return name ? name.charAt(0).toUpperCase() : "?";
+  };
+
+  const getUserDisplayName = () => {
+    if (user?.firstname && user?.lastname) {
+      return `${user.firstname} ${user.lastname}`;
+    } else if (user?.email) {
+      return user.email;
+    }
+    return "User";
+  };
+
+  const getUserRole = () => {
+    if (user?.company_name) {
+      return user.company_name;
+    } else if (user?.email) {
+      return user.email;
+    }
+    return "User";
   };
 
   useEffect(() => {
@@ -389,15 +403,15 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
       <div className="flex justify-between items-center px-4 group-hover:px-7 text-[#EBEBF0] font-medium py-[20px] border-t border-t-[#e9e9e92f] transition-all duration-300 mt-3">
         <div className="flex gap-3 items-center">
           <div className="w-[40px] h-[40px] min-w-[40px] bg-[#9A2444] text-white flex items-center justify-center rounded-full text-lg font-medium">
-            {getUserInitial(user.name)}
+            {getUserInitial(getUserDisplayName())}
           </div>
           <div
             className={`transition-opacity duration-300 whitespace-nowrap ${
               isExpanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
             }`}
           >
-            <h3 className="text-sm">{user.name}</h3>
-            <p className="text-[#E7E7E7] text-[13px] font-[300]">{user.role}</p>
+            <h3 className="text-sm">{getUserDisplayName()}</h3>
+            <p className="text-[#E7E7E7] text-[13px] font-[300]">{getUserRole()}</p>
           </div>
         </div>
         <img
@@ -419,4 +433,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   );
 };
 
+Sidebar.propTypes = {
+  isSidebarOpen: PropTypes.bool.isRequired,
+  toggleSidebar: PropTypes.func.isRequired,
+};
+
 export default Sidebar;
+

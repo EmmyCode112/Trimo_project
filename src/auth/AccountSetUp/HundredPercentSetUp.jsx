@@ -1,15 +1,20 @@
 import { useState } from "react";
 import Button from "../../Components/buttons/transparentButton";
+import PropTypes from "prop-types";
 
-const CaseHundred = ({setSuccessfulSetup}) => {
+const CaseHundred = ({handleProceed, initialData}) => {
   // State to track the selected option
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(initialData?.connectData || "");
 
   // Function to handle option selection
   const handleOptionSelect = (option) => setSelectedOption(option);
 
   // Check if the button should be enabled
   const isProceedEnabled = selectedOption !== "";
+
+  const handleProceedClick = () => {
+    handleProceed({ connectData: selectedOption });
+  };
 
   return (
     <div>
@@ -19,7 +24,7 @@ const CaseHundred = ({setSuccessfulSetup}) => {
           Your Goals and Experience
         </h4>
         <p className="text-[#767676] font-medium text-[16px]">
-          Let’s get you up and running quickly
+          Let's get you up and running quickly
         </p>
       </div>
 
@@ -57,12 +62,17 @@ const CaseHundred = ({setSuccessfulSetup}) => {
 
       <Button
         label="Proceed"
-        onClick={()=>setSuccessfulSetup(true)}
+        onClick={handleProceedClick}
         disabled={!isProceedEnabled}
         className={`${"bg-[#383268] hover:bg-[#41397c] text-white rounded-[8px] w-full py-[12px] px-[20px]"}`}
       />
     </div>
   );
+};
+
+CaseHundred.propTypes = {
+  handleProceed: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
 };
 
 export default CaseHundred;

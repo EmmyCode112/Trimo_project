@@ -93,8 +93,12 @@ const Signin = () => {
         // Assuming your API returns an accessToken in data
         localStorage.setItem("accessToken", data.accessToken); // Store the actual token
         console.log("access token", data.accessToken);
+        // Store complete user details in localStorage
+        localStorage.setItem("userDetails", JSON.stringify(data.userDetails));
+        
         const userData = {
-          email: data.email /* any other user data from response */,
+          ...data.userDetails, // Store all user details
+          accessToken: data.accessToken
         };
         dispatch(loginSuccess(userData));
         console.log("Login successful:", response);
